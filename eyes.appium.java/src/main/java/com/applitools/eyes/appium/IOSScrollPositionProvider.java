@@ -94,7 +94,7 @@ public class IOSScrollPositionProvider extends AppiumScrollPositionProvider {
 
     private double getScrollDistanceRatio() {
         if (distanceRatio == 0.0) {
-            int viewportHeight = eyesDriver.getDefaultContentViewportSize(false).getHeight();
+            int viewportHeight = eyesDriver.getDefaultContentViewportSize(false).getHeight() + eyesDriver.getStatusBarHeight();
             double pixelRatio = eyesDriver.getDevicePixelRatio();
             // viewport height is in device pixels, whereas element heights are in logical pixels,
             // so need to scale the scrollview height accordingly.
