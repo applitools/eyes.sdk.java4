@@ -274,7 +274,7 @@ public class AndroidScrollPositionProvider extends AppiumScrollPositionProvider 
                         logger.verbose("Could not parse scrollable content height");
                     }
                 }
-            } catch (StaleElementReferenceException ignored) {
+            } catch (NoSuchElementException | StaleElementReferenceException ignored) {
                 scrollableHeight = contentSize.scrollableOffset;
                 logger.verbose("Could not get EyesAppiumHelper element. Return scrollable offset from cached content size (" + scrollableHeight + ")");
             }
