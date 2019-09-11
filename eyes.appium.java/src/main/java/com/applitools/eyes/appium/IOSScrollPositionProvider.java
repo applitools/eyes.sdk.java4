@@ -10,6 +10,7 @@ import java.util.List;
 
 import io.appium.java_client.MobileBy;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.WebElement;
 
 import javax.annotation.Nullable;
@@ -20,6 +21,7 @@ public class IOSScrollPositionProvider extends AppiumScrollPositionProvider {
     private static final String SCROLL_DIRECTION_DOWN = "down";
     private static final String SCROLL_DIRECTION_LEFT = "left";
     private static final String SCROLL_DIRECTION_RIGHT = "right";
+    private WebElement firstVisibleChild;
 
     public IOSScrollPositionProvider (Logger logger, EyesAppiumDriver driver) {
         super(logger, driver);
@@ -156,5 +158,44 @@ public class IOSScrollPositionProvider extends AppiumScrollPositionProvider {
             logger.log("WARNING: No active scroll element, so no content size to retrieve");
         }
         return contentSize;
+    }
+
+    @Override
+    protected WebElement getCachedFirstVisibleChild () {
+        WebElement activeScroll = EyesAppiumUtils.getFirstScrollableView(driver);
+        if (firstVisibleChild == null) {
+            logger.verbose("Could not find first visible child in cache, getting (this could take a while)");
+            firstVisibleChild = getFirstChild(activeScroll);
+        } else {
+            Rectangle firstVisibleChildRect = firstVisibleChild.getRect();
+            if (firstVisibleChildRect.getWidth() == 0 && firstVisibleChildRect.getHeight() == 0) {
+                logger.verbose("Cached visible child is invalid for some reason(e.g. user opened another screen and current firstVisibleChild is useless" +
+                        " and it is not already in the view hierarchy). It should be updated. Getting (this could take a while)");
+                firstVisibleChild = getFirstChild(activeScroll);
+            }
+        }
+        return firstVisibleChild;
+    }
+
+    private WebElement getFirstChild(WebElement activeScroll) {
+        if (activeScroll.getAttribute("type").equals("XCUIElementTypeTable")) {
+            List<WebElement> list = activeScroll.findElements(MobileBy.xpath("//XCUIElementTypeTable[1]/*"));
+            WebElement firstCell = getFirstCellForXCUIElementTypeTable(list);
+            if (firstCell == null) {
+                return EyesAppiumUtils.getFirstVisibleChild(activeScroll);
+            }
+            return firstCell;
+        } else {
+            return EyesAppiumUtils.getFirstVisibleChild(activeScroll);
+        }
+    }
+
+    private WebElement getFirstCellForXCUIElementTypeTable(List<WebElement> list) {
+        for (WebElement element : list) {
+            if (element.getTagName().equals("XCUIElementTypeCell")) {
+                return element;
+            }
+        }
+        return null;
     }
 }
