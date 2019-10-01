@@ -11,24 +11,24 @@ import java.util.List;
 
 public class SeleniumCheckSettings extends CheckSettings implements ISeleniumCheckTarget, Cloneable {
 
-    private By targetSelector;
-    private WebElement targetElement;
-    private List<FrameLocator> frameChain = new ArrayList<>();
-    private WebElement scrollRootElement;
-    private By scrollRootSelector;
+    protected By targetSelector;
+    protected WebElement targetElement;
+    protected List<FrameLocator> frameChain = new ArrayList<>();
+    protected WebElement scrollRootElement;
+    protected By scrollRootSelector;
 
-    SeleniumCheckSettings() {
+    protected SeleniumCheckSettings() {
     }
 
-    SeleniumCheckSettings(Region region) {
+    protected SeleniumCheckSettings(Region region) {
         super(region);
     }
 
-    SeleniumCheckSettings(By targetSelector) {
+    protected SeleniumCheckSettings(By targetSelector) {
         this.targetSelector = targetSelector;
     }
 
-    SeleniumCheckSettings(WebElement targetElement) {
+    protected SeleniumCheckSettings(WebElement targetElement) {
         this.targetElement = targetElement;
     }
 

@@ -13,6 +13,7 @@ import com.applitools.eyes.selenium.positioning.RegionPositionCompensation;
 import com.applitools.utils.ArgumentGuard;
 import com.applitools.utils.GeneralUtils;
 import com.applitools.utils.ImageUtils;
+import org.openqa.selenium.WebElement;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
@@ -45,13 +46,14 @@ public class AppiumFullPageCaptureAlgorithm {
     protected final PositionProvider positionProvider;
     protected final ScrollingPositionProvider scrollProvider;
 
+    private WebElement cutElement;
 
     public AppiumFullPageCaptureAlgorithm(Logger logger, PositionProvider originProvider,
-                                    PositionProvider positionProvider,
-                                    ScrollingPositionProvider scrollProvider,
-                                    ImageProvider imageProvider, DebugScreenshotsProvider debugScreenshotsProvider,
-                                    ScaleProviderFactory scaleProviderFactory, CutProvider cutProvider,
-                                    EyesScreenshotFactory screenshotFactory, int waitBeforeScreenshots) {
+                                          PositionProvider positionProvider,
+                                          ScrollingPositionProvider scrollProvider,
+                                          ImageProvider imageProvider, DebugScreenshotsProvider debugScreenshotsProvider,
+                                          ScaleProviderFactory scaleProviderFactory, CutProvider cutProvider,
+                                          EyesScreenshotFactory screenshotFactory, int waitBeforeScreenshots, WebElement cutElement) {
         ArgumentGuard.notNull(logger, "logger");
         this.logger = logger;
         this.originProvider = originProvider;
@@ -70,19 +72,20 @@ public class AppiumFullPageCaptureAlgorithm {
         this.stitchedImage = null;
         this.currentPosition = null;
         this.coordinatesAreScaled = false;
+        this.cutElement = cutElement;
     }
 
     public AppiumFullPageCaptureAlgorithm(Logger logger,
-        AppiumScrollPositionProvider scrollProvider,
-        ImageProvider imageProvider, DebugScreenshotsProvider debugScreenshotsProvider,
-        ScaleProviderFactory scaleProviderFactory, CutProvider cutProvider,
-        EyesScreenshotFactory screenshotFactory, int waitBeforeScreenshots) {
+                                          AppiumScrollPositionProvider scrollProvider,
+                                          ImageProvider imageProvider, DebugScreenshotsProvider debugScreenshotsProvider,
+                                          ScaleProviderFactory scaleProviderFactory, CutProvider cutProvider,
+                                          EyesScreenshotFactory screenshotFactory, int waitBeforeScreenshots, WebElement cutElement) {
 
         // ensure that all the scroll/position providers used by the superclass are the same object;
         // getting the current position for appium is very expensive!
         this(logger, scrollProvider, scrollProvider, scrollProvider, imageProvider,
-            debugScreenshotsProvider, scaleProviderFactory, cutProvider, screenshotFactory,
-            waitBeforeScreenshots);
+                debugScreenshotsProvider, scaleProviderFactory, cutProvider, screenshotFactory,
+                waitBeforeScreenshots, cutElement);
     }
 
     protected RectangleSize captureAndStitchCurrentPart(Region partRegion, Region scrollViewRegion) {
@@ -91,7 +94,7 @@ public class AppiumFullPageCaptureAlgorithm {
         GeneralUtils.sleep(waitBeforeScreenshots);
         BufferedImage partImage = imageProvider.getImage();
         debugScreenshotsProvider.save(partImage,
-            "original-scrolled=" + currentPosition.toStringForFilename());
+                "original-scrolled=" + currentPosition.toStringForFilename());
 
         // before we take new screenshots, we have to reset the region in the screenshot we care
         // about, since from now on we just want the scroll view, not the entire view
@@ -104,7 +107,7 @@ public class AppiumFullPageCaptureAlgorithm {
     }
 
     protected void captureAndStitchTailParts(BufferedImage image, int stitchingOverlap,
-        RectangleSize entireSize, RectangleSize initialPartSize) {
+                                             RectangleSize entireSize, RectangleSize initialPartSize) {
 
         logger.verbose("Capturing all the tail parts for an Appium screen");
 
@@ -118,6 +121,8 @@ public class AppiumFullPageCaptureAlgorithm {
         RectangleSize newSize = new RectangleSize(initialPartSize.getWidth(), scrollViewRegion.getHeight() - 1);
         scrollViewRegion.setLocation(newLoc);
         scrollViewRegion.setSize(newSize);
+
+        ((AppiumScrollPositionProvider) scrollProvider).setCutElement(cutElement);
 
         do {
             lastSuccessfulLocation = currentPosition;

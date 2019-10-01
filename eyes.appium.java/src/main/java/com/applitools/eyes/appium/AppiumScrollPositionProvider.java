@@ -22,6 +22,7 @@ public abstract class AppiumScrollPositionProvider implements SeleniumScrollingP
     protected final EyesAppiumDriver eyesDriver;
     protected double distanceRatio;
     protected int verticalScrollGap;
+    protected WebElement cutElement = null;
 
     protected ContentSize contentSize;
 
@@ -38,6 +39,10 @@ public abstract class AppiumScrollPositionProvider implements SeleniumScrollingP
         distanceRatio = 0.0;
         verticalScrollGap = 0;
         isVerticalScrollGapSet = false;
+    }
+
+    public void setCutElement(WebElement cutElement) {
+        this.cutElement = cutElement;
     }
 
     protected WebElement getCachedFirstVisibleChild () {

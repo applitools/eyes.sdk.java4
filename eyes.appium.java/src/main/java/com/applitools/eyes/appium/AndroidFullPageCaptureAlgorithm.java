@@ -18,7 +18,7 @@ public class AndroidFullPageCaptureAlgorithm extends AppiumFullPageCaptureAlgori
         EyesScreenshotFactory screenshotFactory, int waitBeforeScreenshots) {
 
         super(logger, scrollProvider, imageProvider, debugScreenshotsProvider,
-            scaleProviderFactory, cutProvider, screenshotFactory, waitBeforeScreenshots);
+            scaleProviderFactory, cutProvider, screenshotFactory, waitBeforeScreenshots, null);
 
         // Android returns pixel coordinates which are already scaled according to the pixel ratio
         this.coordinatesAreScaled = true;
