@@ -110,7 +110,7 @@ public class IOSScrollPositionProvider extends AppiumScrollPositionProvider {
             // so need to scale the scrollview height accordingly.
             // FIXME: 29/11/2018 should the scrollviewHeight be indeed UNSCALED and WITHOUT the scrollgap
             //double scrollviewHeight = ((getScrollableViewRegion().getHeight() - verticalScrollGap) * pixelRatio);
-            double scrollviewHeight = getScrollableViewRegion().getHeight();
+            double scrollviewHeight = getScrollableViewRegion().getHeight() - (cutElement != null ? cutElement.getSize().getHeight() : 0);
             distanceRatio = scrollviewHeight / viewportHeight;
             logger.verbose("Distance ratio for scroll down based on viewportHeight of " + viewportHeight +
                 " and scrollview height of " + scrollviewHeight + " is " + Double.toString(distanceRatio));

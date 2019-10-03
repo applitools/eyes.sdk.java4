@@ -16,10 +16,7 @@ import io.appium.java_client.AppiumDriver;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.Point;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 
@@ -27,6 +24,9 @@ public class Eyes extends com.applitools.eyes.selenium.Eyes {
 
     private static final String NATIVE_APP = "NATIVE_APP";
     private EyesAppiumDriver driver;
+
+    private ElementType cutElementType;
+    private WebElement cutElement;
 
     public Eyes() {
         init();
@@ -151,6 +151,27 @@ public class Eyes extends com.applitools.eyes.selenium.Eyes {
         return getEyesDriver().getDevicePixelRatio();
     }
 
+    public void check(EyesAppiumCheckSettings checkSettings) {
+        cutElementType = checkSettings.getCutElementType();
+        cutElement = getDriver().findElement(checkSettings.getCutElementSelector());
+
+        super.check(checkSettings);
+    }
+
+    @Override
+    public void check(ICheckSettings checkSettings) {
+        if (checkSettings instanceof EyesAppiumCheckSettings) {
+            EyesAppiumCheckSettings eyesAppiumCheckSettings = (EyesAppiumCheckSettings)checkSettings;
+            cutElementType = eyesAppiumCheckSettings.getCutElementType();
+            try {
+                cutElement = getDriver().findElement(eyesAppiumCheckSettings.getCutElementSelector());
+            } catch (NoSuchElementException ignored) {
+                logger.verbose("");
+            }
+        }
+        super.check(checkSettings);
+    }
+
     protected EyesAppiumScreenshot getFullPageScreenshot() {
 
         logger.verbose("Full page Appium screenshot requested.");
@@ -161,8 +182,8 @@ public class Eyes extends com.applitools.eyes.selenium.Eyes {
         AppiumScrollPositionProvider scrollPositionProvider = (AppiumScrollPositionProvider) getPositionProvider();
 
         AppiumCaptureAlgorithmFactory algoFactory = new AppiumCaptureAlgorithmFactory(getEyesDriver(), logger,
-            scrollPositionProvider, imageProvider, debugScreenshotsProvider, scaleProviderFactory,
-            cutProviderHandler.get(), screenshotFactory, getWaitBeforeScreenshots());
+                scrollPositionProvider, imageProvider, debugScreenshotsProvider, scaleProviderFactory,
+                cutProviderHandler.get(), screenshotFactory, getWaitBeforeScreenshots(), cutElement);
 
         AppiumFullPageCaptureAlgorithm algo = algoFactory.getAlgorithm();
 
