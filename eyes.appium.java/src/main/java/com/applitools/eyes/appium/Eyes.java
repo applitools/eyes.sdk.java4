@@ -153,7 +153,11 @@ public class Eyes extends com.applitools.eyes.selenium.Eyes {
 
     public void check(EyesAppiumCheckSettings checkSettings) {
         cutElementType = checkSettings.getCutElementType();
-        cutElement = getDriver().findElement(checkSettings.getCutElementSelector());
+        try {
+            cutElement = getDriver().findElement(checkSettings.getCutElementSelector());
+        } catch (NoSuchElementException ignored) {
+            logger.verbose("Element to cut is not found with selector: " + checkSettings.getCutElementSelector());
+        }
 
         super.check(checkSettings);
     }
@@ -166,7 +170,7 @@ public class Eyes extends com.applitools.eyes.selenium.Eyes {
             try {
                 cutElement = getDriver().findElement(eyesAppiumCheckSettings.getCutElementSelector());
             } catch (NoSuchElementException ignored) {
-                logger.verbose("");
+                logger.verbose("Element to cut is not found with selector: " + eyesAppiumCheckSettings.getCutElementSelector());
             }
         }
         super.check(checkSettings);
