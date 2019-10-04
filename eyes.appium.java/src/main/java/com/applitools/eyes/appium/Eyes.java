@@ -151,27 +151,19 @@ public class Eyes extends com.applitools.eyes.selenium.Eyes {
         return getEyesDriver().getDevicePixelRatio();
     }
 
-    public void check(EyesAppiumCheckSettings checkSettings) {
+    private void updateCutElement(EyesAppiumCheckSettings checkSettings) {
         cutElementType = checkSettings.getCutElementType();
         try {
             cutElement = getDriver().findElement(checkSettings.getCutElementSelector());
         } catch (NoSuchElementException ignored) {
             logger.verbose("Element to cut is not found with selector: " + checkSettings.getCutElementSelector());
         }
-
-        super.check(checkSettings);
     }
 
     @Override
     public void check(ICheckSettings checkSettings) {
         if (checkSettings instanceof EyesAppiumCheckSettings) {
-            EyesAppiumCheckSettings eyesAppiumCheckSettings = (EyesAppiumCheckSettings)checkSettings;
-            cutElementType = eyesAppiumCheckSettings.getCutElementType();
-            try {
-                cutElement = getDriver().findElement(eyesAppiumCheckSettings.getCutElementSelector());
-            } catch (NoSuchElementException ignored) {
-                logger.verbose("Element to cut is not found with selector: " + eyesAppiumCheckSettings.getCutElementSelector());
-            }
+            updateCutElement((EyesAppiumCheckSettings)checkSettings);
         }
         super.check(checkSettings);
     }
