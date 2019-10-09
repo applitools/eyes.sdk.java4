@@ -5,9 +5,11 @@ package com.applitools.eyes.appium;
 
 import com.applitools.eyes.*;
 import com.applitools.eyes.appium.capture.ImageProviderFactory;
+import com.applitools.eyes.appium.locators.VisualLocatorProviderFactory;
 import com.applitools.eyes.capture.EyesScreenshotFactory;
 import com.applitools.eyes.fluent.ICheckSettings;
 import com.applitools.eyes.fluent.ICheckSettingsInternal;
+import com.applitools.eyes.locators.IVisualLocatorSettings;
 import com.applitools.eyes.positioning.RegionProvider;
 import com.applitools.eyes.scaling.FixedScaleProviderFactory;
 import com.applitools.utils.ArgumentGuard;
@@ -15,6 +17,8 @@ import com.applitools.utils.ImageUtils;
 import io.appium.java_client.AppiumDriver;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -270,5 +274,16 @@ public class Eyes extends com.applitools.eyes.selenium.Eyes {
         }
     }
 
+    @Override
+    protected void initVisualLocatorProvider() {
+        VisualLocatorProviderFactory factory = new VisualLocatorProviderFactory(driver, logger, serverConnector);
+        visualLocatorProvider = factory.getProvider();
+    }
+
     // TODO override implementation of getFrameOrElementScreenshot
+
+    public Map<String, List<Region>> locate(IVisualLocatorSettings visualLocatorSettings) {
+        ArgumentGuard.notNull(visualLocatorSettings, "visualLocatorSettings");
+        return visualLocatorProvider.getLocators(visualLocatorSettings);
+    }
 }

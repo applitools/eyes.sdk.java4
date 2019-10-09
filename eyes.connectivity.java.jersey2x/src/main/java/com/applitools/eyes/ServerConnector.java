@@ -5,6 +5,7 @@ package com.applitools.eyes;
 
 import com.applitools.utils.ArgumentGuard;
 import com.applitools.utils.GeneralUtils;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import org.apache.commons.codec.binary.Base64;
 import org.glassfish.jersey.message.GZipEncoder;
@@ -17,10 +18,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -390,6 +388,57 @@ public class ServerConnector extends RestClient
                 MediaType.APPLICATION_OCTET_STREAM), null );
         String entity = response.getHeaderString("Location");
         return entity;
+    }
+
+    @Override
+    public String postViewportImage(String base64Image) {
+        WebTarget target = restClient.target(serverUrl).path(("api/sessions/running/data")).queryParam("apiKey", getApiKey());
+        Invocation.Builder request = target.request(MediaType.APPLICATION_JSON);
+
+        byte[] screenshot = Base64.decodeBase64(base64Image);
+
+        ByteArrayOutputStream requestOutputStream = new ByteArrayOutputStream();
+        DataOutputStream requestDos = new DataOutputStream(requestOutputStream);
+        byte[] requestData;
+        String result = null;
+        try {
+            requestOutputStream.write(screenshot);
+            requestOutputStream.flush();
+
+            requestData = requestOutputStream.toByteArray();
+            requestDos.close();
+
+            Response response = postWithRetry(request, Entity.entity(requestData,
+                    MediaType.APPLICATION_OCTET_STREAM), null );
+
+            result = response.getHeaderString("Location");
+        } catch (IOException ignored) {
+            logger.verbose("Failed to send viewport image");
+        }
+
+        return result;
+    }
+
+    @Override
+    public Map<String, List<Region>> postLocators(VisualLocatorsData visualLocatorsData) {
+        String postData;
+        try {
+            jsonMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+            postData = jsonMapper.writeValueAsString(visualLocatorsData);
+        } catch (IOException e) {
+            throw new EyesException("Failed to convert " +
+                    "visualLocatorsData into Json string!", e);
+        }
+
+        WebTarget target = restClient.target(serverUrl).path(("api/locators/locate")).queryParam("apiKey", getApiKey());
+        Invocation.Builder request = target.request(MediaType.APPLICATION_JSON);
+        Response response = postWithRetry(request, Entity.json(postData), null);
+
+        List<Integer> validStatusCodes = new ArrayList<>();
+        validStatusCodes.add(Response.Status.OK.getStatusCode());
+        validStatusCodes.add(Response.Status.CREATED.getStatusCode());
+
+        return parseResponseWithJsonData(response, validStatusCodes, new TypeReference<Map<String, List<Region>>>(){});
     }
 
     private Response postWithRetry(Invocation.Builder request, Entity entity, AtomicInteger retiresCounter) {

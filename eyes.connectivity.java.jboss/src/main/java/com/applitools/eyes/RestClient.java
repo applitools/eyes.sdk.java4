@@ -1,6 +1,7 @@
 package com.applitools.eyes;
 
 import com.applitools.utils.ArgumentGuard;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.auth.AuthScope;
@@ -317,6 +318,62 @@ public class RestClient {
         // Parse data.
         try {
             resultObject = jsonMapper.readValue(data, resultType);
+        } catch (IOException e) {
+            String errorMessage = getReadResponseError(
+                    "Failed to de-serialize response body",
+                    statusCode,
+                    statusPhrase,
+                    data);
+
+            throw new EyesException(errorMessage, e);
+        }
+
+        return resultObject;
+    }
+
+    /**
+     * Generic handling of response with data. Response Handling includes the
+     * following:
+     * 1. Verify that we are able to read response data.
+     * 2. verify that the status code is valid
+     * 3. Parse the response data from JSON to the relevant type.
+     *
+     * @param response The response to parse.
+     * @param validHttpStatusCodes The list of acceptable status codes.
+     * @param typeReference The TypeReference object of the type of result this response
+     *                   should be parsed to.
+     * @param <T> The return value type.
+     * @return The parse response of the type given in {@code resultType}.
+     * @throws EyesException For invalid status codes or if the response
+     * parsing failed.
+     */
+    protected <T> T parseResponseWithJsonData(Response response,
+                                              List<Integer> validHttpStatusCodes, TypeReference<T> typeReference)
+            throws EyesException {
+        ArgumentGuard.notNull(response, "response");
+        ArgumentGuard.notNull(validHttpStatusCodes, "validHttpStatusCodes");
+        ArgumentGuard.notNull(typeReference, "typeReference");
+
+        T resultObject;
+        int statusCode = response.getStatus();
+        String statusPhrase =
+                response.getStatusInfo().getReasonPhrase();
+        String data = response.readEntity(String.class);
+        response.close();
+        // Validate the status code.
+        if (!validHttpStatusCodes.contains(statusCode)) {
+            String errorMessage = getReadResponseError(
+                    "Invalid status code",
+                    statusCode,
+                    statusPhrase,
+                    data);
+
+            throw new EyesException(errorMessage);
+        }
+
+        // Parse data.
+        try {
+            resultObject = jsonMapper.readValue(data, typeReference);
         } catch (IOException e) {
             String errorMessage = getReadResponseError(
                     "Failed to de-serialize response body",
