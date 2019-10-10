@@ -22,10 +22,12 @@ public class AndroidVisualLocatorsTest {
     public static void main(String[] args) throws Exception {
 
         DesiredCapabilities capabilities = new DesiredCapabilities();
+        // IMPORTANT: This assumes an emulator running locally. Make sure the settings match the device you're running.
         capabilities.setCapability("platformName", "Android");
         capabilities.setCapability("deviceName", "Google Nexus 6");
         capabilities.setCapability("platformVersion", "7.1.1");
-        capabilities.setCapability("app", "/Users/alexanderkachechka/Downloads/app-android.apk");
+
+        capabilities.setCapability("app", "https://applitools.bintray.com/Examples/app-android.apk");
         capabilities.setCapability("automationName", "UiAutomator2");
         capabilities.setCapability("newCommandTimeout", 300);
 
@@ -34,7 +36,6 @@ public class AndroidVisualLocatorsTest {
         driver.manage().timeouts().implicitlyWait(10_000, TimeUnit.MILLISECONDS);
 
         Eyes eyes = new Eyes();
-        eyes.setServerUrl("https://eyesfabric4eyes.applitools.com");
 
         eyes.setLogHandler(new StdoutLogHandler(true));
         eyes.setForceFullPageScreenshot(false);
