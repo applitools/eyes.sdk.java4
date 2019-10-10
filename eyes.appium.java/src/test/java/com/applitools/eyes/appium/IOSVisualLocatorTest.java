@@ -34,7 +34,6 @@ public class IOSVisualLocatorTest {
 
         Eyes eyes = new Eyes();
         eyes.setServerUrl("https://eyesfabric4eyes.applitools.com");
-        eyes.setApiKey("RjKIGSkTH106C4fFUfD5NeJFV105jsEeESyapMZYUTLrYGE110");
 
         LogHandler logHandler = new StdoutLogHandler(true);
         eyes.setLogHandler(logHandler);
