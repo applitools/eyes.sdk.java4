@@ -2,6 +2,8 @@ package com.applitools.eyes;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Defines the interface which should be implemented by a ServerConnector.
@@ -81,4 +83,8 @@ public interface IServerConnector {
 
 
     String postDomSnapshot(String domJson);
+
+    String postViewportImage(String base64Image);
+
+    Map<String, List<Region>> postLocators(VisualLocatorsData visualLocatorsData);
 }

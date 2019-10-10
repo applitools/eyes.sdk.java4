@@ -15,6 +15,7 @@ import com.applitools.eyes.exceptions.DiffsFoundException;
 import com.applitools.eyes.exceptions.NewTestException;
 import com.applitools.eyes.exceptions.TestFailedException;
 import com.applitools.eyes.fluent.*;
+import com.applitools.eyes.locators.IVisualLocatorProvider;
 import com.applitools.eyes.positioning.*;
 import com.applitools.eyes.scaling.FixedScaleProvider;
 import com.applitools.eyes.scaling.NullScaleProvider;
@@ -28,10 +29,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * Applitools Eyes Base for Java API .
@@ -84,6 +82,8 @@ public abstract class EyesBase {
     private int validationId;
     private boolean isSendDom;
     protected IDomCaptureListener domCaptureListener;
+
+    protected IVisualLocatorProvider visualLocatorProvider;
 
     public EyesBase() {
 
@@ -1381,6 +1381,8 @@ public abstract class EyesBase {
 
             initProviders();
 
+            initVisualLocatorProvider();
+
             this.isViewportSizeSet = false;
 
             sessionEventHandlers.initStarted();
@@ -1758,6 +1760,12 @@ public abstract class EyesBase {
         } catch (Exception e) {
             GeneralUtils.logExceptionStackTrace(e);
         }
+
+        try {
+            visualLocatorProvider.tryPostScreenshotForLocators();
+        } catch (Exception e) {
+            GeneralUtils.logExceptionStackTrace(e);
+        }
         AppOutputWithScreenshot result = new AppOutputWithScreenshot(new AppOutput(title, compressResult, domJsonUrl), screenshot);
         logger.verbose("Done!");
         return result;
@@ -1825,4 +1833,6 @@ public abstract class EyesBase {
     public void setSendDom(boolean isSendDom) {
         this.isSendDom = isSendDom;
     }
+
+    protected void initVisualLocatorProvider() {}
 }
