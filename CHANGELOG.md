@@ -1,3 +1,7 @@
+## [4.2.0] - 2019-10-04
+### Added 
+- Added 'Visal Locators' API.
+
 ## [4.1.1] - 2019-10-05
 ### Fixed
 - Renamed `EyesAppiumTarget` to `Target`, imported from `com.applitools.eyes.appium`
