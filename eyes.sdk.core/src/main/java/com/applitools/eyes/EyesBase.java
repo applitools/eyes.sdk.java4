@@ -34,7 +34,7 @@ import java.util.*;
 /**
  * Applitools Eyes Base for Java API .
  */
-public abstract class EyesBase {
+public abstract class EyesBase implements IEyesBase {
 
     private static final int DEFAULT_MATCH_TIMEOUT = 2000; // Milliseconds
     protected static final int USE_DEFAULT_TIMEOUT = -1;

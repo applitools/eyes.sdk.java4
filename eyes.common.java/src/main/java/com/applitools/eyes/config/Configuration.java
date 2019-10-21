@@ -1,5 +1,6 @@
 package com.applitools.eyes.config;
 
+import com.applitools.eyes.AccessibilityLevel;
 import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.RectangleSize;
 import com.applitools.eyes.SessionType;
@@ -18,6 +19,7 @@ public class Configuration {
     private String testName;
     private RectangleSize viewportSize;
     private SessionType sessionType;
+    private AccessibilityLevel accessibilityValidation = AccessibilityLevel.None;
 
     public void setBatch(BatchInfo batch) {
         this.batch = batch;
@@ -113,5 +115,13 @@ public class Configuration {
 
     public void setSessionType(SessionType sessionType) {
         this.sessionType = sessionType;
+    }
+
+    public AccessibilityLevel getAccessibilityValidation() {
+        return accessibilityValidation;
+    }
+
+    public void setAccessibilityValidation(AccessibilityLevel accessibilityValidation) {
+        this.accessibilityValidation = accessibilityValidation;
     }
 }

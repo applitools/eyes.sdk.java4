@@ -1,5 +1,6 @@
 package com.applitools.eyes.selenium.fluent;
 
+import com.applitools.eyes.AccessibilityRegionType;
 import com.applitools.eyes.MatchLevel;
 import com.applitools.eyes.Region;
 import com.applitools.eyes.fluent.CheckSettings;
@@ -405,5 +406,26 @@ public class SeleniumCheckSettings extends CheckSettings implements ISeleniumChe
     @Override
     public By getScrollRootSelector() {
         return scrollRootSelector;
+    }
+
+    public SeleniumCheckSettings accessibility(By regionSelector, AccessibilityRegionType regionType) {
+        SeleniumCheckSettings clone = clone();
+        clone.accessibility_(new AccessibilityRegionBySelector(regionSelector, regionType));
+        return clone;
+    }
+
+    public SeleniumCheckSettings accessibility(WebElement element, AccessibilityRegionType regionType) {
+        SeleniumCheckSettings clone = clone();
+        clone.accessibility(new AccessibilityRegionByElement(element, regionType));
+        return clone;
+    }
+
+    public SeleniumCheckSettings accessibility(AccessibilityRegionType regionType, WebElement[] elementsToIgnore) {
+        SeleniumCheckSettings clone = clone();
+        for (WebElement element : elementsToIgnore)
+        {
+            clone.accessibility(new AccessibilityRegionByElement(element, regionType));
+        }
+        return clone;
     }
 }

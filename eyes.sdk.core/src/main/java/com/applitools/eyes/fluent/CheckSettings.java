@@ -1,7 +1,6 @@
 package com.applitools.eyes.fluent;
 
-import com.applitools.eyes.MatchLevel;
-import com.applitools.eyes.Region;
+import com.applitools.eyes.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +21,7 @@ public class CheckSettings implements ICheckSettings, ICheckSettingsInternal {
     private List<GetFloatingRegion> floatingRegions = new ArrayList<>();
     private int timeout = -1;
     private String name;
+    protected List<IGetAccessibilityRegion> accessibilityRegions = new ArrayList<>();
 
     protected CheckSettings() { }
 
@@ -318,6 +318,13 @@ public class CheckSettings implements ICheckSettings, ICheckSettingsInternal {
     }
 
     @Override
+    public ICheckSettings accessibility(Region region, AccessibilityRegionType regionType) {
+        CheckSettings clone = clone();
+        clone.accessibility_(region, regionType);
+        return clone;
+    }
+
+    @Override
     public Region getTargetRegion() {
         return this.targetRegion;
     }
@@ -375,8 +382,25 @@ public class CheckSettings implements ICheckSettings, ICheckSettingsInternal {
         return this.name;
     }
 
+    @Override
+    public IGetAccessibilityRegion[] getAccessibilityRegions() {
+        return this.accessibilityRegions.toArray(new IGetAccessibilityRegion[0]);
+    }
+
     protected void updateTargetRegion(Region region) {
         this.targetRegion = region;
+    }
+
+    protected void accessibility_(IGetAccessibilityRegion accessibilityRegionProvider) {
+        this.accessibilityRegions.add(accessibilityRegionProvider);
+    }
+
+    protected void accessibility_(Region rect, AccessibilityRegionType regionType) {
+        accessibility_(new AccessibilityRegionByRectangle(rect, regionType));
+    }
+
+    protected void accessibility(IGetAccessibilityRegion accessibilityRegionProvider) {
+        accessibilityRegions.add(accessibilityRegionProvider);
     }
 
     protected void populateClone(CheckSettings clone) {
@@ -392,5 +416,6 @@ public class CheckSettings implements ICheckSettings, ICheckSettingsInternal {
         clone.layoutRegions.addAll(this.layoutRegions);
         clone.strictRegions.addAll(this.strictRegions);
         clone.floatingRegions.addAll(this.floatingRegions);
+        clone.accessibilityRegions = this.accessibilityRegions;
     }
 }

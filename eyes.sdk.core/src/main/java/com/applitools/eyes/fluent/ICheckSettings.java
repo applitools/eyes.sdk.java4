@@ -1,5 +1,6 @@
 package com.applitools.eyes.fluent;
 
+import com.applitools.eyes.AccessibilityRegionType;
 import com.applitools.eyes.MatchLevel;
 import com.applitools.eyes.Region;
 
@@ -156,4 +157,6 @@ public interface ICheckSettings {
      * @return An updated clone of this settings object.
      */
     ICheckSettings withName(String name);
+
+    ICheckSettings accessibility(Region region, AccessibilityRegionType regionType);
 }
