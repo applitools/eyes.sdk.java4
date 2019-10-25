@@ -32,14 +32,16 @@ public class AndroidVisualLocatorProvider extends BaseVisualLocatorProvider {
         Map<String, List<Region>> result = new HashMap<>();
         for (String key : map.keySet()) {
             List<Region> regions = new ArrayList<>();
-            for (Region region : map.get(key)) {
-                region.setLeft((int) (region.getLeft() * getDevicePixelRatio()));
-                region.setTop((int) (region.getTop() * getDevicePixelRatio()));
-                region.setHeight((int) (region.getHeight() * getDevicePixelRatio()));
-                region.setWidth((int) (region.getWidth() * getDevicePixelRatio()));
-                regions.add(region);
+            if (map.get(key) != null) {
+                for (Region region : map.get(key)) {
+                    region.setLeft((int) (region.getLeft() * getDevicePixelRatio()));
+                    region.setTop((int) (region.getTop() * getDevicePixelRatio()));
+                    region.setHeight((int) (region.getHeight() * getDevicePixelRatio()));
+                    region.setWidth((int) (region.getWidth() * getDevicePixelRatio()));
+                    regions.add(region);
+                }
+                result.put(key, regions);
             }
-            result.put(key, regions);
         }
         return result;
     }
