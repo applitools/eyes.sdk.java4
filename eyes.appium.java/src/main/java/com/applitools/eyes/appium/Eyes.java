@@ -142,6 +142,9 @@ public class Eyes extends com.applitools.eyes.selenium.Eyes {
                     logger.verbose("Setting OS: " + os);
                     appEnv.setOs(os);
                 }
+                Object deviceNameCapability = underlyingDriver.getCapabilities().getCapability("deviceName");
+                String deviceName = deviceNameCapability != null ? deviceNameCapability.toString() : "Unknown";
+                appEnv.setDeviceInfo(deviceName);
             } else {
                 logger.log("No mobile OS detected.");
             }
