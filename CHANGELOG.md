@@ -1,3 +1,7 @@
+
+### Fixed 
+- Send device name when session created
+
 ## [4.2.0] - 2019-10-04
 ### Added 
 - Added 'Visal Locators' API.
