@@ -215,6 +215,7 @@ public class MatchWindowTask {
 
             collectSimpleRegions(checkSettingsInternal, imageMatchSettings, screenshot);
             collectFloatingRegions(checkSettingsInternal, imageMatchSettings, screenshot);
+            collectAccessibilityRegions(checkSettingsInternal, imageMatchSettings, eyes, screenshot);
         }
         return imageMatchSettings;
     }
@@ -307,6 +308,17 @@ public class MatchWindowTask {
 
     public Region getLastScreenshotBounds() {
         return lastScreenshotBounds;
+    }
+
+    private static void collectAccessibilityRegions(ICheckSettingsInternal checkSettingsInternal,
+                                                    ImageMatchSettings imageMatchSettings, EyesBase eyes,
+                                                    EyesScreenshot screenshot) {
+        List<AccessibilityRegionByRectangle> accessibilityRegions = new ArrayList<>();
+        for (IGetAccessibilityRegion regionProvider : checkSettingsInternal.getAccessibilityRegions()) {
+            accessibilityRegions.addAll(regionProvider.getRegions(eyes, screenshot));
+        }
+        imageMatchSettings.setAccessibility(accessibilityRegions.toArray(new AccessibilityRegionByRectangle[0]));
+
     }
 
 }

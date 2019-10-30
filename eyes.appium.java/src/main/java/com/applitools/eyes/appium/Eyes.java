@@ -161,6 +161,9 @@ public class Eyes extends com.applitools.eyes.selenium.Eyes {
     private void updateCutElement(EyesAppiumCheckSettings checkSettings) {
         cutElementType = checkSettings.getCutElementType();
         try {
+            if (checkSettings.getCutElementSelector() == null) {
+                return;
+            }
             cutElement = getDriver().findElement(checkSettings.getCutElementSelector());
         } catch (NoSuchElementException ignored) {
             logger.verbose("Element to cut is not found with selector: " + checkSettings.getCutElementSelector());

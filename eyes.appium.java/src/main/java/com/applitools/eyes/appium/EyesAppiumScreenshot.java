@@ -50,4 +50,9 @@ public class EyesAppiumScreenshot extends EyesWebDriverScreenshot {
     public EyesWebDriverScreenshot getSubScreenshotForRegion(Region region, boolean throwIfClipped) {
         return super.getSubScreenshotForRegion(region, throwIfClipped);
     }
+
+    @Override
+    public Location convertLocation(Location location, CoordinatesType from, CoordinatesType to) {
+        return location;
+    }
 }

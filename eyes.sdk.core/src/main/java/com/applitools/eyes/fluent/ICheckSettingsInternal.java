@@ -1,5 +1,6 @@
 package com.applitools.eyes.fluent;
 
+import com.applitools.eyes.IGetAccessibilityRegion;
 import com.applitools.eyes.MatchLevel;
 import com.applitools.eyes.Region;
 
@@ -15,4 +16,5 @@ public interface ICheckSettingsInternal {
     GetFloatingRegion[] getFloatingRegions();
     Boolean getIgnoreCaret();
     String getName();
+    IGetAccessibilityRegion[] getAccessibilityRegions();
 }
