@@ -183,8 +183,8 @@ public class ImageMatchSettings {
         this.ignoreCaret = ignoreCaret;
     }
 
-    public void setAccessibility(AccessibilityRegionByRectangle[] accessibilityValidation) {
-        this.accessibility = accessibilityValidation;
+    public void setAccessibility(AccessibilityRegionByRectangle[] accessibilityRegions) {
+        this.accessibility = accessibilityRegions;
     }
 
     public AccessibilityLevel getAccessibilityLevel() {

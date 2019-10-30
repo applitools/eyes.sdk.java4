@@ -174,7 +174,7 @@ public class ImageMatchSettings {
     }
 
     @JsonProperty("accessibility")
-    public void setAccessibility(AccessibilityRegionByRectangle[] accessibilityValidation) {
-        this.accessibility = accessibilityValidation;
+    public void setAccessibility(AccessibilityRegionByRectangle[] accessibilityRegions) {
+        this.accessibility = accessibilityRegions;
     }
 }

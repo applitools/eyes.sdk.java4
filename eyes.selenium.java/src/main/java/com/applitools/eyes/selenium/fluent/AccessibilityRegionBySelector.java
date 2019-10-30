@@ -43,20 +43,4 @@ public class AccessibilityRegionBySelector implements IGetAccessibilityRegion, I
         return elements;
 
     }
-
-
-//
-//    public IList<AccessibilityRegionByRectangle> GetRegions(EyesBase eyesBase, EyesScreenshot screenshot)
-//    {
-//        ReadOnlyCollection<IWebElement> elements = ((SeleniumEyes)eyesBase).GetDriver().FindElements(selector_);
-//        IList<AccessibilityRegionByRectangle> retVal = new List<AccessibilityRegionByRectangle>();
-//        foreach (IWebElement element in elements)
-//        {
-//            Point p = element.Location;
-//            Point pTag = screenshot.ConvertLocation(p, CoordinatesTypeEnum.CONTEXT_RELATIVE, CoordinatesTypeEnum.SCREENSHOT_AS_IS);
-//            retVal.Add(new AccessibilityRegionByRectangle(new Rectangle(pTag, element.Size), regionType_));
-//        }
-//        return retVal;
-//    }
-//
 }
