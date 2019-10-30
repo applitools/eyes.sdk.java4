@@ -1,3 +1,8 @@
+
+### Fixed 
+- Send device name when session created
+- Catch NullPointerException if there no visual locators for provided name
+
 ## [4.2.0] - 2019-10-04
 ### Added 
 - Added 'Visal Locators' API.

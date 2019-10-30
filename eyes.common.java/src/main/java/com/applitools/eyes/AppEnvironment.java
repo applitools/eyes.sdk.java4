@@ -8,6 +8,7 @@ public class AppEnvironment {
     private String os;
     private String hostingApp;
     private RectangleSize displaySize;
+    private String deviceInfo;
 
     /**
      * Creates a new AppEnvironment instance.
@@ -103,10 +104,19 @@ public class AppEnvironment {
         this.displaySize = size;
     }
 
+    public String getDeviceInfo() {
+        return deviceInfo;
+    }
+
+    public void setDeviceInfo(String deviceInfo) {
+        this.deviceInfo = deviceInfo;
+    }
+
     @Override
     public String toString() {
         return "[os = " + (os == null ? "?" : "'" + os + "'") + " hostingApp = "
                 + (hostingApp == null ? "?" : "'" + hostingApp + "'")
+                + " deviceInfo = " + (deviceInfo == null ? "?" : "'" + deviceInfo + "'")
                 + " displaySize = " + displaySize + "]";
     }
 }
