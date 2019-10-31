@@ -73,6 +73,9 @@ public class AndroidVisualLocatorsTest {
                 eyes.checkWindow("ListView screen");
             }
 
+            locators = eyes.locate(VisualLocator.name("header_locator"));
+            System.out.println("Received locators" + locators);
+
             eyes.close();
         } finally {
             driver.quit();

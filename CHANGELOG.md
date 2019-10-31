@@ -1,4 +1,7 @@
 
+### Fixed
+- Send viewport screenshot on each locators call
+
 ### Fixed 
 - Send device name when session created
 - Catch NullPointerException if there no visual locators for provided name

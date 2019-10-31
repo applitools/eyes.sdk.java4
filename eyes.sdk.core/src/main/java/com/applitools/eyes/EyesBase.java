@@ -1761,11 +1761,6 @@ public abstract class EyesBase implements IEyesBase {
             GeneralUtils.logExceptionStackTrace(e);
         }
 
-        try {
-            visualLocatorProvider.tryPostScreenshotForLocators();
-        } catch (Exception e) {
-            GeneralUtils.logExceptionStackTrace(e);
-        }
         AppOutputWithScreenshot result = new AppOutputWithScreenshot(new AppOutput(title, compressResult, domJsonUrl), screenshot);
         logger.verbose("Done!");
         return result;
