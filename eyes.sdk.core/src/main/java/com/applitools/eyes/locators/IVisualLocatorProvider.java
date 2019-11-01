@@ -12,7 +12,5 @@ public interface IVisualLocatorProvider {
 
     Map<String, List<Region>> adjustVisualLocators(Map<String, List<Region>> map);
 
-    void tryPostScreenshotForLocators();
-
     Map<String, List<Region>> getLocators(IVisualLocatorSettings visualLocatorSettings);
 }

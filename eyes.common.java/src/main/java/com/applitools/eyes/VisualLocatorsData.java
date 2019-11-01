@@ -53,4 +53,14 @@ public class VisualLocatorsData {
     public void setLocatorNames(List<String> locatorNames) {
         this.locatorNames = locatorNames;
     }
+
+    @Override
+    public String toString() {
+        return "VisualLocatorsData{" +
+                "appName='" + appName + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", firstOnly=" + firstOnly +
+                ", locatorNames=" + locatorNames +
+                '}';
+    }
 }
