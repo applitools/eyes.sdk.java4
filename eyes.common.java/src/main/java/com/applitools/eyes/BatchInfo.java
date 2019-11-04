@@ -20,6 +20,7 @@ public class BatchInfo {
     private String id;
     private final String name;
     private final String startedAt;
+    private String batchSequenceName;
 
     /**
      * Creates a new BatchInfo instance.
@@ -29,10 +30,11 @@ public class BatchInfo {
      */
     public BatchInfo(String name, Calendar startedAt) {
         ArgumentGuard.notNull(startedAt, "startedAt");
-        String envVarBatchId = System.getenv("APPLITOOLS_BATCH_ID");
+        String envVarBatchId = GeneralUtils.getEnvString(GeneralUtils.APPLITOOLS_BATCH_ID);
         this.id = envVarBatchId != null ? envVarBatchId : UUID.randomUUID().toString();
-        this.name = name != null ? name : System.getenv("APPLITOOLS_BATCH_NAME");
+        this.name = name != null ? name : GeneralUtils.getEnvString(GeneralUtils.APPLITOOLS_BATCH_NAME);
         this.startedAt = GeneralUtils.toISO8601DateTime(startedAt);
+        this.batchSequenceName = GeneralUtils.getEnvString(GeneralUtils.APPLITOOLS_BATCH_SEQUENCE);
     }
 
     /**
@@ -92,6 +94,14 @@ public class BatchInfo {
         } catch (ParseException ex) {
             throw new EyesException("Failed to parse batch start time", ex);
         }
+    }
+
+    public String getSequenceName() {
+        return batchSequenceName;
+    }
+
+    public void setSequenceName(String sequenceName) {
+        this.batchSequenceName = sequenceName;
     }
 
     @Override

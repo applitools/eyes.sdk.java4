@@ -20,6 +20,17 @@ import java.util.zip.GZIPOutputStream;
  */
 public class GeneralUtils {
 
+    public static final String APPLITOOLS_SERVER_URL = "APPLITOOLS_SERVER_URL";
+    public static final String APPLITOOLS_API_KEY = "APPLITOOLS_API_KEY";
+    public static final String APPLITOOLS_BATCH_ID = "APPLITOOLS_BATCH_ID";
+    public static final String APPLITOOLS_BATCH_NAME = "APPLITOOLS_BATCH_NAME";
+    public static final String APPLITOOLS_BATCH_SEQUENCE = "APPLITOOLS_BATCH_SEQUENCE";
+    public static final String APPLITOOLS_BATCH_NOTIFY = "APPLITOOLS_BATCH_NOTIFY";
+    public static final String APPLITOOLS_BRANCH = "APPLITOOLS_BRANCH";
+    public static final String APPLITOOLS_PARENT_BRANCH = "APPLITOOLS_PARENT_BRANCH";
+    public static final String APPLITOOLS_BASELINE_BRANCH = "APPLITOOLS_BASELINE_BRANCH";
+    public static final String APPLITOOLS_DONT_CLOSE_BATCHES = "APPLITOOLS_DONT_CLOSE_BATCHES";
+
     @SuppressWarnings("SpellCheckingInspection")
     private static final String DATE_FORMAT_ISO8601_FOR_OUTPUT =
             "yyyy-MM-dd'T'HH:mm:ss'Z'";
@@ -233,8 +244,9 @@ public class GeneralUtils {
     }
 
     public static URI getDefaultServerUrl() {
+        String serverUrl = getEnvString(APPLITOOLS_SERVER_URL);
         try {
-            return new URI("https://eyesapi.applitools.com");
+            return new URI(serverUrl != null ? serverUrl : "https://eyesapi.applitools.com");
         } catch (URISyntaxException ex) {
             throw new EyesException(ex.getMessage(), ex);
         }
@@ -256,5 +268,9 @@ public class GeneralUtils {
             e.printStackTrace();
         }
         return resultStream.toByteArray();
+    }
+
+    public static String getEnvString(String variableName) {
+        return System.getenv(variableName) == null ? System.getenv("bamboo_" + variableName) : System.getenv(variableName);
     }
 }
