@@ -24,6 +24,7 @@ public class AndroidScrollPositionProvider extends AppiumScrollPositionProvider 
 
     private Location curScrollPos;
     private Location scrollableViewLoc;
+    private RectangleSize entireSize = null;
 
     public AndroidScrollPositionProvider(Logger logger, EyesAppiumDriver driver) {
         super(logger, driver);
@@ -110,6 +111,8 @@ public class AndroidScrollPositionProvider extends AppiumScrollPositionProvider 
                 }
                 lastScrollPos = curScrollPos;
             }
+            scroll(false); // One more scroll to make sure that first child is fully visible
+            entireSize = null;
             // FIXME: 12/12/2018 remove this
 //            return new Location(0,0 );
         }
@@ -245,6 +248,9 @@ public class AndroidScrollPositionProvider extends AppiumScrollPositionProvider 
 
     @Override
     public RectangleSize getEntireSize() {
+        if (curScrollPos != null && curScrollPos.getY() != 0 && entireSize != null) {
+            return entireSize;
+        }
         int windowHeight = driver.manage().window().getSize().getHeight() - getStatusBarHeight();
         logger.verbose("window height: " + windowHeight);
 
@@ -287,11 +293,11 @@ public class AndroidScrollPositionProvider extends AppiumScrollPositionProvider 
         this.contentSize.scrollableOffset = scrollableHeight == 0 ? contentSize.scrollableOffset : scrollableHeight - contentSize.height;
         int scrollContentHeight = this.contentSize.getScrollContentHeight();
         int outsideScrollviewHeight = windowHeight - contentSize.height;
-        RectangleSize result = new RectangleSize(contentSize.width,
+        entireSize = new RectangleSize(contentSize.width,
                 scrollContentHeight + outsideScrollviewHeight + verticalScrollGap);
-        logger.verbose("AppiumScrollPositionProvider - Entire size: " + result + " (Accounting for " +
+        logger.verbose("AppiumScrollPositionProvider - Entire size: " + entireSize + " (Accounting for " +
                 "a vertical scroll gap of " + verticalScrollGap + ", with a scroll content height of " +
                 scrollContentHeight + ")");
-        return result;
+        return entireSize;
     }
 }
