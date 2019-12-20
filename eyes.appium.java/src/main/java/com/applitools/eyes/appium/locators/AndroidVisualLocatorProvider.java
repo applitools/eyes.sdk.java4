@@ -22,13 +22,6 @@ public class AndroidVisualLocatorProvider extends BaseVisualLocatorProvider {
     }
 
     @Override
-    public BufferedImage getViewPortScreenshot() {
-        String base64Image = driver.getScreenshotAs(OutputType.BASE64);
-        BufferedImage image = ImageUtils.imageFromBase64(base64Image);
-        return ImageUtils.scaleImage(image, 1/getDevicePixelRatio());
-    }
-
-    @Override
     public Map<String, List<Region>> adjustVisualLocators(Map<String, List<Region>> map) {
         logger.verbose("Adjust visual locators size and coordinates according to device pixel ratio = " + getDevicePixelRatio());
         Map<String, List<Region>> result = new HashMap<>();
