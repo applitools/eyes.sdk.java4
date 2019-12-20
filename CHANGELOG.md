@@ -1,6 +1,6 @@
 
 ### Fixed
-- Fullpage screenshot with RecyclerView on Android. [Trello 1416](https://trello.com/c/cpHFs1Zr/1416-eyes-appium-java4-issues-getting-full-screenshots-in-native-app-on-perfecto)
+- Fullpage screenshot with RecyclerView on Android. [Trello 1416](https://trello.com/c/cpHFs1Zr), [Trello 953](https://trello.com/c/3UOEHgCl)
 
 ## [4.2.1] - 2019-11-1
 ### Fixed
