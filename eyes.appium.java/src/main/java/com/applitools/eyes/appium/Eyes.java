@@ -193,7 +193,6 @@ public class Eyes extends com.applitools.eyes.selenium.Eyes {
 
         AppiumFullPageCaptureAlgorithm algo = algoFactory.getAlgorithm();
 
-        Location originalScrollViewPosition = scrollPositionProvider.getScrollableViewLocation();
         BufferedImage fullPageImage = algo
             .getStitchedRegion(Region.EMPTY, getStitchOverlap(), regionPositionCompensation);
 
