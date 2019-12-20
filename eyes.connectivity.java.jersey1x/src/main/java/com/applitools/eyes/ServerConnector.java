@@ -78,7 +78,7 @@ public class ServerConnector extends RestClient
      * @return The currently set API key or {@code null} if no key is set.
      */
     public String getApiKey() {
-        return this.apiKey != null ? this.apiKey : System.getenv("APPLITOOLS_API_KEY");
+        return this.apiKey != null ? this.apiKey : GeneralUtils.getEnvString(GeneralUtils.APPLITOOLS_API_KEY);
     }
 
     /**

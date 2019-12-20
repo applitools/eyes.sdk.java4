@@ -4,13 +4,14 @@ import com.applitools.eyes.AccessibilityLevel;
 import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.RectangleSize;
 import com.applitools.eyes.SessionType;
+import com.applitools.utils.GeneralUtils;
 
 public class Configuration {
 
     private BatchInfo batch;
-    private String branchName = System.getenv("APPLITOOLS_BRANCH");
-    private String parentBranchName = System.getenv("APPLITOOLS_PARENT_BRANCH");
-    private String baselineBranchName = System.getenv("APPLITOOLS_BASELINE_BRANCH");
+    private String branchName = GeneralUtils.getEnvString(GeneralUtils.APPLITOOLS_BRANCH);
+    private String parentBranchName = GeneralUtils.getEnvString(GeneralUtils.APPLITOOLS_PARENT_BRANCH);
+    private String baselineBranchName = GeneralUtils.getEnvString(GeneralUtils.APPLITOOLS_BASELINE_BRANCH);
     private String agentId;
     private String baselineEnvName;
     private String environmentName;
