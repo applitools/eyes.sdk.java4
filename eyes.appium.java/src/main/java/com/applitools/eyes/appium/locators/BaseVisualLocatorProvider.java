@@ -9,7 +9,9 @@ import com.applitools.eyes.locators.IVisualLocatorProvider;
 import com.applitools.eyes.locators.IVisualLocatorSettings;
 import com.applitools.utils.ArgumentGuard;
 import com.applitools.utils.ImageUtils;
+import org.openqa.selenium.OutputType;
 
+import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Map;
 
@@ -27,22 +29,38 @@ public abstract class BaseVisualLocatorProvider implements IVisualLocatorProvide
         this.devicePixelRatio = driver.getEyes().getDevicePixelRatio();
     }
 
+    private BufferedImage getViewPortScreenshot() {
+        logger.verbose("Getting screenshot as base64...");
+        String base64Image = driver.getScreenshotAs(OutputType.BASE64);
+
+        logger.verbose("Done getting base64! Creating BufferedImage...");
+        BufferedImage image = ImageUtils.imageFromBase64(base64Image);
+
+        logger.verbose("Scale image with the scale ratio - " + 1/getDevicePixelRatio());
+        return ImageUtils.scaleImage(image, 1/getDevicePixelRatio());
+    }
+
     @Override
     public Map<String, List<Region>> getLocators(IVisualLocatorSettings visualLocatorSettings) {
         ArgumentGuard.notNull(visualLocatorSettings, "visualLocatorSettings");
 
         logger.verbose("Get locators with given names: " + visualLocatorSettings.getNames());
 
-        String base64Image = ImageUtils.base64FromImage(getViewPortScreenshot());
+        logger.verbose("Requested viewport screenshot for visual locators...");
+        BufferedImage viewPortImage = getViewPortScreenshot();
+
+        logger.verbose("Convert screenshot from BufferedImage to base64...");
+        String base64Image = ImageUtils.base64FromImage(viewPortImage);
+
+        logger.verbose("Post visual locators screenshot...");
         String viewportScreenshotUrl = serverConnector.postViewportImage(base64Image);
 
         VisualLocatorsData data = new VisualLocatorsData(driver.getEyes().getAppName(), viewportScreenshotUrl, visualLocatorSettings.isFirstOnly(), visualLocatorSettings.getNames());
 
+        logger.verbose("Post visual locators: " + data.toString());
         Map<String, List<Region>> result = serverConnector.postLocators(data);
 
-        logger.verbose("Done get locators");
-        logger.verbose(result.toString());
-
+        logger.verbose("Done! Response: " + result.toString());
         return adjustVisualLocators(result);
     }
 

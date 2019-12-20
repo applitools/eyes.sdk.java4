@@ -4,10 +4,7 @@ import com.applitools.eyes.IServerConnector;
 import com.applitools.eyes.Logger;
 import com.applitools.eyes.Region;
 import com.applitools.eyes.appium.EyesAppiumDriver;
-import com.applitools.utils.ImageUtils;
-import org.openqa.selenium.OutputType;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,13 +14,6 @@ public class AndroidVisualLocatorProvider extends BaseVisualLocatorProvider {
 
     AndroidVisualLocatorProvider(EyesAppiumDriver driver, Logger logger, IServerConnector serverConnector) {
         super(driver, serverConnector, logger);
-    }
-
-    @Override
-    public BufferedImage getViewPortScreenshot() {
-        String base64Image = driver.getScreenshotAs(OutputType.BASE64);
-        BufferedImage image = ImageUtils.imageFromBase64(base64Image);
-        return ImageUtils.scaleImage(image, 1/getDevicePixelRatio());
     }
 
     @Override
