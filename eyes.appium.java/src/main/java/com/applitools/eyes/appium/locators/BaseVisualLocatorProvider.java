@@ -51,7 +51,7 @@ public abstract class BaseVisualLocatorProvider implements IVisualLocatorProvide
 
         logger.verbose("Requested viewport screenshot for visual locators...");
         BufferedImage viewPortScreenshot = getViewPortScreenshot();
-        debugScreenshotsProvider.save(viewPortScreenshot, "visual_locators_screenshot");
+        debugScreenshotsProvider.save(viewPortScreenshot, "visual_locators_" + String.join("_", visualLocatorSettings.getNames()));
 
         logger.verbose("Convert screenshot from BufferedImage to base64...");
         String base64Image = ImageUtils.base64FromImage(viewPortScreenshot);
