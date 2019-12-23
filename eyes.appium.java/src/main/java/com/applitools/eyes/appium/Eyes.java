@@ -281,7 +281,7 @@ public class Eyes extends com.applitools.eyes.selenium.Eyes {
 
     @Override
     protected void initVisualLocatorProvider() {
-        VisualLocatorProviderFactory factory = new VisualLocatorProviderFactory(driver, logger, serverConnector);
+        VisualLocatorProviderFactory factory = new VisualLocatorProviderFactory(driver, logger, serverConnector, debugScreenshotsProvider);
         visualLocatorProvider = factory.getProvider();
     }
 
