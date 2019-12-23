@@ -15,3 +15,6 @@ dependency-reduced-pom.xml
 
 # Cross-SDK Features description files
 src/test/java/features
+
+#Jenv
+/.java-version
