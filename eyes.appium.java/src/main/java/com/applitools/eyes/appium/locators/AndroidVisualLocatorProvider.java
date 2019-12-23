@@ -8,7 +8,6 @@ import com.applitools.eyes.debug.DebugScreenshotsProvider;
 import com.applitools.utils.ImageUtils;
 import org.openqa.selenium.OutputType;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
