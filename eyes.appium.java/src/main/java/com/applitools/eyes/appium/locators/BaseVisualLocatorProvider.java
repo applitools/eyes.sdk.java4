@@ -59,6 +59,8 @@ public abstract class BaseVisualLocatorProvider implements IVisualLocatorProvide
         logger.verbose("Post visual locators screenshot...");
         String viewportScreenshotUrl = serverConnector.postViewportImage(base64Image);
 
+        logger.verbose("Screenshot URL: " + viewportScreenshotUrl);
+
         VisualLocatorsData data = new VisualLocatorsData(driver.getEyes().getAppName(), viewportScreenshotUrl, visualLocatorSettings.isFirstOnly(), visualLocatorSettings.getNames());
 
         logger.verbose("Post visual locators: " + data.toString());
