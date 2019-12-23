@@ -8,7 +8,6 @@ import com.applitools.eyes.debug.DebugScreenshotsProvider;
 import com.applitools.utils.ImageUtils;
 import org.openqa.selenium.OutputType;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,13 +18,6 @@ public class AndroidVisualLocatorProvider extends BaseVisualLocatorProvider {
     AndroidVisualLocatorProvider(EyesAppiumDriver driver, Logger logger, IServerConnector serverConnector,
                                  DebugScreenshotsProvider debugScreenshotsProvider) {
         super(driver, serverConnector, logger, debugScreenshotsProvider);
-    }
-
-    @Override
-    public BufferedImage getViewPortScreenshot() {
-        String base64Image = driver.getScreenshotAs(OutputType.BASE64);
-        BufferedImage image = ImageUtils.imageFromBase64(base64Image);
-        return ImageUtils.scaleImage(image, 1/getDevicePixelRatio());
     }
 
     @Override
