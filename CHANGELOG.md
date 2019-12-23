@@ -1,6 +1,10 @@
 
 ### Fixed
 - Fullpage screenshot with RecyclerView on Android. [Trello 1416](https://trello.com/c/cpHFs1Zr), [Trello 953](https://trello.com/c/3UOEHgCl)
+### Added
+- Debug screenshots for visual locators. [Trello 1429](https://trello.com/c/CUebKSdY)
+- Additional logs into BaseVisualLocatorProvider. [Trello 1401](https://trello.com/c/6MyKH9iR)
+- Locator IDs into debug screenshot file name. [Trello 1438](https://trello.com/c/9lxK5XZv)
 
 ## [4.2.1] - 2019-11-1
 ### Fixed
