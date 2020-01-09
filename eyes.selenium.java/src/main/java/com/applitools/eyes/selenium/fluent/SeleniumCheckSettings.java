@@ -17,6 +17,7 @@ public class SeleniumCheckSettings extends CheckSettings implements ISeleniumChe
     protected List<FrameLocator> frameChain = new ArrayList<>();
     protected WebElement scrollRootElement;
     protected By scrollRootSelector;
+    protected Boolean statusBarExists;
 
     protected SeleniumCheckSettings() {
     }
@@ -427,5 +428,21 @@ public class SeleniumCheckSettings extends CheckSettings implements ISeleniumChe
             clone.accessibility(new AccessibilityRegionByElement(element, regionType));
         }
         return clone;
+    }
+
+    public SeleniumCheckSettings statusBarExists() {
+        SeleniumCheckSettings clone = this.clone();
+        clone.statusBarExists = true;
+        return clone;
+    }
+
+    public SeleniumCheckSettings statusBarExists(boolean statusBarExists) {
+        SeleniumCheckSettings clone = this.clone();
+        clone.statusBarExists = statusBarExists;
+        return clone;
+    }
+
+    public Boolean getStatusBarExists() {
+        return statusBarExists;
     }
 }

@@ -2,6 +2,7 @@
 ### Fixed
 - ClassCastException while getting status bar height. [Trello 1478](https://trello.com/c/RuPL3v4v)
 - Setting the batch sequence name on session start. [Trello 1484](https://trello.com/c/eJPrunMV)
+- checkRegion() with selector for iOS and Android [Trello 1419](https://trello.com/c/IIIKosP8)
 ### Added
 - Print visual locator screenshot URL to the logs [Trello 1439](https://trello.com/c/7JAqWkaz)
 

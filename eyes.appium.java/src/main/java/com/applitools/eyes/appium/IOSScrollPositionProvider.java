@@ -2,6 +2,7 @@ package com.applitools.eyes.appium;
 
 import com.applitools.eyes.Location;
 import com.applitools.eyes.Logger;
+import com.applitools.eyes.Region;
 import com.applitools.eyes.positioning.PositionMemento;
 
 import java.io.IOException;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import io.appium.java_client.MobileBy;
+import io.appium.java_client.remote.MobileCapabilityType;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.WebElement;
@@ -129,6 +131,40 @@ public class IOSScrollPositionProvider extends AppiumScrollPositionProvider {
         // Do not need this method
     }
 
+    @Override
+    public Region getElementRegion(WebElement element, boolean shouldStitchContent, Boolean statusBarExists) {
+        double devicePixelRatio = eyesDriver.getDevicePixelRatio();
+        Region region = new Region((int) (element.getLocation().getX() * devicePixelRatio),
+                (int) (element.getLocation().getY() * devicePixelRatio),
+                (int) (element.getSize().getWidth() * devicePixelRatio),
+                (int) (element.getSize().getHeight() * devicePixelRatio));;
+        logger.verbose("Element is instance of " + element.getAttribute("type"));
+        if (shouldStitchContent) {
+            try {
+                ContentSize contentSize = EyesAppiumUtils.getContentSize(driver, element);
+                switch (element.getAttribute("type")) {
+                    case "XCUIElementTypeTable":
+                        List<WebElement> list = element.findElements(MobileBy.xpath("//XCUIElementTypeTable[1]/*"));
+                        WebElement lastElement = list.get(list.size()-1);
+                        contentSize.scrollableOffset = positionCorrectionRegardingStatusBar(lastElement.getLocation().getY(), statusBarExists) + lastElement.getSize().getHeight();
+                        break;
+                    case "XCUIElementTypeScrollView":
+                        list = element.findElements(MobileBy.xpath("//XCUIElementTypeScrollView[1]/*"));
+                        WebElement firstElement = list.get(0);
+                        contentSize.scrollableOffset = positionCorrectionRegardingStatusBar(firstElement.getLocation().getY(), statusBarExists) + firstElement.getSize().getHeight();
+                        break;
+                }
+                region = new Region((int) (contentSize.left * devicePixelRatio),
+                        (int) (contentSize.top * devicePixelRatio),
+                        (int) (contentSize.width * devicePixelRatio),
+                        (int) (contentSize.getScrollContentHeight() * devicePixelRatio));
+            } catch (IOException e) {
+                logger.verbose("Could not get element content size.");
+            }
+        }
+        return region;
+    }
+
     @Nullable
     @Override
     protected ContentSize getCachedContentSize() {
@@ -140,6 +176,16 @@ public class IOSScrollPositionProvider extends AppiumScrollPositionProvider {
                     List<WebElement> list = activeScroll.findElements(MobileBy.xpath("//XCUIElementTypeTable[1]/*"));
                     WebElement lastElement = list.get(list.size()-1);
                     contentSize.scrollableOffset = lastElement.getLocation().getY() + lastElement.getSize().getHeight();
+                    logger.verbose("Retrieved contentSize, it is: " + contentSize);
+                } catch (IOException e) {
+                    logger.log("WARNING: could not retrieve content size from active scroll element");
+                }
+            } else if (activeScroll.getAttribute("type").equals("XCUIElementTypeScrollView")) {
+                try {
+                    contentSize = EyesAppiumUtils.getContentSize(driver, activeScroll);
+                    List<WebElement> list = activeScroll.findElements(MobileBy.xpath("//XCUIElementTypeScrollView[1]/*"));
+                    WebElement firstElement = list.get(0);
+                    contentSize.scrollableOffset = firstElement.getLocation().getY() + firstElement.getSize().getHeight();
                     logger.verbose("Retrieved contentSize, it is: " + contentSize);
                 } catch (IOException e) {
                     logger.log("WARNING: could not retrieve content size from active scroll element");
@@ -197,5 +243,92 @@ public class IOSScrollPositionProvider extends AppiumScrollPositionProvider {
             }
         }
         return null;
+    }
+
+    private int positionCorrectionRegardingStatusBar(int position, Boolean statusBarExists) {
+        // Position correction regarding the status bar height
+        if (statusBarExists != null && !statusBarExists) {
+            return position;
+        }
+        Double platformVersion = null;
+        try {
+            platformVersion = Double.valueOf((String) driver.getCapabilities().getCapability(MobileCapabilityType.PLATFORM_VERSION));
+        } catch (NumberFormatException e) {
+            logger.verbose("Could not extract platform version from capabilities.");
+        }
+        // Since iOS 13 we can not get correct status bar height
+        if (platformVersion != null && platformVersion.compareTo(Double.valueOf("13.0")) >= 0) {
+            return position - getDeviceStatusBarHeight(((String) driver.getCapabilities().getCapability(MobileCapabilityType.DEVICE_NAME)).toLowerCase());
+        } else {
+            return position - getStatusBarHeight();
+        }
+    }
+
+    private int getDeviceStatusBarHeight(String deviceName) {
+        int statusBarHeight = 0;
+        int density = 1;
+        switch (deviceName) {
+            case "iphone 6":
+                statusBarHeight = 40;
+                density = 2;
+                break;
+            case "iphone 6s":
+                statusBarHeight = 40;
+                density = 2;
+                break;
+            case "iphone 6 plus":
+                statusBarHeight = 60;
+                density = 3;
+                break;
+            case "iphone 6s plus":
+                statusBarHeight = 60;
+                density = 3;
+                break;
+            case "iphone 7 plus":
+                statusBarHeight = 60;
+                density = 3;
+                break;
+            case "iphone 7":
+                statusBarHeight = 40;
+                density = 2;
+                break;
+            case "iphone 8":
+                statusBarHeight = 40;
+                density = 2;
+                break;
+            case "iphone 8 plus":
+                statusBarHeight = 60;
+                density = 3;
+                break;
+            case "iphone x":
+                statusBarHeight = 132;
+                density = 3;
+                break;
+            case "iphone xr":
+                statusBarHeight = 88;
+                density = 2;
+                break;
+            case "iphone xs":
+                statusBarHeight = 132;
+                density = 3;
+                break;
+            case "iphone xs max":
+                statusBarHeight = 132;
+                density = 3;
+                break;
+            case "iphone 11":
+                statusBarHeight = 88;
+                density = 2;
+                break;
+            case "iphone 11 pro":
+                statusBarHeight = 132;
+                density = 3;
+                break;
+            case "iphone 11 pro max":
+                statusBarHeight = 132;
+                density = 3;
+                break;
+        }
+        return statusBarHeight / density;
     }
 }
