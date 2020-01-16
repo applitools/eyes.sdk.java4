@@ -3,6 +3,7 @@ package com.applitools.eyes;
 import com.applitools.utils.ArgumentGuard;
 import com.applitools.utils.GeneralUtils;
 import com.applitools.utils.Iso8610CalendarSerializer;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.text.ParseException;
@@ -20,6 +21,7 @@ public class BatchInfo {
     private String id;
     private final String name;
     private final String startedAt;
+    @JsonProperty("batchSequenceName")
     private String batchSequenceName;
 
     /**
@@ -96,6 +98,7 @@ public class BatchInfo {
         }
     }
 
+    @JsonProperty("batchSequenceName")
     public String getSequenceName() {
         return batchSequenceName;
     }
