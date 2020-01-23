@@ -1968,7 +1968,7 @@ public class Eyes extends EyesBase {
         return this.checkElement(this.targetElement, name, checkSettings);
     }
 
-    private MatchResult checkElement(WebElement element, String name, ICheckSettings checkSettings) {
+    protected MatchResult checkElement(WebElement element, String name, ICheckSettings checkSettings) {
 
         // Since the element might already have been found using EyesWebDriver.
         final EyesRemoteWebElement eyesElement = (element instanceof EyesRemoteWebElement) ?

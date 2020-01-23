@@ -3,12 +3,15 @@ package com.applitools.eyes.appium;
 import com.applitools.eyes.Location;
 import com.applitools.eyes.Logger;
 import com.applitools.eyes.RectangleSize;
+import com.applitools.eyes.Region;
 import com.applitools.eyes.positioning.PositionMemento;
 import com.applitools.eyes.selenium.positioning.ScrollPositionMemento;
 import io.appium.java_client.MobileBy;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.AndroidDriver;
+
+import java.io.IOException;
 import java.time.Duration;
 
 import io.appium.java_client.android.AndroidElement;
@@ -187,6 +190,52 @@ public class AndroidScrollPositionProvider extends AppiumScrollPositionProvider 
         // because Android scrollbars are visible a bit after touch, we should wait for them to
         // disappear before handing control back to the screenshotter
         try { Thread.sleep(750); } catch (InterruptedException ign) {}
+    }
+
+    @Override
+    public Region getElementRegion(WebElement element, boolean shouldStitchContent, Boolean statusBarExists) {
+        Region region = new Region(element.getLocation().getX(),
+                element.getLocation().getY(),
+                element.getSize().getWidth(),
+                element.getSize().getHeight());
+        if (shouldStitchContent) {
+            try {
+                logger.verbose("Element is instance of " + element.getAttribute("className"));
+                double devicePixelRatio = eyesDriver.getDevicePixelRatio();
+                ContentSize contentSize = EyesAppiumUtils.getContentSize(driver, element);
+                region = new Region(contentSize.left,
+                        contentSize.top,
+                        contentSize.width,
+                        contentSize.getScrollContentHeight());
+                if (element.getAttribute("className").equals("android.support.v7.widget.RecyclerView") ||
+                        element.getAttribute("className").equals("android.widget.ListView") ||
+                        element.getAttribute("className").equals("android.widget.GridView")) {
+                    try {
+                        MobileElement hiddenElement = ((AndroidDriver<AndroidElement>) driver).findElement(MobileBy.AndroidUIAutomator("new UiSelector().descriptionContains(\"EyesAppiumHelper\")"));
+                        if (hiddenElement != null) {
+                            hiddenElement.click();
+
+                            String scrollableContentSize = hiddenElement.getText();
+                            try {
+                                int scrollableHeight = Integer.valueOf(scrollableContentSize);
+                                logger.verbose("Scrollable height received from EyesAppiumHelper = " + scrollableContentSize);
+                                region = new Region((int) (element.getLocation().getX() * devicePixelRatio),
+                                        (int) (element.getLocation().getY() * devicePixelRatio),
+                                        (int) (element.getSize().getWidth() * devicePixelRatio),
+                                        scrollableHeight);
+                            } catch (NumberFormatException nfe) {
+                                logger.verbose("Could not parse scrollable content height");
+                            }
+                        }
+                    } catch (NoSuchElementException | StaleElementReferenceException ignored) {
+                        logger.verbose("Could not get EyesAppiumHelper element.");
+                    }
+                }
+            } catch (IOException e) {
+                logger.verbose("Could not get element content size.");
+            }
+        }
+        return region;
     }
 
     private Location getScrollPosFromScrollData(ContentSize contentSize, LastScrollData scrollData, int supposedScrollAmt, boolean isDown) {

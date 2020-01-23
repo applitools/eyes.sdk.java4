@@ -218,4 +218,6 @@ public abstract class AppiumScrollPositionProvider implements SeleniumScrollingP
     int getStatusBarHeight() {
         return eyesDriver.getStatusBarHeight();
     }
+
+    public abstract Region getElementRegion(WebElement element, boolean shouldStitchContent, Boolean statusBarExists);
 }

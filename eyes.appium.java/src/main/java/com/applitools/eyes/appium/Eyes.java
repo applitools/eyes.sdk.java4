@@ -12,6 +12,7 @@ import com.applitools.eyes.fluent.ICheckSettingsInternal;
 import com.applitools.eyes.locators.IVisualLocatorSettings;
 import com.applitools.eyes.positioning.RegionProvider;
 import com.applitools.eyes.scaling.FixedScaleProviderFactory;
+import com.applitools.eyes.selenium.fluent.SeleniumCheckSettings;
 import com.applitools.utils.ArgumentGuard;
 import com.applitools.utils.ImageUtils;
 import io.appium.java_client.AppiumDriver;
@@ -178,6 +179,16 @@ public class Eyes extends com.applitools.eyes.selenium.Eyes {
         super.check(checkSettings);
     }
 
+    @Override
+    protected MatchResult checkElement(WebElement element, String name, ICheckSettings checkSettings) {
+        return checkWindowBase(new RegionProvider() {
+            @Override
+            public Region getRegion() {
+                return getElementRegion(element, checkSettings);
+            }
+        }, name, false, checkSettings);
+    }
+
     protected EyesAppiumScreenshot getFullPageScreenshot() {
 
         logger.verbose("Full page Appium screenshot requested.");
@@ -290,5 +301,16 @@ public class Eyes extends com.applitools.eyes.selenium.Eyes {
     public Map<String, List<Region>> locate(IVisualLocatorSettings visualLocatorSettings) {
         ArgumentGuard.notNull(visualLocatorSettings, "visualLocatorSettings");
         return visualLocatorProvider.getLocators(visualLocatorSettings);
+    }
+
+    private Region getElementRegion(WebElement element, ICheckSettings checkSettings) {
+        logger.verbose("Get element region...");
+        Boolean statusBarExists = null;
+        if (checkSettings instanceof SeleniumCheckSettings) {
+            statusBarExists = ((SeleniumCheckSettings) checkSettings).getStatusBarExists();
+        }
+        Region region = ((AppiumScrollPositionProvider) getPositionProvider()).getElementRegion(element, shouldStitchContent(), statusBarExists);
+        logger.verbose("Element region: " + region.toString());
+        return region;
     }
 }
