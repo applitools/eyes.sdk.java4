@@ -62,7 +62,12 @@ public class EyesAppiumDriver extends EyesWebDriver {
     }
 
     public int getStatusBarHeight() {
-        return ((Long) getCachedSessionDetails().get("statBarHeight")).intValue();
+        Object statusBarHeight = getCachedSessionDetails().get("statBarHeight");
+        if (statusBarHeight instanceof Double) {
+            return ((Double) statusBarHeight).intValue();
+        } else {
+            return ((Long) statusBarHeight).intValue();
+        }
     }
 
     public double getDevicePixelRatio () {
