@@ -1,3 +1,7 @@
+
+### Added
+- Print visual locator screenshot URL to the logs [Trello 1439](https://trello.com/c/7JAqWkaz)
+
 ## [4.3.0] - 2019-12-23
 ### Fixed
 - Fullpage screenshot with RecyclerView on Android. [Trello 1416](https://trello.com/c/cpHFs1Zr), [Trello 953](https://trello.com/c/3UOEHgCl)
