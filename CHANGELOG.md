@@ -1,4 +1,6 @@
 
+### Fixed
+- ClassCastException while getting status bar height. [Trello 1478](https://trello.com/c/RuPL3v4v)
 ### Added
 - Print visual locator screenshot URL to the logs [Trello 1439](https://trello.com/c/7JAqWkaz)
 
