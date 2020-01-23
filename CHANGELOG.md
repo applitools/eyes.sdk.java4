@@ -1,4 +1,4 @@
-
+## [4.4.0] - 2020-01-23
 ### Fixed
 - ClassCastException while getting status bar height. [Trello 1478](https://trello.com/c/RuPL3v4v)
 - Setting the batch sequence name on session start. [Trello 1484](https://trello.com/c/eJPrunMV)
