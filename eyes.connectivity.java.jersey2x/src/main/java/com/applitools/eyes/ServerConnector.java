@@ -206,18 +206,14 @@ public class ServerConnector extends RestClient
 
         HttpMethodCall delete = new HttpMethodCall() {
             public Response call() {
-
-                String currentTime = GeneralUtils.toRfc1123(
-                        Calendar.getInstance(TimeZone.getTimeZone("UTC")));
-
                 // Building the request
                 Invocation.Builder invocationBuilder = endPoint.path(sessionId)
                         .queryParam("apiKey", getApiKey())
                         .queryParam("aborted", String.valueOf(isAborted))
                         .queryParam("updateBaseline", String.valueOf(save))
                         .request(MediaType.APPLICATION_JSON)
-                        .header("Eyes-Expect", "202-accepted")
-                        .header("Eyes-Date", currentTime);
+                        .header("Eyes-Expect", "202+location")
+                        .header("Eyes-Date", getCurrentTime());
 
                 // Actually perform the method call and return the result
                 return invocationBuilder.delete();
@@ -247,6 +243,9 @@ public class ServerConnector extends RestClient
                 .queryParam("apiKey", getApiKey())
                 .queryParam("AccessToken", testResults.getSecretToken())
                 .request(MediaType.APPLICATION_JSON);
+
+        invocationBuilder.header("Eyes-Expect", "202+location")
+                .header("Eyes-Date", getCurrentTime());
 
         Response response = invocationBuilder.delete();
     }
@@ -382,6 +381,9 @@ public class ServerConnector extends RestClient
         WebTarget target = restClient.target(serverUrl).path(("api/sessions/running/data")).queryParam("apiKey", getApiKey());
         Invocation.Builder request = target.request(MediaType.APPLICATION_JSON);
 
+        request.header("Eyes-Expect", "202+location")
+                .header("Eyes-Date", getCurrentTime());
+
         byte[] resultStream = GeneralUtils.getGzipByteArrayOutputStream(domJson);
 
         Response response = postWithRetry(request, Entity.entity(resultStream,
@@ -394,6 +396,9 @@ public class ServerConnector extends RestClient
     public String postViewportImage(String base64Image) {
         WebTarget target = restClient.target(serverUrl).path(("api/sessions/running/data")).queryParam("apiKey", getApiKey());
         Invocation.Builder request = target.request(MediaType.APPLICATION_JSON);
+
+        request.header("Eyes-Expect", "202+location")
+                .header("Eyes-Date", getCurrentTime());
 
         byte[] screenshot = Base64.decodeBase64(base64Image);
 
@@ -432,6 +437,10 @@ public class ServerConnector extends RestClient
 
         WebTarget target = restClient.target(serverUrl).path(("api/locators/locate")).queryParam("apiKey", getApiKey());
         Invocation.Builder request = target.request(MediaType.APPLICATION_JSON);
+
+        request.header("Eyes-Expect", "202+location")
+                .header("Eyes-Date", getCurrentTime());
+
         Response response = postWithRetry(request, Entity.json(postData), null);
 
         List<Integer> validStatusCodes = new ArrayList<>();
@@ -449,6 +458,8 @@ public class ServerConnector extends RestClient
 
         }
         try {
+            request.header("Eyes-Expect", "202+location")
+                    .header("Eyes-Date", getCurrentTime());
             return request.
                     post(entity);
         } catch (Exception e) {
@@ -473,4 +484,8 @@ public class ServerConnector extends RestClient
 
     }
 
+    private String getCurrentTime() {
+        return GeneralUtils.toRfc1123(
+                Calendar.getInstance(TimeZone.getTimeZone("UTC")));
+    }
 }

@@ -166,6 +166,8 @@ public class ServerConnector extends RestClient
         try {
             response = endPoint.queryParam("apiKey", getApiKey()).
                     accept(MediaType.APPLICATION_JSON).
+                    header("Eyes-Expect", "202+location").
+                    header("Eyes-Date", getCurrentTime()).
                     entity(postData, MediaType.APPLICATION_JSON_TYPE).
                     post(ClientResponse.class);
         } catch (RuntimeException e) {
@@ -211,17 +213,14 @@ public class ServerConnector extends RestClient
         HttpMethodCall delete = new HttpMethodCall() {
             public ClientResponse call() {
 
-                String currentTime = GeneralUtils.toRfc1123(
-                        Calendar.getInstance(TimeZone.getTimeZone("UTC")));
-
                 // Building the request
                 WebResource.Builder builder = endPoint.path(sessionId)
                         .queryParam("apiKey", getApiKey())
                         .queryParam("aborted", String.valueOf(isAborted))
                         .queryParam("updateBaseline", String.valueOf(save))
                         .accept(MediaType.APPLICATION_JSON)
-                        .header("Eyes-Expect", "202-accepted")
-                        .header("Eyes-Date", currentTime);
+                        .header("Eyes-Expect", "202+location")
+                        .header("Eyes-Date", getCurrentTime());
 
                 // Actually perform the method call and return the result
                 return builder.delete(ClientResponse.class);
@@ -251,6 +250,8 @@ public class ServerConnector extends RestClient
                 .path(testResults.getId())
                 .queryParam("apiKey", getApiKey())
                 .queryParam("AccessToken", testResults.getSecretToken())
+                .header("Eyes-Expect", "202+location")
+                .header("Eyes-Date", getCurrentTime())
                 .accept(MediaType.APPLICATION_JSON);
 
         builder.delete();
@@ -333,6 +334,8 @@ public class ServerConnector extends RestClient
         response = runningSessionsEndpoint.queryParam("apiKey", getApiKey()).
                 accept(MediaType.APPLICATION_JSON).
                 entity(requestData, MediaType.APPLICATION_OCTET_STREAM_TYPE).
+                header("Eyes-Expect", "202+location").
+                header("Eyes-Date", getCurrentTime()).
                 post(ClientResponse.class);
 
         // Ok, let's create the running session from the response
@@ -398,6 +401,9 @@ public class ServerConnector extends RestClient
 
             WebResource.Builder request = target.accept(MediaType.APPLICATION_JSON).entity(resultStream, MediaType.APPLICATION_OCTET_STREAM_TYPE);
 
+            request.header("Eyes-Expect", "202+location")
+                    .header("Eyes-Date", getCurrentTime());
+
             ClientResponse response = request.post(ClientResponse.class);
 
             MultivaluedMap<String, String> headers = response.getHeaders();
@@ -431,6 +437,9 @@ public class ServerConnector extends RestClient
 
             WebResource.Builder request = target.accept(MediaType.APPLICATION_JSON).entity(requestData, MediaType.APPLICATION_OCTET_STREAM_TYPE);
 
+            request.header("Eyes-Expect", "202+location")
+                    .header("Eyes-Date", getCurrentTime());
+
             ClientResponse response = request.post(ClientResponse.class);
             MultivaluedMap<String, String> headers = response.getHeaders();
 
@@ -460,6 +469,9 @@ public class ServerConnector extends RestClient
 
         WebResource.Builder request = target.accept(MediaType.APPLICATION_JSON).entity(postData, MediaType.APPLICATION_JSON_TYPE);
 
+        request.header("Eyes-Expect", "202+location")
+                .header("Eyes-Date", getCurrentTime());
+
         ClientResponse response = request.post(ClientResponse.class);
 
         List<Integer> validStatusCodes = new ArrayList<>();
@@ -467,5 +479,10 @@ public class ServerConnector extends RestClient
         validStatusCodes.add(Response.Status.CREATED.getStatusCode());
 
         return parseResponseWithJsonData(response, validStatusCodes, new TypeReference<Map<String, List<Region>>>(){});
+    }
+
+    private String getCurrentTime() {
+        return GeneralUtils.toRfc1123(
+                Calendar.getInstance(TimeZone.getTimeZone("UTC")));
     }
 }
