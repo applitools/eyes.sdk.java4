@@ -1,6 +1,7 @@
 
 ### Added 
 - Long-running request implementation. [Trello 1516](https://trello.com/c/GThsXbIL)
+- Upload images directly to cloud storage. [Trello 1461](https://trello.com/c/1V5X9O37)
 
 ## [4.4.0] - 2020-01-23
 ### Fixed
