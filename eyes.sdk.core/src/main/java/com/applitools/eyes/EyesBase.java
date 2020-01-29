@@ -1737,8 +1737,10 @@ public abstract class EyesBase implements IEyesBase {
             debugScreenshotsProvider.save(screenshot.getImage(), "SUB_SCREENSHOT");
         }
 
-        logger.verbose("Compressing screenshot...");
-        String compressResult = compressScreenshot64(screenshot, lastScreenshot);
+        logger.verbose("Getting image bytes (encoded as PNG)...");
+        BufferedImage screenshotImage = screenshot.getImage();
+        byte[] screenshotBytes = ImageUtils.encodeAsPng(screenshotImage);
+
         logger.verbose("Done! Getting title...");
         String title = getTitle();
         logger.verbose("Done!");
@@ -1761,7 +1763,7 @@ public abstract class EyesBase implements IEyesBase {
             GeneralUtils.logExceptionStackTrace(e);
         }
 
-        AppOutputWithScreenshot result = new AppOutputWithScreenshot(new AppOutput(title, compressResult, domJsonUrl), screenshot);
+        AppOutputWithScreenshot result = new AppOutputWithScreenshot(new AppOutput(title, screenshotBytes, domJsonUrl, null), screenshot);
         logger.verbose("Done!");
         return result;
     }

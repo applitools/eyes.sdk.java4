@@ -36,6 +36,8 @@ public class ServerConnector extends RestClient
 
     private String apiKey = null;
 
+    private RenderingInfo renderingInfo;
+
     /***
      * @param logger A logger instance.
      * @param serverUrl The URI of the Eyes server.
@@ -283,11 +285,6 @@ public class ServerConnector extends RestClient
             throw new EyesException("Failed create binary data from JSON!", e);
         }
 
-        // Getting the screenshot's bytes (notice this can be either
-        // compressed/uncompressed form).
-        byte[] screenshot = Base64.decodeBase64(
-                matchData.getAppOutput().getScreenshot64());
-
         // Ok, let's create the request data
         ByteArrayOutputStream requestOutputStream = new ByteArrayOutputStream();
         DataOutputStream requestDos = new DataOutputStream(requestOutputStream);
@@ -296,7 +293,6 @@ public class ServerConnector extends RestClient
             requestDos.writeInt(jsonBytes.length);
             requestDos.flush();
             requestOutputStream.write(jsonBytes);
-            requestOutputStream.write(screenshot);
             requestOutputStream.flush();
 
             // Ok, get the data bytes
@@ -423,6 +419,39 @@ public class ServerConnector extends RestClient
         validStatusCodes.add(Response.Status.CREATED.getStatusCode());
 
         return parseResponseWithJsonData(response, validStatusCodes, new TypeReference<Map<String, List<Region>>>(){});
+    }
+
+    @Override
+    public RenderingInfo getRenderInfo() {
+        if (renderingInfo == null) {
+            String apiKey = getApiKey();
+            WebTarget target = restClient.target(serverUrl).path((RENDER_INFO_PATH)).queryParam("apiKey", apiKey);
+            Invocation.Builder request = target.request(MediaType.APPLICATION_JSON);
+
+            // Ok, let's create the running session from the response
+            List<Integer> validStatusCodes = new ArrayList<>();
+            validStatusCodes.add(Response.Status.OK.getStatusCode());
+
+            Response response = request.get();
+            renderingInfo = parseResponseWithJsonData(response, validStatusCodes, RenderingInfo.class);
+        }
+        return renderingInfo;
+    }
+
+    @Override
+    public int uploadImage(byte[] screenshotBytes, RenderingInfo renderingInfo, String imageTargetUrl) {
+        WebTarget target = restClient.target(imageTargetUrl);
+        Invocation.Builder request = target
+                .request("image/png")
+                .accept("image/png")
+                .header("X-Auth-Token", renderingInfo.getAccessToken())
+                .header("x-ms-blob-type", "BlockBlob");
+
+        Response response = request.put(Entity.entity(screenshotBytes, "image/png"));
+        int statusCode = response.getStatus();
+        response.close();
+        logger.verbose("Upload Status Code: " + statusCode);
+        return statusCode;
     }
 
     private Response postWithRetry(Invocation.Builder request, Entity entity, AtomicInteger retiresCounter) {
