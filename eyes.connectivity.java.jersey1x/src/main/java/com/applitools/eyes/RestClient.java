@@ -1,6 +1,7 @@
 package com.applitools.eyes;
 
 import com.applitools.utils.ArgumentGuard;
+import com.applitools.utils.GeneralUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,11 +11,16 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.client.apache4.ApacheHttpClient4;
 import com.sun.jersey.client.apache4.config.ApacheHttpClient4Config;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
+import org.apache.http.HttpHeaders;
+import org.apache.http.HttpStatus;
 
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Provides common rest client functionality.
@@ -186,36 +192,84 @@ public class RestClient {
         return serverUrl;
     }
 
-    protected ClientResponse sendLongRequest(HttpMethodCall method, String name)
+    protected ClientResponse sendLongRequest(WebResource.Builder invocationBuilder, String method, Object entity, String mediaType)
             throws EyesException {
+        logger.verbose("enter");
+        String currentTime = GeneralUtils.toRfc1123(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
+        invocationBuilder = invocationBuilder
+                .header("Eyes-Expect", "202+location")
+                .header("Eyes-Date", currentTime);
 
-        // Adding the long request headers
-        int maxDelay = 10000;
-        int delay = 2000;  // milliseconds
-        ClientResponse response;
-        while (true) {
-            response = method.call();
-            if (response.getStatus() != 202) {
-                return response;
-            }
+        if (entity != null && mediaType != null) {
+            invocationBuilder = invocationBuilder.entity(entity, mediaType);
+        } else if (entity != null) {
+            invocationBuilder = invocationBuilder.entity(entity);
+        }
 
-            // Since we haven't read the entity, We must release the response
-            // or the connection stays open (meaning it'll get stuck after two
-            // requests).
+        ClientResponse response = invocationBuilder.method(method, ClientResponse.class);
+
+        String statusUrl = response.getHeaders().getFirst(HttpHeaders.LOCATION);
+        int status = response.getStatus();
+        if (statusUrl != null && status == HttpStatus.SC_ACCEPTED) {
             response.close();
 
-            // Waiting a delay
-            logger.verbose(String.format(
-                    "%s: Still running... Retrying in %d ms", name, delay));
-            try {
-                Thread.sleep(delay);
-            } catch (InterruptedException e) {
-                throw new EyesException("Long request interrupted!", e);
-            }
+            int wait = 500;
+            while (true) {
+                response = get(statusUrl);
+                status = response.getStatus();
+                if (status == HttpStatus.SC_CREATED) {
+                    logger.verbose("exit (CREATED)");
+                    return delete(response.getHeaders().getFirst(HttpHeaders.LOCATION));
+                }
 
-            // increasing the delay
-            delay = Math.min(maxDelay, (int) Math.floor(delay * 1.5));
+                if (response.getStatus() == HttpStatus.SC_OK) {
+                    try {
+                        Thread.sleep(wait);
+                    } catch (InterruptedException e) {
+                        throw new EyesException("Long request interrupted!", e);
+                    }
+                    wait *= 2;
+                    wait = Math.min(10000, wait);
+                    response.close();
+                    continue;
+                }
+
+                // Something went wrong.
+                logger.verbose("exit (inside loop) (" + status + ")");
+                return response;
+            }
         }
+        logger.verbose("exit (" + status + ")");
+        return response;
+    }
+
+    public String getString(String path, String accept) {
+        ClientResponse response = sendHttpWebRequest(path, HttpMethod.GET, accept);
+        return response.getEntity(String.class);
+    }
+
+    private ClientResponse get(String path, String accept) {
+        return sendHttpWebRequest(path, HttpMethod.GET, accept);
+    }
+
+    private ClientResponse get(String path) {
+        return get(path, null);
+    }
+
+    private ClientResponse delete(String path, String accept) {
+        return sendHttpWebRequest(path, HttpMethod.DELETE, accept);
+    }
+
+    private ClientResponse delete(String path) {
+        return delete(path, null);
+    }
+
+    protected ClientResponse sendHttpWebRequest(String path, final String method, String accept) {
+        // Building the request
+        WebResource.Builder invocationBuilder = restClient.resource(path).accept(accept);
+
+        // Actually perform the method call and return the result
+        return invocationBuilder.method(method, ClientResponse.class);
     }
 
 

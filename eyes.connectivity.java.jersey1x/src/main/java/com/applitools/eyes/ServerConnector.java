@@ -14,6 +14,7 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.async.TypeListener;
 import org.apache.commons.io.IOUtils;
 
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
@@ -164,12 +165,8 @@ public class ServerConnector extends RestClient
         }
 
         try {
-            response = endPoint.queryParam("apiKey", getApiKey()).
-                    accept(MediaType.APPLICATION_JSON).
-                    header("Eyes-Expect", "202+location").
-                    header("Eyes-Date", getCurrentTime()).
-                    entity(postData, MediaType.APPLICATION_JSON_TYPE).
-                    post(ClientResponse.class);
+            WebResource.Builder builder = endPoint.queryParam("apiKey", getApiKey()).accept(MediaType.APPLICATION_JSON);
+            response = sendLongRequest(builder, HttpMethod.POST, postData, MediaType.APPLICATION_JSON);
         } catch (RuntimeException e) {
             logger.log("startSession(): Server request failed: " + e.getMessage());
             throw e;
@@ -210,24 +207,13 @@ public class ServerConnector extends RestClient
         List<Integer> validStatusCodes;
         TestResults result;
 
-        HttpMethodCall delete = new HttpMethodCall() {
-            public ClientResponse call() {
+        WebResource.Builder builder = endPoint.path(sessionId)
+                .queryParam("apiKey", getApiKey())
+                .queryParam("aborted", String.valueOf(isAborted))
+                .queryParam("updateBaseline", String.valueOf(save))
+                .accept(MediaType.APPLICATION_JSON);
 
-                // Building the request
-                WebResource.Builder builder = endPoint.path(sessionId)
-                        .queryParam("apiKey", getApiKey())
-                        .queryParam("aborted", String.valueOf(isAborted))
-                        .queryParam("updateBaseline", String.valueOf(save))
-                        .accept(MediaType.APPLICATION_JSON)
-                        .header("Eyes-Expect", "202+location")
-                        .header("Eyes-Date", getCurrentTime());
-
-                // Actually perform the method call and return the result
-                return builder.delete(ClientResponse.class);
-            }
-        };
-
-        response = sendLongRequest(delete, "stopSession");
+        response = sendLongRequest(builder, "DELETE", null, null);
 
         // Ok, let's create the running session from the response
         validStatusCodes = new ArrayList<>();
@@ -250,8 +236,6 @@ public class ServerConnector extends RestClient
                 .path(testResults.getId())
                 .queryParam("apiKey", getApiKey())
                 .queryParam("AccessToken", testResults.getSecretToken())
-                .header("Eyes-Expect", "202+location")
-                .header("Eyes-Date", getCurrentTime())
                 .accept(MediaType.APPLICATION_JSON);
 
         builder.delete();
@@ -270,9 +254,8 @@ public class ServerConnector extends RestClient
     public MatchResult matchWindow(RunningSession runningSession,
                                    MatchWindowData matchData)
             throws EyesException {
-
         ArgumentGuard.notNull(runningSession, "runningSession");
-        ArgumentGuard.notNull(matchData, "data");
+        ArgumentGuard.notNull(matchData, "model");
 
         ClientResponse response;
         List<Integer> validStatusCodes;
@@ -283,9 +266,7 @@ public class ServerConnector extends RestClient
         WebResource runningSessionsEndpoint =
                 endPoint.path(runningSession.getId());
 
-        // Serializing data into JSON (we'll treat it as binary later).
-        // IMPORTANT This serializes everything EXCEPT for the screenshot (which
-        // we'll add later).
+        // Serializing model into JSON (we'll treat it as binary later).
         try {
             jsonData = jsonMapper.writeValueAsString(matchData);
         } catch (IOException e) {
@@ -331,22 +312,18 @@ public class ServerConnector extends RestClient
         }
 
         // Sending the request
-        response = runningSessionsEndpoint.queryParam("apiKey", getApiKey()).
-                accept(MediaType.APPLICATION_JSON).
-                entity(requestData, MediaType.APPLICATION_OCTET_STREAM_TYPE).
-                header("Eyes-Expect", "202+location").
-                header("Eyes-Date", getCurrentTime()).
-                post(ClientResponse.class);
+        WebResource.Builder request = runningSessionsEndpoint.queryParam("apiKey", getApiKey())
+                .accept(MediaType.APPLICATION_JSON);
+
+        response = sendLongRequest(request, HttpMethod.POST, requestData, MediaType.APPLICATION_OCTET_STREAM);
 
         // Ok, let's create the running session from the response
         validStatusCodes = new ArrayList<>(1);
         validStatusCodes.add(ClientResponse.Status.OK.getStatusCode());
 
-        result = parseResponseWithJsonData(response, validStatusCodes,
-                MatchResult.class);
+        result = parseResponseWithJsonData(response, validStatusCodes, MatchResult.class);
 
         return result;
-
     }
 
     @Override
@@ -401,9 +378,6 @@ public class ServerConnector extends RestClient
 
             WebResource.Builder request = target.accept(MediaType.APPLICATION_JSON).entity(resultStream, MediaType.APPLICATION_OCTET_STREAM_TYPE);
 
-            request.header("Eyes-Expect", "202+location")
-                    .header("Eyes-Date", getCurrentTime());
-
             ClientResponse response = request.post(ClientResponse.class);
 
             MultivaluedMap<String, String> headers = response.getHeaders();
@@ -437,9 +411,6 @@ public class ServerConnector extends RestClient
 
             WebResource.Builder request = target.accept(MediaType.APPLICATION_JSON).entity(requestData, MediaType.APPLICATION_OCTET_STREAM_TYPE);
 
-            request.header("Eyes-Expect", "202+location")
-                    .header("Eyes-Date", getCurrentTime());
-
             ClientResponse response = request.post(ClientResponse.class);
             MultivaluedMap<String, String> headers = response.getHeaders();
 
@@ -469,9 +440,6 @@ public class ServerConnector extends RestClient
 
         WebResource.Builder request = target.accept(MediaType.APPLICATION_JSON).entity(postData, MediaType.APPLICATION_JSON_TYPE);
 
-        request.header("Eyes-Expect", "202+location")
-                .header("Eyes-Date", getCurrentTime());
-
         ClientResponse response = request.post(ClientResponse.class);
 
         List<Integer> validStatusCodes = new ArrayList<>();
@@ -481,8 +449,15 @@ public class ServerConnector extends RestClient
         return parseResponseWithJsonData(response, validStatusCodes, new TypeReference<Map<String, List<Region>>>(){});
     }
 
-    private String getCurrentTime() {
-        return GeneralUtils.toRfc1123(
-                Calendar.getInstance(TimeZone.getTimeZone("UTC")));
+    @Override
+    protected ClientResponse sendHttpWebRequest(String path, final String method, String accept) {
+        // Building the request
+        WebResource.Builder invocationBuilder = restClient
+                .resource(path)
+                .queryParam("apikey", getApiKey())
+                .accept(accept);
+
+        // Actually perform the method call and return the result
+        return invocationBuilder.method(method, ClientResponse.class);
     }
 }
