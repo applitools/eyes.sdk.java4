@@ -273,42 +273,11 @@ public class ServerConnector extends RestClient
                     e);
         }
 
-        // Convert the JSON to binary.
-        byte[] jsonBytes;
-        ByteArrayOutputStream jsonToBytesConverter = new ByteArrayOutputStream();
-        try {
-            jsonToBytesConverter.write(
-                    jsonData.getBytes(DEFAULT_CHARSET_NAME));
-            jsonToBytesConverter.flush();
-            jsonBytes = jsonToBytesConverter.toByteArray();
-        } catch (IOException e) {
-            throw new EyesException("Failed create binary data from JSON!", e);
-        }
-
-        // Ok, let's create the request data
-        ByteArrayOutputStream requestOutputStream = new ByteArrayOutputStream();
-        DataOutputStream requestDos = new DataOutputStream(requestOutputStream);
-        byte[] requestData;
-        try {
-            requestDos.writeInt(jsonBytes.length);
-            requestDos.flush();
-            requestOutputStream.write(jsonBytes);
-            requestOutputStream.flush();
-
-            // Ok, get the data bytes
-            requestData = requestOutputStream.toByteArray();
-
-            // Release the streams
-            requestDos.close();
-        } catch (IOException e) {
-            throw new EyesException("Failed send check window request!", e);
-        }
-
         // Sending the request
         Invocation.Builder request = runningSessionsEndpoint.queryParam("apiKey", getApiKey())
                 .request(MediaType.APPLICATION_JSON);
 
-        response = sendLongRequest(request, HttpMethod.POST, Entity.entity(requestData, MediaType.APPLICATION_OCTET_STREAM));
+        response = sendLongRequest(request, HttpMethod.POST, Entity.entity(jsonData, MediaType.APPLICATION_JSON));
 
         // Ok, let's create the running session from the response
         validStatusCodes = new ArrayList<>(1);

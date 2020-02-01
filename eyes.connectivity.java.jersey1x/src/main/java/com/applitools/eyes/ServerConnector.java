@@ -214,7 +214,7 @@ public class ServerConnector extends RestClient
                 .queryParam("updateBaseline", String.valueOf(save))
                 .accept(MediaType.APPLICATION_JSON);
 
-        response = sendLongRequest(builder, "DELETE", null, null);
+        response = sendLongRequest(builder, HttpMethod.DELETE, null, null);
 
         // Ok, let's create the running session from the response
         validStatusCodes = new ArrayList<>();
@@ -275,42 +275,11 @@ public class ServerConnector extends RestClient
                     e);
         }
 
-        // Convert the JSON to binary.
-        byte[] jsonBytes;
-        ByteArrayOutputStream jsonToBytesConverter = new ByteArrayOutputStream();
-        try {
-            jsonToBytesConverter.write(
-                    jsonData.getBytes(DEFAULT_CHARSET_NAME));
-            jsonToBytesConverter.flush();
-            jsonBytes = jsonToBytesConverter.toByteArray();
-        } catch (IOException e) {
-            throw new EyesException("Failed create binary data from JSON!", e);
-        }
-
-        // Ok, let's create the request data
-        ByteArrayOutputStream requestOutputStream = new ByteArrayOutputStream();
-        DataOutputStream requestDos = new DataOutputStream(requestOutputStream);
-        byte[] requestData;
-        try {
-            requestDos.writeInt(jsonBytes.length);
-            requestDos.flush();
-            requestOutputStream.write(jsonBytes);
-            requestOutputStream.flush();
-
-            // Ok, get the data bytes
-            requestData = requestOutputStream.toByteArray();
-
-            // Release the streams
-            requestDos.close();
-        } catch (IOException e) {
-            throw new EyesException("Failed send check window request!", e);
-        }
-
         // Sending the request
         WebResource.Builder request = runningSessionsEndpoint.queryParam("apiKey", getApiKey())
                 .accept(MediaType.APPLICATION_JSON);
 
-        response = sendLongRequest(request, HttpMethod.POST, requestData, MediaType.APPLICATION_OCTET_STREAM);
+        response = sendLongRequest(request, HttpMethod.POST, jsonData, MediaType.APPLICATION_JSON);
 
         // Ok, let's create the running session from the response
         validStatusCodes = new ArrayList<>(1);
