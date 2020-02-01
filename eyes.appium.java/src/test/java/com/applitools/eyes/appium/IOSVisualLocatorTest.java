@@ -33,7 +33,6 @@ public class IOSVisualLocatorTest {
         IOSDriver driver = new IOSDriver<>(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
 
         Eyes eyes = new Eyes();
-        eyes.setServerUrl("https://eyesfabric4eyes.applitools.com");
 
         LogHandler logHandler = new StdoutLogHandler(true);
         eyes.setLogHandler(logHandler);

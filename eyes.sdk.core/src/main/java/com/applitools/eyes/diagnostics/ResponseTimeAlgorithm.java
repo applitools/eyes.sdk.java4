@@ -61,7 +61,7 @@ public class ResponseTimeAlgorithm {
 
         TimedAppOutput updatedAppOutput = new TimedAppOutput(
                 currentAppOutput.getTitle(),
-                currentAppOutput.getScreenshot64(),
+                currentAppOutput.getScreenshotBytes(),
                 currentAppOutput.getElapsed(),
                 updatePrimary);
         MatchWindowData updatedMwd = new MatchWindowData(
@@ -114,7 +114,7 @@ public class ResponseTimeAlgorithm {
         AppOutput appOutput = appOutputWithScreenshot.getAppOutput();
         TimedAppOutput timedAppOutput = new TimedAppOutput(
                 appOutput.getTitle(),
-                appOutput.getScreenshot64(),
+                appOutput.getScreenshotBytes(),
                 elapsedTime,
                 true
         );
@@ -258,7 +258,7 @@ public class ResponseTimeAlgorithm {
             AppOutput appOutput = appOutputWithScreenshot.getAppOutput();
             TimedAppOutput timedAppOutput = new TimedAppOutput(
                     appOutput.getTitle(),
-                    appOutput.getScreenshot64(),
+                    appOutput.getScreenshotBytes(),
                     elapsedTime,
                     isPrimary
             );

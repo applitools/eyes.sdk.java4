@@ -9,6 +9,10 @@ import java.util.Map;
  * Defines the interface which should be implemented by a ServerConnector.
  */
 public interface IServerConnector {
+
+    String API_SESSIONS = "api/sessions";
+    String RENDER_INFO_PATH = API_SESSIONS + "/renderinfo";
+
     void setApiKey(String apiKey);
     String getApiKey();
 
@@ -87,4 +91,11 @@ public interface IServerConnector {
     String postViewportImage(String base64Image);
 
     Map<String, List<Region>> postLocators(VisualLocatorsData visualLocatorsData);
+
+    /**
+     * @return the render info from the server to be used later on.
+     */
+    RenderingInfo getRenderInfo();
+
+    int uploadImage(byte[] screenshotBytes, RenderingInfo renderingInfo, String imageTargetUrl);
 }

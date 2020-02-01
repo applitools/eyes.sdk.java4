@@ -789,7 +789,11 @@ public class Eyes extends EyesBase {
             debugScreenshotsProvider.save(subScreenshot.getImage(), String.format("subscreenshot_%s", name));
 
             ImageMatchSettings ims = mwt.createImageMatchSettings(checkSettingsInternal, subScreenshot);
-            AppOutput appOutput = new AppOutput(name, ImageUtils.base64FromImage(subScreenshot.getImage()), null);
+
+            BufferedImage screenshotImage = subScreenshot.getImage();
+            byte[] screenshotBytes = ImageUtils.encodeAsPng(screenshotImage);
+
+            AppOutput appOutput = new AppOutput(name, screenshotBytes, null, null);
             AppOutputWithScreenshot appOutputWithScreenshot = new AppOutputWithScreenshot(appOutput, subScreenshot);
             MatchResult matchResult = mwt.performMatch(
                     new Trigger[0], appOutputWithScreenshot, name, false, ims);
