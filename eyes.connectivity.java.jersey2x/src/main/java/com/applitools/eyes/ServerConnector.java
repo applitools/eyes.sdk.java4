@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import org.apache.commons.codec.binary.Base64;
 import org.glassfish.jersey.message.GZipEncoder;
 
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -204,27 +205,13 @@ public class ServerConnector extends RestClient
         List<Integer> validStatusCodes;
         TestResults result;
 
-        HttpMethodCall delete = new HttpMethodCall() {
-            public Response call() {
+        Invocation.Builder invocationBuilder = endPoint.path(sessionId)
+                .queryParam("apiKey", getApiKey())
+                .queryParam("aborted", String.valueOf(isAborted))
+                .queryParam("updateBaseline", String.valueOf(save))
+                .request(MediaType.APPLICATION_JSON);
 
-                String currentTime = GeneralUtils.toRfc1123(
-                        Calendar.getInstance(TimeZone.getTimeZone("UTC")));
-
-                // Building the request
-                Invocation.Builder invocationBuilder = endPoint.path(sessionId)
-                        .queryParam("apiKey", getApiKey())
-                        .queryParam("aborted", String.valueOf(isAborted))
-                        .queryParam("updateBaseline", String.valueOf(save))
-                        .request(MediaType.APPLICATION_JSON)
-                        .header("Eyes-Expect", "202-accepted")
-                        .header("Eyes-Date", currentTime);
-
-                // Actually perform the method call and return the result
-                return invocationBuilder.delete();
-            }
-        };
-
-        response = sendLongRequest(delete, "stopSession");
+        response = sendLongRequest(invocationBuilder, HttpMethod.DELETE, null);
 
         // Ok, let's create the running session from the response
         validStatusCodes = new ArrayList<>();
@@ -266,20 +253,17 @@ public class ServerConnector extends RestClient
             throws EyesException {
 
         ArgumentGuard.notNull(runningSession, "runningSession");
-        ArgumentGuard.notNull(matchData, "data");
+        ArgumentGuard.notNull(matchData, "model");
 
         Response response;
         List<Integer> validStatusCodes;
         MatchResult result;
-        String jsonData;
+        final String jsonData;
 
         // since we rather not add an empty "tag" param
-        WebTarget runningSessionsEndpoint =
-                endPoint.path(runningSession.getId());
+        final WebTarget runningSessionsEndpoint = endPoint.path(runningSession.getId());
 
-        // Serializing data into JSON (we'll treat it as binary later).
-        // IMPORTANT This serializes everything EXCEPT for the screenshot (which
-        // we'll add later).
+        // Serializing model into JSON (we'll treat it as binary later).
         try {
             jsonData = jsonMapper.writeValueAsString(matchData);
         } catch (IOException e) {
@@ -325,17 +309,16 @@ public class ServerConnector extends RestClient
         }
 
         // Sending the request
-        Invocation.Builder request = runningSessionsEndpoint.queryParam("apiKey", getApiKey()).
-                request(MediaType.APPLICATION_JSON);
-        response = postWithRetry(request, Entity.entity(requestData,
-                MediaType.APPLICATION_OCTET_STREAM), null);
+        Invocation.Builder request = runningSessionsEndpoint.queryParam("apiKey", getApiKey())
+                .request(MediaType.APPLICATION_JSON);
+
+        response = sendLongRequest(request, HttpMethod.POST, Entity.entity(requestData, MediaType.APPLICATION_OCTET_STREAM));
 
         // Ok, let's create the running session from the response
         validStatusCodes = new ArrayList<>(1);
         validStatusCodes.add(Response.Status.OK.getStatusCode());
 
-        result = parseResponseWithJsonData(response, validStatusCodes,
-                MatchResult.class);
+        result = parseResponseWithJsonData(response, validStatusCodes, MatchResult.class);
 
         return result;
 
@@ -432,6 +415,7 @@ public class ServerConnector extends RestClient
 
         WebTarget target = restClient.target(serverUrl).path(("api/locators/locate")).queryParam("apiKey", getApiKey());
         Invocation.Builder request = target.request(MediaType.APPLICATION_JSON);
+
         Response response = postWithRetry(request, Entity.json(postData), null);
 
         List<Integer> validStatusCodes = new ArrayList<>();
@@ -473,4 +457,15 @@ public class ServerConnector extends RestClient
 
     }
 
+    @Override
+    protected Response sendHttpWebRequest(String path, String method, String accept) {
+        // Building the request
+        Invocation.Builder invocationBuilder = restClient
+                .target(path)
+                .queryParam("apikey", getApiKey())
+                .request(accept);
+
+        // Actually perform the method call and return the result
+        return invocationBuilder.method(method);
+    }
 }
