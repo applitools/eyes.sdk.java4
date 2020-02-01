@@ -1,6 +1,6 @@
 
 ### Added 
-- Long-running task headers. [Trello 1516](https://trello.com/c/GThsXbIL)
+- Long-running request implementation. [Trello 1516](https://trello.com/c/GThsXbIL)
 
 ## [4.4.0] - 2020-01-23
 ### Fixed
