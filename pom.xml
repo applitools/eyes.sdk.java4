@@ -18,11 +18,6 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-    <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
-    </parent>
     <developers>
         <developer>
             <id>team@applitools.com</id>
