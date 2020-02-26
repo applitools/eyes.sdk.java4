@@ -1,3 +1,6 @@
+### Fixed 
+- Removed deprecated Sonatype parent POM. [Trello 1556](https://trello.com/c/EGpks4Pv)
+
 ## [4.5.0] - 2020-02-01
 ### Added 
 - Long-running request implementation. [Trello 1516](https://trello.com/c/GThsXbIL)
