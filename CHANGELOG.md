@@ -1,4 +1,4 @@
-## [4.5.1] - 2020-02-26
+## [4.5.3] - 2020-02-28
 ### Fixed 
 - Removed deprecated Sonatype parent POM. [Trello 1556](https://trello.com/c/EGpks4Pv)
 
