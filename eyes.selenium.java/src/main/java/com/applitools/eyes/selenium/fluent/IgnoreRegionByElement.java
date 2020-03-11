@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IgnoreRegionByElement implements GetRegion {
-    private WebElement element;
+    protected WebElement element;
 
     public IgnoreRegionByElement(WebElement element) {
         this.element = element;

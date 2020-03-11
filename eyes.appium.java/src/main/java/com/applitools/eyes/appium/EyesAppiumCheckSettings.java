@@ -1,6 +1,7 @@
 package com.applitools.eyes.appium;
 
 import com.applitools.eyes.Region;
+import com.applitools.eyes.appium.fluent.IgnoreRegionByElement;
 import com.applitools.eyes.selenium.fluent.FrameLocator;
 import com.applitools.eyes.selenium.fluent.SeleniumCheckSettings;
 import org.openqa.selenium.By;
@@ -74,6 +75,75 @@ public class EyesAppiumCheckSettings extends SeleniumCheckSettings {
         FrameLocator fl = new FrameLocator();
         fl.setFrameReference(frameReference);
         clone.frameChain.add(fl);
+        return clone;
+    }
+
+    @Override
+    public EyesAppiumCheckSettings layout(WebElement[] elements) {
+        EyesAppiumCheckSettings clone = this.clone();
+        for (WebElement e : elements) {
+            clone.layout_(new IgnoreRegionByElement(e));
+        }
+        return clone;
+    }
+
+    public EyesAppiumCheckSettings layout(WebElement element, WebElement... elements) {
+        EyesAppiumCheckSettings clone = this.clone();
+        clone.layout_(new IgnoreRegionByElement(element));
+        for (WebElement e : elements) {
+            clone.layout_(new IgnoreRegionByElement(e));
+        }
+        return clone;
+    }
+
+    public EyesAppiumCheckSettings ignore(WebElement element, WebElement... elements) {
+        EyesAppiumCheckSettings clone = this.clone();
+        clone.ignore_(new IgnoreRegionByElement(element));
+        for (WebElement e : elements) {
+            clone.ignore_(new IgnoreRegionByElement(e));
+        }
+        return clone;
+    }
+
+    public EyesAppiumCheckSettings ignore(WebElement[] elements) {
+        EyesAppiumCheckSettings clone = this.clone();
+        for (WebElement e : elements) {
+            clone.ignore_(new IgnoreRegionByElement(e));
+        }
+        return clone;
+    }
+
+    public EyesAppiumCheckSettings strict(WebElement element, WebElement... elements) {
+        EyesAppiumCheckSettings clone = this.clone();
+        clone.strict_(new IgnoreRegionByElement(element));
+        for (WebElement e : elements) {
+            clone.strict_(new IgnoreRegionByElement(e));
+        }
+        return clone;
+    }
+
+    public EyesAppiumCheckSettings strict(WebElement[] elements) {
+        EyesAppiumCheckSettings clone = this.clone();
+        for (WebElement e : elements) {
+            clone.strict_(new IgnoreRegionByElement(e));
+        }
+        return clone;
+    }
+
+    public EyesAppiumCheckSettings content(WebElement element, WebElement... elements) {
+        EyesAppiumCheckSettings clone = this.clone();
+        clone.content_(new IgnoreRegionByElement(element));
+        for (WebElement e : elements) {
+            clone.content_(new IgnoreRegionByElement(e));
+        }
+        return clone;
+    }
+
+    public EyesAppiumCheckSettings content(WebElement[] elements) {
+        EyesAppiumCheckSettings clone = this.clone();
+        for (WebElement e : elements) {
+            clone.content_(new IgnoreRegionByElement(e));
+        }
         return clone;
     }
 
