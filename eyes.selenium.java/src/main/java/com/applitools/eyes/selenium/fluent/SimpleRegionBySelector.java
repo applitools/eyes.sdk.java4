@@ -11,10 +11,10 @@ import org.openqa.selenium.WebElement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IgnoreRegionBySelector implements GetRegion {
+public class SimpleRegionBySelector implements GetRegion {
     private By selector;
 
-    public IgnoreRegionBySelector(By selector) {
+    public SimpleRegionBySelector(By selector) {
         this.selector = selector;
     }
 

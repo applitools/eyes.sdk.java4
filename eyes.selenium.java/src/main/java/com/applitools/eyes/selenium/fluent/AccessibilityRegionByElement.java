@@ -11,8 +11,8 @@ import java.util.List;
 
 public class AccessibilityRegionByElement implements IGetAccessibilityRegion, IGetSeleniumRegion, IGetAccessibilityRegionType {
 
-    private AccessibilityRegionType regionType;
-    private WebElement element;
+    protected AccessibilityRegionType regionType;
+    protected WebElement element;
 
     public AccessibilityRegionByElement(WebElement element, AccessibilityRegionType regionType) {
         this.element = element;

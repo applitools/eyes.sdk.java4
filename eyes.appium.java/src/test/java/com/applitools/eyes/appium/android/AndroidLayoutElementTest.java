@@ -1,5 +1,6 @@
 package com.applitools.eyes.appium.android;
 
+import com.applitools.eyes.AccessibilityRegionType;
 import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.StdoutLogHandler;
 import com.applitools.eyes.appium.Eyes;
@@ -16,8 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class AndroidLayoutElementTest {
 
     public static void main(String[] args) throws MalformedURLException {
-        BatchInfo batch = new BatchInfo("Test");
-        batch.setSequenceName("sequence");
+        BatchInfo batch = new BatchInfo("Regions test");
         Eyes eyes = new Eyes();
         eyes.setBatch(batch);
         eyes.setLogHandler(new StdoutLogHandler(true));
@@ -37,10 +37,20 @@ public class AndroidLayoutElementTest {
 
         try {
             // Start visual UI testing
-            eyes.open(driver, "Android test application", "test");
+            eyes.open(driver, "Android test application", "Test regions with element");
 
             MobileElement elem = driver.findElementById("random_number_text_view");
-            eyes.check(Target.window().layout(elem));
+            eyes.check(Target.window().layout(elem).withName("layout()"));
+
+            eyes.check(Target.window().content(elem).withName("content()"));
+
+            eyes.check(Target.window().strict(elem).withName("strict()"));
+
+            eyes.check(Target.window().ignore(elem).withName("ignore()"));
+
+            eyes.check(Target.window().floating(elem, 100, 100, 100, 100).withName("floating()"));
+
+            eyes.check(Target.window().accessibility(elem, AccessibilityRegionType.RegularText).withName("accessibility()"));
 
             // End visual UI testing. Validate visual correctness.
             eyes.close();

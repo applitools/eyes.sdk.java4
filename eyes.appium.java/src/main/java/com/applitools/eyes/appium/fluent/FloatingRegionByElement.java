@@ -10,23 +10,24 @@ import org.openqa.selenium.WebElement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IgnoreRegionByElement extends com.applitools.eyes.selenium.fluent.IgnoreRegionByElement {
+public class FloatingRegionByElement extends com.applitools.eyes.selenium.fluent.FloatingRegionByElement {
 
-    public IgnoreRegionByElement(WebElement element) {
-        super(element);
+    public FloatingRegionByElement(WebElement element, int maxUpOffset, int maxDownOffset, int maxLeftOffset, int maxRightOffset) {
+        super(element, maxUpOffset, maxDownOffset, maxLeftOffset, maxRightOffset);
     }
 
     @Override
-    public List<Region> getRegions(EyesBase eyesBase, EyesScreenshot screenshot, boolean adjustLocation) {
+    public List<FloatingMatchSettings> getRegions(EyesBase eyesBase, EyesScreenshot screenshot) {
         EyesAppiumElement eyesAppiumElement = new EyesAppiumElement(eyesBase.getLogger(),
                 ((Eyes) eyesBase).getEyesDriver(), element, 1/((Eyes) eyesBase).getDevicePixelRatio());
 
         Point locationAsPoint = eyesAppiumElement.getLocation();
         Dimension size = eyesAppiumElement.getSize();
 
-        List<Region> value = new ArrayList<>();
-        value.add(new Region(new Location(locationAsPoint.getX(), locationAsPoint.getY()), new RectangleSize(size.getWidth(), size.getHeight()),
-                CoordinatesType.SCREENSHOT_AS_IS));
+        List<FloatingMatchSettings> value = new ArrayList<>();
+
+        value.add(new FloatingMatchSettings(locationAsPoint.getX(), locationAsPoint.getY(), size.getWidth(),
+                size.getHeight(), maxUpOffset, maxDownOffset, maxLeftOffset, maxRightOffset));
 
         return value;
     }
