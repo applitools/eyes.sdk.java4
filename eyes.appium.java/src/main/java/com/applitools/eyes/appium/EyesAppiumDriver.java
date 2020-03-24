@@ -49,6 +49,7 @@ public class EyesAppiumDriver extends EyesWebDriver {
         if(sessionDetails == null) {
             logger.verbose("Retrieving session details and caching the result...");
             sessionDetails = getRemoteWebDriver().getSessionDetails();
+            logger.verbose("Session details: " + sessionDetails.toString());
         }
         return sessionDetails;
     }
