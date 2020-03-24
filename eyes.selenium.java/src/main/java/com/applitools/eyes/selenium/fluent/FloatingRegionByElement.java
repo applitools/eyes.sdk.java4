@@ -13,11 +13,11 @@ import java.util.List;
 
 public class FloatingRegionByElement implements GetFloatingRegion {
 
-    private WebElement element;
-    private int maxUpOffset;
-    private int maxDownOffset;
-    private int maxLeftOffset;
-    private int maxRightOffset;
+    protected WebElement element;
+    protected int maxUpOffset;
+    protected int maxDownOffset;
+    protected int maxLeftOffset;
+    protected int maxRightOffset;
 
     public FloatingRegionByElement(WebElement element, int maxUpOffset, int maxDownOffset, int maxLeftOffset, int maxRightOffset) {
 

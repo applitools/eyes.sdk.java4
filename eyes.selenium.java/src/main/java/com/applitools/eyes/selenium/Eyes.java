@@ -718,7 +718,7 @@ public class Eyes extends EyesBase {
                     }
 
                     if (targetElement != null) {
-                        getRegions.put(i, new IgnoreRegionByElement(targetElement));
+                        getRegions.put(i, new SimpleRegionByElement(targetElement));
                     }
                 }
             }
