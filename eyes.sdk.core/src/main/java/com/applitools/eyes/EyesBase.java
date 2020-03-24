@@ -1354,10 +1354,6 @@ public abstract class EyesBase implements IEyesBase {
         ArgumentGuard.notNull(testName, "testName");
         this.config.setTestName(testName);
 
-        logger.log("Agent = " + getFullAgentId());
-        logger.verbose(String.format("openBase('%s', '%s', '%s')", appName,
-                testName, viewportSize));
-
         config.setSessionType(sessionType != null ? sessionType : SessionType.SEQUENTIAL);
         config.setViewportSize(viewportSize);
 
@@ -1450,6 +1446,9 @@ public abstract class EyesBase implements IEyesBase {
         logger.log(String.format("matchTimeout = '%d' ", matchTimeout));
         logger.log(String.format("Default match settings = '%s' ", defaultMatchSettings));
         logger.log(String.format("FailureReports = '%s' ", failureReports));
+        logger.log("Agent = " + getFullAgentId());
+        logger.verbose(String.format("openBase('%s', '%s', '%s')", config.getAppName(),
+                config.getTestName(), config.getViewportSize()));
     }
 
     private void validateSessionOpen() {
