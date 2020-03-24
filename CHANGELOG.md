@@ -1,8 +1,9 @@
-
+## [4.6.0] - 2020-03-24
 ### Fixed
 - Correct element location and size when using layout(), ignore(), strict(), content(), floating() and accessibility(). [Trello 1601](https://trello.com/c/mN1R9zVZ)
-- Additional logs (agentId, session details, scrollable element type). [Trello 1663](https://trello.com/c/HnJKeNKO)
 - Check for XCUIElementTypeScrollView child count to avoid IndexOfBoundException.
+### Updated
+- Additional logs (agentId, session details, scrollable element type). [Trello 1663](https://trello.com/c/HnJKeNKO)
 
 ## [4.5.3] - 2020-02-28
 ### Fixed 
