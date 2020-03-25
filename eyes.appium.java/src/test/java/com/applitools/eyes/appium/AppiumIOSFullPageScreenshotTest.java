@@ -20,6 +20,7 @@ public class AppiumIOSFullPageScreenshotTest {
 
         capabilities.setCapability("platformName", "iOS");
         capabilities.setCapability("deviceName", "iPhone 8 Plus");
+        capabilities.setCapability("automationName", "XCUITest");
         capabilities.setCapability("platformVersion", "11.4");
         // TODO do not merge until this is replaced with a non-user-specific path
         capabilities.setCapability("app", "/Users/danielputerman/test/sdk/appium/xcui-test-app/eyesxcui-demo-app.app");
