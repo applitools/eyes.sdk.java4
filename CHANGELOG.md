@@ -1,3 +1,7 @@
+
+### Fixed
+- Check for XCUIElementTypeTable child count to avoid IndexOfBoundException. [Trello 1670](https://trello.com/c/If5sMKeW)
+
 ## [4.6.0] - 2020-03-24
 ### Fixed
 - Correct element location and size when using layout(), ignore(), strict(), content(), floating() and accessibility(). [Trello 1601](https://trello.com/c/mN1R9zVZ)

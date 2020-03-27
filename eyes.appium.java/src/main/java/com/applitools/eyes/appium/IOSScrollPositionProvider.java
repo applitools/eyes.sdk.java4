@@ -175,8 +175,12 @@ public class IOSScrollPositionProvider extends AppiumScrollPositionProvider {
                 try {
                     contentSize = EyesAppiumUtils.getContentSize(driver, activeScroll);
                     List<WebElement> list = activeScroll.findElements(MobileBy.xpath("//XCUIElementTypeTable[1]/*"));
-                    WebElement lastElement = list.get(list.size()-1);
-                    contentSize.scrollableOffset = lastElement.getLocation().getY() + lastElement.getSize().getHeight();
+                    if (!list.isEmpty()) {
+                        WebElement lastElement = list.get(list.size()-1);
+                        contentSize.scrollableOffset = lastElement.getLocation().getY() + lastElement.getSize().getHeight();
+                    } else {
+                        logger.verbose("XCUIElementTypeTable does not have child...");
+                    }
                     logger.verbose("Retrieved contentSize, it is: " + contentSize);
                 } catch (IOException e) {
                     logger.log("WARNING: could not retrieve content size from active scroll element");
