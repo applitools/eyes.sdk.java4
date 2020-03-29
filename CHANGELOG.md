@@ -1,4 +1,4 @@
-
+## [4.6.1] - 2020-03-29
 ### Fixed
 - Check for XCUIElementTypeTable child count to avoid IndexOfBoundException. [Trello 1670](https://trello.com/c/If5sMKeW)
 
