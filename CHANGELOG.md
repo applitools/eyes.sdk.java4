@@ -1,3 +1,7 @@
+
+### Added
+- Support scrollable views from AndroidX libraries with EyesAppiumHelper library. [Trello 1701](https://trello.com/c/BIZSYiDN)
+
 ## [4.6.1] - 2020-03-29
 ### Fixed
 - Check for XCUIElementTypeTable child count to avoid IndexOfBoundException. [Trello 1670](https://trello.com/c/If5sMKeW)
