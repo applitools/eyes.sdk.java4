@@ -1,6 +1,8 @@
-
+### Fixed
+- Update 'getElementRegion' for iOS. [Trello 1702](https://trello.com/c/fz5vDBEx)
 ### Added
 - Support scrollable views from AndroidX libraries with EyesAppiumHelper library. [Trello 1701](https://trello.com/c/BIZSYiDN)
+- Basic tests for iOS table and scroll views.
 
 ## [4.6.1] - 2020-03-29
 ### Fixed
