@@ -208,6 +208,8 @@ public class AndroidScrollPositionProvider extends AppiumScrollPositionProvider 
                         contentSize.width,
                         contentSize.getScrollContentHeight());
                 if (element.getAttribute("className").equals("android.support.v7.widget.RecyclerView") ||
+                        element.getAttribute("className").equals("androidx.recyclerview.widget.RecyclerView") ||
+                        element.getAttribute("className").equals("androidx.viewpager2.widget.ViewPager2") ||
                         element.getAttribute("className").equals("android.widget.ListView") ||
                         element.getAttribute("className").equals("android.widget.GridView")) {
                     try {
@@ -315,6 +317,8 @@ public class AndroidScrollPositionProvider extends AppiumScrollPositionProvider 
             String className = activeScroll.getAttribute("className");
 
             if (className.equals("android.support.v7.widget.RecyclerView") ||
+                    className.equals("androidx.recyclerview.widget.RecyclerView") ||
+                    className.equals("androidx.viewpager2.widget.ViewPager2") ||
                     className.equals("android.widget.ListView") ||
                     className.equals("android.widget.GridView")) {
                 try {
