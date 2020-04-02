@@ -1,3 +1,4 @@
+## [4.7.0] - 2020-04-03
 ### Fixed
 - Update 'getElementRegion' for iOS. [Trello 1702](https://trello.com/c/fz5vDBEx)
 ### Added
