@@ -1,3 +1,7 @@
+
+### Fixed 
+- Reset contentSize if no active scrollable element. [Trello 1371](https://trello.com/c/M90Imf7t) 
+
 ## [4.7.0] - 2020-04-03
 ### Fixed
 - Update 'getElementRegion' for iOS. [Trello 1702](https://trello.com/c/fz5vDBEx)
