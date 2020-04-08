@@ -5,13 +5,16 @@ import com.applitools.eyes.Logger;
 import com.applitools.eyes.Region;
 import com.applitools.eyes.positioning.PositionMemento;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
+import com.applitools.utils.ImageUtils;
 import io.appium.java_client.MobileBy;
 import io.appium.java_client.remote.MobileCapabilityType;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.WebElement;
 
@@ -202,47 +205,29 @@ public class IOSScrollPositionProvider extends AppiumScrollPositionProvider {
         try {
             WebElement activeScroll = EyesAppiumUtils.getFirstScrollableView(driver);
             logger.verbose("Scrollable element is type of " + activeScroll.getAttribute("type"));
-            if (activeScroll.getAttribute("type").equals("XCUIElementTypeTable")) {
-                try {
-                    contentSize = EyesAppiumUtils.getContentSize(driver, activeScroll);
-                    List<WebElement> list = activeScroll.findElements(MobileBy.xpath("//XCUIElementTypeTable[1]/*"));
-                    if (!list.isEmpty()) {
-                        WebElement lastElement = list.get(list.size()-1);
-                        contentSize.scrollableOffset = lastElement.getLocation().getY() + lastElement.getSize().getHeight();
-                    } else {
-                        logger.verbose("XCUIElementTypeTable does not have child...");
-                    }
-                    logger.verbose("Retrieved contentSize, it is: " + contentSize);
-                } catch (IOException e) {
-                    logger.log("WARNING: could not retrieve content size from active scroll element");
-                }
-            } else if (activeScroll.getAttribute("type").equals("XCUIElementTypeScrollView")) {
-                try {
-                    contentSize = EyesAppiumUtils.getContentSize(driver, activeScroll);
-                    List<WebElement> list = activeScroll.findElements(MobileBy.xpath("//XCUIElementTypeScrollView[1]/*"));
-                    if (!list.isEmpty()) {
-                        WebElement firstElement = list.get(0);
-                        contentSize.scrollableOffset = firstElement.getLocation().getY() + firstElement.getSize().getHeight();
-                    } else {
-                        logger.verbose("XCUIElementTypeScrollView does not have child...");
-                    }
-                    logger.verbose("Retrieved contentSize, it is: " + contentSize);
-                } catch (IOException e) {
-                    logger.log("WARNING: could not retrieve content size from active scroll element");
-                }
-            } else {
-                if (contentSize == null) {
-                    try {
-                        contentSize = EyesAppiumUtils.getContentSize(driver, activeScroll);
-                        logger.verbose("Retrieved contentSize, it is: " + contentSize);
-                    } catch (IOException e) {
-                        logger.log("WARNING: could not retrieve content size from active scroll element");
-                    }
-                }
+            try {
+                contentSize = EyesAppiumUtils.getContentSize(driver, activeScroll);
+
+                contentSize.scrollableOffset = getEntireScrollableHeight(activeScroll, contentSize);
+            } catch (IOException e) {
+                logger.log("WARNING: could not retrieve content size from active scroll element");
+                contentSize = null;
             }
         } catch (NoSuchElementException e) {
             logger.log("WARNING: No active scroll element, so no content size to retrieve");
+            contentSize = null;
+
+            /*
+            * To get more information about view hierarchy we printed page source to the logs
+            * and saving debug screenshot for current screen
+             */
+            String base64 = driver.getScreenshotAs(OutputType.BASE64);
+            BufferedImage image = ImageUtils.imageFromBase64(base64);
+            eyesDriver.getEyes().getDebugScreenshotsProvider().save(image, "no_scroll_element");
+
+            logger.verbose(driver.getPageSource());
         }
+        logger.verbose("Retrieved contentSize, it is: " + contentSize);
         return contentSize;
     }
 
@@ -370,5 +355,34 @@ public class IOSScrollPositionProvider extends AppiumScrollPositionProvider {
                 break;
         }
         return statusBarHeight / density;
+    }
+
+    private int getEntireScrollableHeight(WebElement element, ContentSize contentSize) {
+        /*
+        * We should calculate entire scrollable height for some element types
+        * because Appium returns wrong scrollable height.
+         */
+        int scrollableOffset = contentSize.scrollableOffset;
+        switch (element.getAttribute("type")) {
+            case "XCUIElementTypeTable":
+                List<WebElement> list = element.findElements(MobileBy.xpath("//XCUIElementTypeTable[1]/*"));
+                if (!list.isEmpty()) {
+                    WebElement lastElement = list.get(list.size()-1);
+                    scrollableOffset = lastElement.getLocation().getY() + lastElement.getSize().getHeight();
+                } else {
+                    logger.verbose("XCUIElementTypeTable does not have child...");
+                }
+                break;
+            case "XCUIElementTypeScrollView":
+                list = element.findElements(MobileBy.xpath("//XCUIElementTypeScrollView[1]/*"));
+                if (!list.isEmpty()) {
+                    WebElement firstElement = list.get(0);
+                    scrollableOffset = firstElement.getLocation().getY() + firstElement.getSize().getHeight();
+                } else {
+                    logger.verbose("XCUIElementTypeScrollView does not have child...");
+                }
+                break;
+        }
+        return scrollableOffset;
     }
 }
