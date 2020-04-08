@@ -2,6 +2,7 @@ package com.applitools.eyes.selenium.capture;
 
 import com.applitools.eyes.BrowserNames;
 import com.applitools.eyes.Logger;
+import com.applitools.eyes.OSNames;
 import com.applitools.eyes.UserAgent;
 import com.applitools.eyes.capture.ImageProvider;
 import com.applitools.eyes.selenium.Eyes;
@@ -21,6 +22,8 @@ public class ImageProviderFactory {
                 }
             } else if (ua.getBrowser().equals(BrowserNames.Safari)) {
                 return new SafariScreenshotImageProvider(eyes, logger, tsInstance, ua);
+            } else if (ua.getOS().equals(OSNames.ANDROID) || ua.getOS().equals(OSNames.IOS)) {
+                return new MobileViewportScreenshotImageProvider(logger, eyes.getEyesDriver());
             }
         }
         return new TakesScreenshotImageProvider(logger, tsInstance);

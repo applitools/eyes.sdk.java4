@@ -208,7 +208,7 @@ public class EyesSeleniumUtils {
      */
     public static void setCurrentScrollPosition(IEyesJsExecutor executor,
                                                 Location location) {
-        executor.executeScript(String.format("window.scrollTo(%d,%d)",
+        executor.executeScript(String.format("window.scroll(%d,%d)",
                 location.getX(), location.getY()));
     }
 

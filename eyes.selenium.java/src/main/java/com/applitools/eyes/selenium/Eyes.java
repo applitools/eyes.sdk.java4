@@ -356,6 +356,8 @@ public class Eyes extends EyesBase {
 
         initDriver(driver);
 
+        setJsExecutor(new SeleniumJavaScriptExecutor(getEyesDriver()));
+
         tryUpdateDevicePixelRatio();
 
         screenshotFactory = new EyesWebDriverScreenshotFactory(logger, getEyesDriver());
@@ -371,8 +373,6 @@ public class Eyes extends EyesBase {
                 this, logger);
 
         initDriverBasedPositionProviders();
-
-        setJsExecutor(new SeleniumJavaScriptExecutor(getEyesDriver()));
 
         getEyesDriver().setRotation(getRotation());
         return getEyesDriver();
