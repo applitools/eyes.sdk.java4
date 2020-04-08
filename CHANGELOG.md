@@ -1,8 +1,9 @@
-
+## [4.7.0] - 2020-04-08
 ### Fixed 
 - Reset contentSize if no active scrollable element. [Trello 1371](https://trello.com/c/M90Imf7t) 
-- WebView full page screenshot with `com.applitools.eyes.selenium.Eyes`. [Trello 1663](https://trello.com/c/HnJKeNKO)
 - Getting device pixel ratio for `com.applitools.eyes.selenium.Eyes`.
+### Updated
+- - WebView full page screenshot with `com.applitools.eyes.selenium.Eyes`. [Trello 1663](https://trello.com/c/HnJKeNKO)
 
 ## [4.7.0] - 2020-04-03
 ### Fixed
