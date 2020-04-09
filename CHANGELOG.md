@@ -1,9 +1,14 @@
-## [4.7.0] - 2020-04-08
+## [4.9.0] - 2020-04-10
+### Updated
+- `com.applitools.eyes.selenium.Eyes` will use standard screenshot if viewportScreenshot fails for mobile. [Trello 1663](https://trello.com/c/HnJKeNKO)
+
+
+## [4.8.0] - 2020-04-08
 ### Fixed 
 - Reset contentSize if no active scrollable element. [Trello 1371](https://trello.com/c/M90Imf7t) 
 - Getting device pixel ratio for `com.applitools.eyes.selenium.Eyes`.
 ### Updated
-- - WebView full page screenshot with `com.applitools.eyes.selenium.Eyes`. [Trello 1663](https://trello.com/c/HnJKeNKO)
+- WebView full page screenshot with `com.applitools.eyes.selenium.Eyes`. [Trello 1663](https://trello.com/c/HnJKeNKO)
 
 ## [4.7.0] - 2020-04-03
 ### Fixed
