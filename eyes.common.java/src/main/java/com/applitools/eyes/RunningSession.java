@@ -16,6 +16,7 @@ public class RunningSession {
     private String baselineId;
     private String batchId;
     private String sessionId;
+    private Boolean isNew;
 
     public RunningSession() {
         isNewSession = false;
@@ -67,5 +68,13 @@ public class RunningSession {
 
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
+    }
+
+    public Boolean getIsNew() {
+        return isNew;
+    }
+
+    public void setIsNew(Boolean aNew) {
+        isNew = aNew;
     }
 }

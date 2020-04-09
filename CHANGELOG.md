@@ -3,6 +3,7 @@
 - Version 4.9.0 skipped because of Maven deploy issues.
 ### Updated
 - `com.applitools.eyes.selenium.Eyes` will use standard screenshot if viewportScreenshot fails for mobile. [Trello 1663](https://trello.com/c/HnJKeNKO)
+- StartSession request now considers "isNew" flag. [Trello 1715](https://trello.com/c/DcVzWbeR)
 
 
 ## [4.8.0] - 2020-04-08
