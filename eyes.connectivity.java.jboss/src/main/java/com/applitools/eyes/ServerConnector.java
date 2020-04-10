@@ -181,7 +181,9 @@ public class ServerConnector extends RestClient
 
         // If this is a new session, we set this flag.
         statusCode = response.getStatus();
-        isNewSession = (statusCode == Response.Status.CREATED.getStatusCode());
+        isNewSession = runningSession.getIsNew() != null ?
+                runningSession.getIsNew() :
+                (statusCode == Response.Status.CREATED.getStatusCode());
         runningSession.setIsNewSession(isNewSession);
 
         return runningSession;
