@@ -39,10 +39,10 @@ public class AndroidFullPageCaptureAlgorithm extends AppiumFullPageCaptureAlgori
 
         int positionMargin = 50; // We need to set position margin to avoid shadow at the top of view
 
-        int xPos = entireSize.getWidth()/2;
+        int xPos = 5;
         Region regionToCrop;
         int oneScrollStep = scrollViewRegion.getHeight() - positionMargin;
-        int maxScrollSteps = (contentSize.scrollableOffset + contentSize.height) / oneScrollStep;
+        int maxScrollSteps = contentSize.getScrollContentHeight() / oneScrollStep;
 
         for (int step = 1; step <= maxScrollSteps; step++) {
             regionToCrop = new Region(0,
@@ -59,7 +59,7 @@ public class AndroidFullPageCaptureAlgorithm extends AppiumFullPageCaptureAlgori
                     scrollViewRegion.getTop() + (step != maxScrollSteps ? positionMargin : 0));
 
             if (step == maxScrollSteps) {
-                int cropTo = (contentSize.scrollableOffset + contentSize.height) - (oneScrollStep * (step));
+                int cropTo = contentSize.getScrollContentHeight() - (oneScrollStep * (step));
                 int cropFrom = oneScrollStep - cropTo + scrollViewRegion.getTop() + positionMargin;
                 regionToCrop = new Region(0,
                         cropFrom,
@@ -75,7 +75,7 @@ public class AndroidFullPageCaptureAlgorithm extends AppiumFullPageCaptureAlgori
         if (heightUnderScrollableView > 0) { // check if there is views under the scrollable view
             regionToCrop = new Region(0, scrollViewRegion.getHeight() + scrollViewRegion.getTop() - positionMargin, initialPartSize.getWidth(), heightUnderScrollableView);
 
-            currentPosition = new Location(0, scrollViewRegion.getTop() + (contentSize.scrollableOffset + contentSize.height) - positionMargin);
+            currentPosition = new Location(0, scrollViewRegion.getTop() + contentSize.getScrollContentHeight() - positionMargin);
 
             captureAndStitchCurrentPart(regionToCrop, scrollViewRegion);
         }

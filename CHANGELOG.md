@@ -1,5 +1,9 @@
+
+### Fixed
+- Changed X position for Android fullpage to avoid touch action on the elements located centered. [Trello 1645](https://trello.com/c/nSGlV1C1)
+
 ## [4.9.1] - 2020-04-10
-## Fixed
+### Fixed
 - Version 4.9.0 skipped because of Maven deploy issues.
 ### Updated
 - `com.applitools.eyes.selenium.Eyes` will use standard screenshot if viewportScreenshot fails for mobile. [Trello 1663](https://trello.com/c/HnJKeNKO)
