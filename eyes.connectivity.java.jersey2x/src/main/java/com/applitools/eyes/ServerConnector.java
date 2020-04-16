@@ -325,22 +325,6 @@ public class ServerConnector extends RestClient
     }
 
     @Override
-    public String postDomSnapshot(String domJson) {
-
-        restClient.register(GZipEncoder.class);
-
-        WebTarget target = restClient.target(serverUrl).path(("api/sessions/running/data")).queryParam("apiKey", getApiKey());
-        Invocation.Builder request = target.request(MediaType.APPLICATION_JSON);
-
-        byte[] resultStream = GeneralUtils.getGzipByteArrayOutputStream(domJson);
-
-        Response response = postWithRetry(request, Entity.entity(resultStream,
-                MediaType.APPLICATION_OCTET_STREAM), null );
-        String entity = response.getHeaderString("Location");
-        return entity;
-    }
-
-    @Override
     public String postViewportImage(String base64Image) {
         WebTarget target = restClient.target(serverUrl).path(("api/sessions/running/data")).queryParam("apiKey", getApiKey());
         Invocation.Builder request = target.request(MediaType.APPLICATION_JSON);
@@ -410,15 +394,15 @@ public class ServerConnector extends RestClient
     }
 
     @Override
-    public int uploadImage(byte[] screenshotBytes, RenderingInfo renderingInfo, String imageTargetUrl) {
-        WebTarget target = restClient.target(imageTargetUrl);
+    public int uploadData(byte[] bytes, RenderingInfo renderingInfo, String targetUrl, String contentType, String mediaType) {
+        WebTarget target = restClient.target(targetUrl);
         Invocation.Builder request = target
-                .request("image/png")
-                .accept("image/png")
+                .request(contentType)
+                .accept(mediaType)
                 .header("X-Auth-Token", renderingInfo.getAccessToken())
                 .header("x-ms-blob-type", "BlockBlob");
 
-        Response response = request.put(Entity.entity(screenshotBytes, "image/png"));
+        Response response = request.put(Entity.entity(bytes, mediaType));
         int statusCode = response.getStatus();
         response.close();
         logger.verbose("Upload Status Code: " + statusCode);

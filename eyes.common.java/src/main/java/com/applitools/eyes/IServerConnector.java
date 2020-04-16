@@ -85,9 +85,6 @@ public interface IServerConnector {
      */
     void downloadString(URL uri, boolean isSecondRetry, IDownloadListener listener);
 
-
-    String postDomSnapshot(String domJson);
-
     String postViewportImage(String base64Image);
 
     Map<String, List<Region>> postLocators(VisualLocatorsData visualLocatorsData);
@@ -97,5 +94,5 @@ public interface IServerConnector {
      */
     RenderingInfo getRenderInfo();
 
-    int uploadImage(byte[] screenshotBytes, RenderingInfo renderingInfo, String imageTargetUrl);
+    int uploadData(byte[] bytes, RenderingInfo renderingInfo, String targetUrl, String contentType, String mediaType);
 }

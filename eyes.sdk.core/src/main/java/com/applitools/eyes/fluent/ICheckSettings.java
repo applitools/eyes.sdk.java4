@@ -159,4 +159,10 @@ public interface ICheckSettings {
     ICheckSettings withName(String name);
 
     ICheckSettings accessibility(Region region, AccessibilityRegionType regionType);
+
+    ICheckSettings useDom(boolean useDom);
+
+    ICheckSettings sendDom(boolean sendDom);
+
+    ICheckSettings sendDom();
 }

@@ -17,4 +17,6 @@ public interface ICheckSettingsInternal {
     Boolean getIgnoreCaret();
     String getName();
     IGetAccessibilityRegion[] getAccessibilityRegions();
+    Boolean isUseDom();
+    Boolean isSendDom();
 }
