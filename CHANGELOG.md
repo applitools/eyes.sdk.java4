@@ -1,4 +1,6 @@
-
+## [4.10.0] - 2020-04-16
+### Updated
+-  StartSession isNew handling. [Trello 1715](https://trello.com/c/DcVzWbeR/)
 ### Fixed
 - Changed X position for Android fullpage to avoid touch action on the elements located centered. [Trello 1645](https://trello.com/c/nSGlV1C1)
 
