@@ -367,11 +367,10 @@ public class ServerConnector extends RestClient
         WebTarget target = restClient.target(serverUrl).path(("api/locators/locate")).queryParam("apiKey", getApiKey());
         Invocation.Builder request = target.request(MediaType.APPLICATION_JSON);
 
-        Response response = postWithRetry(request, Entity.json(postData), null);
+        Response response = sendLongRequest(request, HttpMethod.POST, Entity.json(postData));
 
         List<Integer> validStatusCodes = new ArrayList<>();
         validStatusCodes.add(Response.Status.OK.getStatusCode());
-        validStatusCodes.add(Response.Status.CREATED.getStatusCode());
 
         return parseResponseWithJsonData(response, validStatusCodes, new TypeReference<Map<String, List<Region>>>(){});
     }

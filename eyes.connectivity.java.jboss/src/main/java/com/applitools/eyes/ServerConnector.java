@@ -367,7 +367,8 @@ public class ServerConnector extends RestClient
         List<Integer> validStatusCodes = new ArrayList<>(1);
         validStatusCodes.add(Response.Status.OK.getStatusCode());
 
-        Response response = postWithRetry(request, Entity.json(postData), null);
+        Response response = sendLongRequest(request, HttpMethod.POST, Entity.json(postData));
+
         return parseResponseWithJsonData(response, validStatusCodes, new TypeReference<Map<String, List<Region>>>(){});
     }
 

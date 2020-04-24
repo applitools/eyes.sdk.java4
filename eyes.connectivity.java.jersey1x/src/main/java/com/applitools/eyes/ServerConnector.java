@@ -383,11 +383,10 @@ public class ServerConnector extends RestClient
 
         WebResource.Builder request = target.accept(MediaType.APPLICATION_JSON).entity(postData, MediaType.APPLICATION_JSON_TYPE);
 
-        ClientResponse response = request.post(ClientResponse.class);
+        ClientResponse response = sendLongRequest(request, HttpMethod.POST, postData, MediaType.APPLICATION_JSON);
 
         List<Integer> validStatusCodes = new ArrayList<>();
         validStatusCodes.add(Response.Status.OK.getStatusCode());
-        validStatusCodes.add(Response.Status.CREATED.getStatusCode());
 
         return parseResponseWithJsonData(response, validStatusCodes, new TypeReference<Map<String, List<Region>>>(){});
     }
