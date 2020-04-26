@@ -144,6 +144,21 @@ public class AppiumFullPageCaptureAlgorithm {
         }
         while (true);
 
+        // We should check if there any elements below the scrollable view
+        // and add them to entire screenshot
+        int capturedHeight = scrollViewRegion.getHeight() + scrollViewRegion.getTop();
+        if (initialPartSize.getHeight() - capturedHeight > 0) {
+            Region partRegion = new Region(0,
+                    capturedHeight,
+                    initialPartSize.getWidth(),
+                    initialPartSize.getHeight() - capturedHeight);
+
+            currentPosition = new Location(currentPosition.getX(), lastSuccessfulLocation.getY() + lastSuccessfulPartSize.getHeight());
+
+            lastSuccessfulPartSize = captureAndStitchCurrentPart(partRegion, partRegion);
+            lastSuccessfulLocation = currentPosition;
+        }
+
         cleanupStitch(originalStitchedState, lastSuccessfulLocation, lastSuccessfulPartSize, entireSize);
         moveToTopLeft();
     }
