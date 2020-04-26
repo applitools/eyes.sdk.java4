@@ -21,6 +21,8 @@ public class CheckSettings implements ICheckSettings, ICheckSettingsInternal {
     private List<GetFloatingRegion> floatingRegions = new ArrayList<>();
     private int timeout = -1;
     private String name;
+    protected Boolean sendDom = null;
+    protected Boolean useDom = null;
     protected List<IGetAccessibilityRegion> accessibilityRegions = new ArrayList<>();
 
     protected CheckSettings() { }
@@ -322,6 +324,36 @@ public class CheckSettings implements ICheckSettings, ICheckSettingsInternal {
         CheckSettings clone = clone();
         clone.accessibility_(region, regionType);
         return clone;
+    }
+
+    @Override
+    public Boolean isUseDom() {
+        return useDom;
+    }
+
+    @Override
+    public Boolean isSendDom() {
+        return sendDom;
+    }
+
+    @Override
+    public ICheckSettings useDom(boolean useDom) {
+        CheckSettings clone = this.clone();
+        clone.useDom = useDom;
+        return clone;
+    }
+
+
+    @Override
+    public ICheckSettings sendDom(boolean sendDom) {
+        CheckSettings clone = this.clone();
+        clone.sendDom = sendDom;
+        return clone;
+    }
+
+    @Override
+    public ICheckSettings sendDom() {
+        return sendDom(true);
     }
 
     @Override

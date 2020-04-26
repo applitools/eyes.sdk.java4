@@ -17,6 +17,10 @@ public class Image {
     private String id;
     @JsonProperty("size")
     private RectangleSize size;
+    @JsonProperty("hasDom")
+    private boolean hasDom;
+    @JsonProperty("domId")
+    private String domId;
 
     @JsonProperty("id")
     public String getId() {
@@ -38,4 +42,23 @@ public class Image {
         this.size = size;
     }
 
+    @JsonProperty("hasDom")
+    public boolean getHasDom() {
+        return hasDom;
+    }
+
+    @JsonProperty("hasDom")
+    public void setHasDom(boolean hasDom) {
+        this.hasDom = hasDom;
+    }
+
+    @JsonProperty("domId")
+    public String getDomId() {
+        return this.domId;
+    }
+
+    @JsonProperty("domId")
+    public void setDomId(String domId) {
+        this.domId = domId;
+    }
 }

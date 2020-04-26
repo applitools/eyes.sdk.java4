@@ -1210,9 +1210,10 @@ public abstract class EyesBase implements IEyesBase {
         return result;
     }
 
-    private String tryPostDomSnapshot(String domJson) {
+    private String tryPostDomCapture(String domJson) {
         if (domJson != null) {
-            return serverConnector.postDomSnapshot(domJson);
+            byte[] resultStream = GeneralUtils.getGzipByteArrayOutputStream(domJson);
+            return matchWindowTask.tryUploadData(resultStream, "application/octet-stream", "application/json");
         }
         return null;
     }
@@ -1753,7 +1754,7 @@ public abstract class EyesBase implements IEyesBase {
 
                 if (domJson != null) {
                     long start = System.currentTimeMillis();
-                    domJsonUrl = tryPostDomSnapshot(domJson);
+                    domJsonUrl = tryPostDomCapture(domJson);
                     logger.verbose("Send JSON to SERVER in "+(System.currentTimeMillis() - start)/ 1000);
                 }
 

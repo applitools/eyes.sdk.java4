@@ -1,3 +1,7 @@
+
+### Updated
+- Send DOM directly to Azure Storage server. [Trello 1743](https://trello.com/c/PVyhBHCh)
+
 ## [4.10.0] - 2020-04-16
 ### Updated
 -  StartSession isNew handling. [Trello 1715](https://trello.com/c/DcVzWbeR/)
