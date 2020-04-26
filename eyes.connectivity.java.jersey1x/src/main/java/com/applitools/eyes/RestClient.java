@@ -267,6 +267,8 @@ public class RestClient {
     protected ClientResponse sendHttpWebRequest(String path, final String method, String accept) {
         // Building the request
         WebResource.Builder invocationBuilder = restClient.resource(path).accept(accept);
+        String currentTime = GeneralUtils.toRfc1123(Calendar.getInstance(TimeZone.getTimeZone("UTC")));
+        invocationBuilder.header("Eyes-Date", currentTime);
 
         // Actually perform the method call and return the result
         return invocationBuilder.method(method, ClientResponse.class);
