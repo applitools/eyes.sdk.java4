@@ -1,4 +1,4 @@
-
+## [4.11.0] - 2020-04-26
 ### Updated
 - Send DOM directly to Azure Storage server. [Trello 1743](https://trello.com/c/PVyhBHCh)
 - Migrate post visual locators to long-running request. [Trello 1672](https://trello.com/c/9r6TeoVo)
