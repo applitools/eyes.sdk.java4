@@ -12,11 +12,17 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.RequestEntityProcessing;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URI;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -79,7 +85,8 @@ public class RestClient {
         // does not support proxy settings.
         cc.connectorProvider(new ApacheConnectorProvider());
 
-        return ClientBuilder.newBuilder().withConfig(cc).build();
+        // Disable SSL verification. Accept all certificates
+        return disableSSL(ClientBuilder.newBuilder().withConfig(cc)).build();
     }
 
     /***
@@ -398,5 +405,34 @@ public class RestClient {
         }
 
         return resultObject;
+    }
+
+    private static ClientBuilder disableSSL(ClientBuilder builder) {
+        TrustManager[] trustManagers = new TrustManager[]{
+                new X509TrustManager() {
+
+                    @Override
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return null;
+                    }
+
+                    @Override
+                    public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
+                    }
+
+                    @Override
+                    public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
+                    }
+                }
+        };
+
+        try {
+            SSLContext sslContext = SSLContext.getInstance("ssl");
+            sslContext.init(null, trustManagers, null);
+            builder.sslContext(sslContext);
+        } catch (NoSuchAlgorithmException | KeyManagementException ignored) {
+        }
+
+        return builder;
     }
 }

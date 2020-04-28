@@ -1,3 +1,7 @@
+
+### Added
+- Disable SSL verification. Accept all certificates. [Trello 1771](https://trello.com/c/WPWFJFcD)
+
 ## [4.11.0] - 2020-04-26
 ### Updated
 - Send DOM directly to Azure Storage server. [Trello 1743](https://trello.com/c/PVyhBHCh)

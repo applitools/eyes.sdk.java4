@@ -68,6 +68,9 @@ public class RestClient {
                                       AbstractProxySettings abstractProxySettings) {
         ResteasyClientBuilder builder = new ResteasyClientBuilder();
 
+        // Disable SSL verification. Accept all certificates
+        builder.disableTrustManager();
+
         builder = builder.establishConnectionTimeout(timeout, TimeUnit.MILLISECONDS)
                 .socketTimeout(timeout, TimeUnit.MILLISECONDS);
 

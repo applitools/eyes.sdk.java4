@@ -11,6 +11,7 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.client.apache4.ApacheHttpClient4;
 import com.sun.jersey.client.apache4.config.ApacheHttpClient4Config;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
+import com.sun.jersey.client.urlconnection.HTTPSProperties;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 
@@ -18,6 +19,7 @@ import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.URI;
+import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -57,6 +59,11 @@ public class RestClient {
         cc.getProperties().put(ApacheHttpClient4Config.PROPERTY_CONNECT_TIMEOUT, timeout);
         cc.getProperties().put(ApacheHttpClient4Config.PROPERTY_READ_TIMEOUT, timeout);
 
+        // Disable SSL verification. Accept all certificates
+        try {
+            cc.getProperties().put(HTTPSProperties.PROPERTY_HTTPS_PROPERTIES, new HTTPSProperties((s, sslSession) -> true));
+        } catch (NoSuchAlgorithmException ignored) {
+        }
 
         if (abstractProxySettings != null) {
             URI uri = URI.create(abstractProxySettings.getUri());
