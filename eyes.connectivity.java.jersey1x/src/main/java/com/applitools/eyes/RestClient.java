@@ -11,13 +11,18 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.client.apache4.ApacheHttpClient4;
 import com.sun.jersey.client.apache4.config.ApacheHttpClient4Config;
 import com.sun.jersey.client.apache4.config.DefaultApacheHttpClient4Config;
+import com.sun.jersey.client.urlconnection.HTTPSProperties;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 
+import javax.net.ssl.*;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
 import java.net.URI;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -57,6 +62,8 @@ public class RestClient {
         cc.getProperties().put(ApacheHttpClient4Config.PROPERTY_CONNECT_TIMEOUT, timeout);
         cc.getProperties().put(ApacheHttpClient4Config.PROPERTY_READ_TIMEOUT, timeout);
 
+        // Disable SSL verification. Accept all certificates
+        cc = disableSSL(cc);
 
         if (abstractProxySettings != null) {
             URI uri = URI.create(abstractProxySettings.getUri());
@@ -409,5 +416,35 @@ public class RestClient {
         }
 
         return resultObject;
+    }
+
+    private static ApacheHttpClient4Config disableSSL(ApacheHttpClient4Config config) {
+        TrustManager[] trustManagers = new TrustManager[]{
+                new X509TrustManager() {
+
+                    @Override
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return null;
+                    }
+
+                    @Override
+                    public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
+                    }
+
+                    @Override
+                    public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
+                    }
+                }
+        };
+
+        try {
+            HostnameVerifier hostnameVerifier = HttpsURLConnection.getDefaultHostnameVerifier();
+            SSLContext sslContext = SSLContext.getInstance("ssl");
+            sslContext.init(null, trustManagers, null);
+            config.getProperties().put(HTTPSProperties.PROPERTY_HTTPS_PROPERTIES, new HTTPSProperties(hostnameVerifier, sslContext));
+        } catch (NoSuchAlgorithmException | KeyManagementException ignored) {
+        }
+
+        return config;
     }
 }
