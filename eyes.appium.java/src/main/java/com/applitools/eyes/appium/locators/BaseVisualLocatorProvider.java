@@ -1,20 +1,19 @@
 package com.applitools.eyes.appium.locators;
 
-import com.applitools.eyes.IServerConnector;
-import com.applitools.eyes.Logger;
-import com.applitools.eyes.Region;
-import com.applitools.eyes.VisualLocatorsData;
+import com.applitools.eyes.*;
 import com.applitools.eyes.appium.EyesAppiumDriver;
 import com.applitools.eyes.debug.DebugScreenshotsProvider;
 import com.applitools.eyes.locators.IVisualLocatorProvider;
 import com.applitools.eyes.locators.IVisualLocatorSettings;
 import com.applitools.utils.ArgumentGuard;
+import com.applitools.utils.GeneralUtils;
 import com.applitools.utils.ImageUtils;
 import org.openqa.selenium.OutputType;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public abstract class BaseVisualLocatorProvider implements IVisualLocatorProvider {
 
@@ -54,10 +53,10 @@ public abstract class BaseVisualLocatorProvider implements IVisualLocatorProvide
         debugScreenshotsProvider.save(viewPortScreenshot, "visual_locators_" + String.join("_", visualLocatorSettings.getNames()));
 
         logger.verbose("Convert screenshot from BufferedImage to base64...");
-        String base64Image = ImageUtils.base64FromImage(viewPortScreenshot);
+        byte[] image = ImageUtils.encodeAsPng(viewPortScreenshot);
 
         logger.verbose("Post visual locators screenshot...");
-        String viewportScreenshotUrl = serverConnector.postViewportImage(base64Image);
+        String viewportScreenshotUrl = postViewportImage(image);
 
         logger.verbose("Screenshot URL: " + viewportScreenshotUrl);
 
@@ -72,5 +71,42 @@ public abstract class BaseVisualLocatorProvider implements IVisualLocatorProvide
 
     double getDevicePixelRatio() {
         return devicePixelRatio;
+    }
+
+    @SuppressWarnings("Duplicates")
+    private String postViewportImage(byte[] bytes) {
+        String targetUrl;
+        RenderingInfo renderingInfo = serverConnector.getRenderInfo();
+        if (renderingInfo != null && (targetUrl = renderingInfo.getResultsUrl()) != null) {
+            try {
+                UUID uuid = UUID.randomUUID();
+                targetUrl = targetUrl.replace("__random__", uuid.toString());
+                logger.verbose("uploading viewport image to " + targetUrl);
+
+                int retriesLeft = 3;
+                int wait = 500;
+                while (retriesLeft-- > 0) {
+                    try {
+                        int statusCode = serverConnector.uploadData(bytes, renderingInfo, targetUrl, "image/png", "image/png");
+                        if (statusCode == 200 || statusCode == 201) {
+                            logger.verbose("upload viewport image guid " + uuid + "complete.");
+                            return targetUrl;
+                        }
+                        if (statusCode < 500) {
+                            break;
+                        }
+                    } catch (Exception e) {
+                        if (retriesLeft == 0) throw e;
+                    }
+                    Thread.sleep(wait);
+                    wait *= 2;
+                    wait = Math.min(10000, wait);
+                }
+            } catch (Exception e) {
+                logger.log("Error uploading viewport image");
+                GeneralUtils.logExceptionStackTrace(logger, e);
+            }
+        }
+        return null;
     }
 }

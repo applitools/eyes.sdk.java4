@@ -85,8 +85,6 @@ public interface IServerConnector {
      */
     void downloadString(URL uri, boolean isSecondRetry, IDownloadListener listener);
 
-    String postViewportImage(String base64Image);
-
     Map<String, List<Region>> postLocators(VisualLocatorsData visualLocatorsData);
 
     /**
