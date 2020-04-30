@@ -7,15 +7,11 @@ import com.applitools.utils.ArgumentGuard;
 import com.applitools.utils.GeneralUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import org.apache.commons.codec.binary.Base64;
-import org.glassfish.jersey.message.GZipEncoder;
 
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
@@ -322,35 +318,6 @@ public class ServerConnector extends RestClient
             }
         });
 
-    }
-
-    @Override
-    public String postViewportImage(String base64Image) {
-        WebTarget target = restClient.target(serverUrl).path(("api/sessions/running/data")).queryParam("apiKey", getApiKey());
-        Invocation.Builder request = target.request(MediaType.APPLICATION_JSON);
-
-        byte[] screenshot = Base64.decodeBase64(base64Image);
-
-        ByteArrayOutputStream requestOutputStream = new ByteArrayOutputStream();
-        DataOutputStream requestDos = new DataOutputStream(requestOutputStream);
-        byte[] requestData;
-        String result = null;
-        try {
-            requestOutputStream.write(screenshot);
-            requestOutputStream.flush();
-
-            requestData = requestOutputStream.toByteArray();
-            requestDos.close();
-
-            Response response = postWithRetry(request, Entity.entity(requestData,
-                    MediaType.APPLICATION_OCTET_STREAM), null );
-
-            result = response.getHeaderString("Location");
-        } catch (IOException ignored) {
-            logger.verbose("Failed to send viewport image");
-        }
-
-        return result;
     }
 
     @Override

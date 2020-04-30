@@ -1,4 +1,6 @@
 
+### Updated
+- Upload viewport image to Azure cloud for visual locators. [Trello 1672](https://trello.com/c/9r6TeoVo)
 ### Added
 - Disable SSL verification. Accept all certificates. [Trello 1771](https://trello.com/c/WPWFJFcD)
 

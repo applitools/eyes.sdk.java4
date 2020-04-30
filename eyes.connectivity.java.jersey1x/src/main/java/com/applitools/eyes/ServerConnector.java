@@ -16,9 +16,7 @@ import org.apache.commons.io.IOUtils;
 
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import javax.xml.bind.DatatypeConverter;
 import java.io.*;
 import java.net.URI;
 import java.net.URL;
@@ -332,40 +330,6 @@ public class ServerConnector extends RestClient
             }
 
         });
-    }
-
-    @Override
-    public String postViewportImage(String base64Image) {
-        WebResource target = restClient.resource(serverUrl).path(("api/sessions/running/data")).queryParam("apiKey", getApiKey());
-
-        byte[] screenshot = DatatypeConverter.parseBase64Binary(base64Image);
-
-        ByteArrayOutputStream requestOutputStream = new ByteArrayOutputStream();
-        DataOutputStream requestDos = new DataOutputStream(requestOutputStream);
-        byte[] requestData;
-        String result = null;
-        try {
-            requestOutputStream.write(screenshot);
-            requestOutputStream.flush();
-
-            requestData = requestOutputStream.toByteArray();
-
-            requestDos.close();
-
-            WebResource.Builder request = target.accept(MediaType.APPLICATION_JSON).entity(requestData, MediaType.APPLICATION_OCTET_STREAM_TYPE);
-
-            ClientResponse response = request.post(ClientResponse.class);
-            MultivaluedMap<String, String> headers = response.getHeaders();
-
-            List<String> location = headers.get("Location");
-            if (!location.isEmpty()) {
-                result = location.get(0);
-            }
-        } catch (IOException e) {
-            logger.verbose("Failed to send viewport image");
-        }
-
-        return result;
     }
 
     @Override
