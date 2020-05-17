@@ -1,9 +1,6 @@
 package com.applitools.eyes.config;
 
-import com.applitools.eyes.AccessibilityLevel;
-import com.applitools.eyes.BatchInfo;
-import com.applitools.eyes.RectangleSize;
-import com.applitools.eyes.SessionType;
+import com.applitools.eyes.*;
 import com.applitools.utils.GeneralUtils;
 
 public class Configuration {
@@ -20,7 +17,7 @@ public class Configuration {
     private String testName;
     private RectangleSize viewportSize;
     private SessionType sessionType;
-    private AccessibilityLevel accessibilityValidation = AccessibilityLevel.None;
+    private AccessibilitySettings accessibilityValidation = null;
 
     public void setBatch(BatchInfo batch) {
         this.batch = batch;
@@ -118,11 +115,20 @@ public class Configuration {
         this.sessionType = sessionType;
     }
 
-    public AccessibilityLevel getAccessibilityValidation() {
+    public AccessibilitySettings getAccessibilityValidation() {
         return accessibilityValidation;
     }
 
-    public void setAccessibilityValidation(AccessibilityLevel accessibilityValidation) {
+    public void setAccessibilityValidation(AccessibilitySettings accessibilityValidation) {
+        if (accessibilityValidation == null) {
+            this.accessibilityValidation = null;
+            return;
+        }
+
+        if (accessibilityValidation.getLevel() == null || accessibilityValidation.getGuidelinesVersion() == null) {
+            throw new IllegalArgumentException("AccessibilitySettings should have the following properties: ‘level,version’");
+        }
+
         this.accessibilityValidation = accessibilityValidation;
     }
 }

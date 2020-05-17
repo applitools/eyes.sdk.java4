@@ -1,3 +1,7 @@
+## [vNext]
+### Updated
+- Accessibility guidelines version support [Trello 1767](https://trello.com/c/gq69woeK)
+
 ## [4.11.1] - 2020-05-4
 ### Fixed
 - Upload viewport image to Azure cloud for visual locators. [Trello 1672](https://trello.com/c/9r6TeoVo)

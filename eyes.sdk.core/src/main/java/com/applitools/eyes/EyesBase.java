@@ -1668,6 +1668,7 @@ public abstract class EyesBase implements IEyesBase {
 
         logger.verbose("Application environment is " + appEnv);
 
+        defaultMatchSettings.setAccessibilitySettings(config.getAccessibilityValidation());
         sessionStartInfo = new SessionStartInfo(config, getFullAgentId(), null,
                 appEnv, defaultMatchSettings, properties);
 

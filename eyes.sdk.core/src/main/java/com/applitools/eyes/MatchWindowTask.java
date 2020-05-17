@@ -270,6 +270,8 @@ public class MatchWindowTask {
 
             imageMatchSettings.setUseDom(checkSettingsInternal.isUseDom() != null ? checkSettingsInternal.isUseDom() : false);
 
+            imageMatchSettings.setAccessibilitySettings(eyes.getDefaultMatchSettings().getAccessibilitySettings());
+
             collectSimpleRegions(checkSettingsInternal, imageMatchSettings, screenshot);
             collectFloatingRegions(checkSettingsInternal, imageMatchSettings, screenshot);
             collectAccessibilityRegions(checkSettingsInternal, imageMatchSettings, eyes, screenshot);

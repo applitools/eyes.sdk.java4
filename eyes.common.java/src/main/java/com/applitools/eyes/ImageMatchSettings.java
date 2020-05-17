@@ -17,7 +17,7 @@ public class ImageMatchSettings {
     private FloatingMatchSettings floatingMatchSettings[];
     private boolean useDom;
     private AccessibilityRegionByRectangle[] accessibility = new AccessibilityRegionByRectangle[0];
-    private AccessibilityLevel accessibilityLevel = AccessibilityLevel.None;
+    private AccessibilitySettings accessibilitySettings;
 
     public ImageMatchSettings(MatchLevel matchLevel, ExactMatchSettings exact, boolean useDom) {
         this.matchLevel = matchLevel;
@@ -187,12 +187,12 @@ public class ImageMatchSettings {
         this.accessibility = accessibilityRegions;
     }
 
-    public AccessibilityLevel getAccessibilityLevel() {
-        return accessibilityLevel;
+    public AccessibilitySettings getAccessibilitySettings() {
+        return accessibilitySettings;
     }
 
-    public void setAccessibilityLevel(AccessibilityLevel accessibilityLevel) {
-        this.accessibilityLevel = accessibilityLevel;
+    public void setAccessibilitySettings(AccessibilitySettings accessibilitySettings) {
+        this.accessibilitySettings = accessibilitySettings;
     }
 
     public AccessibilityRegionByRectangle[] getAccessibility() {
