@@ -6,10 +6,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class AccessibilitySettings {
 
     @JsonInclude
-    private final AccessibilityLevel level;
+    private AccessibilityLevel level;
 
     @JsonProperty("version")
-    private final AccessibilityGuidelinesVersion guidelinesVersion;
+    private AccessibilityGuidelinesVersion guidelinesVersion;
+
+    public AccessibilitySettings() {}
 
     public AccessibilitySettings(AccessibilityLevel level, AccessibilityGuidelinesVersion guidelinesVersion) {
         this.level = level;

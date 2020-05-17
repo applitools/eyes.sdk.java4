@@ -13,7 +13,7 @@ import java.net.URL;
 public class AndroidAccessibilityTest {
 
     @Test
-    public void testSanity() throws Exception {
+    public void testAndroidAccessibility() throws Exception {
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("platformName", "Android");
         capabilities.setCapability("deviceName", "Google Nexus 6");
@@ -28,6 +28,9 @@ public class AndroidAccessibilityTest {
         eyes.setForceFullPageScreenshot(false);
         eyes.setMatchTimeout(1000);
         eyes.setSaveDebugScreenshots(false);
+        eyes.setProxy(new ProxySettings("http://localhost:8888"));
+        eyes.setServerUrl("https://testeyesapi.applitools.com");
+        eyes.setApiKey("D98LyaCRbaPoEDpIyF99AKiUHAzx1JUoqITFiyF104mHniE110");
 
         Configuration configuration = new Configuration();
         configuration.setAppName("Android Test App");
@@ -42,8 +45,8 @@ public class AndroidAccessibilityTest {
 
             TestResults results = eyes.close();
             SessionAccessibilityStatus accessibilityStatus = results.getAccessibilityStatus();
-            Assert.assertEquals(accessibilityStatus.getSettings().getLevel(), AccessibilityLevel.AA);
-            Assert.assertEquals(accessibilityStatus.getSettings().getGuidelinesVersion(), AccessibilityGuidelinesVersion.WCAG_2_0);
+            Assert.assertEquals(accessibilityStatus.getLevel(), AccessibilityLevel.AA);
+            Assert.assertEquals(accessibilityStatus.getVersion(), AccessibilityGuidelinesVersion.WCAG_2_0);
         } finally {
             driver.quit();
             eyes.abortIfNotClosed();

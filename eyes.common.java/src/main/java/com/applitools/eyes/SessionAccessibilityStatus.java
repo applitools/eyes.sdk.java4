@@ -27,7 +27,11 @@ public class SessionAccessibilityStatus {
         return status;
     }
 
-    public AccessibilitySettings getSettings() {
-        return new AccessibilitySettings(level, version);
+    public AccessibilityLevel getLevel() {
+        return level;
+    }
+
+    public AccessibilityGuidelinesVersion getVersion() {
+        return version;
     }
 }
