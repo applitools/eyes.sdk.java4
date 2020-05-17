@@ -1,9 +1,5 @@
-package com.applitools.eyes.selenium;
+package com.applitools.eyes;
 
-import com.applitools.eyes.EyesBase;
-import com.applitools.eyes.Logger;
-import com.applitools.eyes.RestClient;
-import com.applitools.eyes.TestResults;
 import com.applitools.eyes.metadata.ActualAppOutput;
 import com.applitools.eyes.metadata.SessionResults;
 import com.applitools.utils.ArgumentGuard;

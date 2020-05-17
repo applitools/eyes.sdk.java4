@@ -1,5 +1,6 @@
 package com.applitools.eyes.selenium;
 
+import com.applitools.eyes.TestUtils;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;

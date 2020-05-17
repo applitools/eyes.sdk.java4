@@ -22,14 +22,14 @@ public class TestAccessibility {
         Eyes eyes = new Eyes();
         AccessibilitySettings settings = new AccessibilitySettings(AccessibilityLevel.AA, AccessibilityGuidelinesVersion.WCAG_2_0);
         Configuration configuration = new Configuration();
+        configuration.setAppName("Selenium Test App");
+        configuration.setTestName("Test accessibility");
+        configuration.setViewportSize(new RectangleSize(700, 460));
         configuration.setAccessibilityValidation(settings);
-        eyes.setProxy(new ProxySettings("http://localhost:8888"));
-//        eyes.setServerUrl("https://testeyesapi.applitools.com");
-//        eyes.setApiKey("D98LyaCRbaPoEDpIyF99AKiUHAzx1JUoqITFiyF104mHniE110");
         WebDriver driver = new ChromeDriver();
         try {
             driver.get("https://applitools.github.io/demo/TestPages/FramesTestPage/");
-            eyes.open(driver);
+            eyes.open(driver, configuration);
             eyes.check("Sanity", Target.window().accessibility(By.className("ignore"), AccessibilityRegionType.LargeText));
             TestResults results = eyes.close();
 
