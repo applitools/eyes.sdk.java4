@@ -28,9 +28,6 @@ public class AndroidAccessibilityTest {
         eyes.setForceFullPageScreenshot(false);
         eyes.setMatchTimeout(1000);
         eyes.setSaveDebugScreenshots(false);
-        eyes.setProxy(new ProxySettings("http://localhost:8888"));
-        eyes.setServerUrl("https://testeyesapi.applitools.com");
-        eyes.setApiKey("D98LyaCRbaPoEDpIyF99AKiUHAzx1JUoqITFiyF104mHniE110");
 
         Configuration configuration = new Configuration();
         configuration.setAppName("Android Test App");
