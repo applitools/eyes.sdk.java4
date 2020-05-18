@@ -33,15 +33,18 @@ public class TestAccessibility {
             eyes.check("Sanity", Target.window().accessibility(By.className("ignore"), AccessibilityRegionType.LargeText));
             TestResults results = eyes.close();
 
+            // Testing the accessibility status returned in the results
             SessionAccessibilityStatus accessibilityStatus = results.getAccessibilityStatus();
             Assert.assertEquals(accessibilityStatus.getLevel(), AccessibilityLevel.AA);
             Assert.assertEquals(accessibilityStatus.getVersion(), AccessibilityGuidelinesVersion.WCAG_2_0);
 
+            // Testing the accessibility settings sent in the start info
             SessionResults sessionResults = TestUtils.getSessionResults(eyes.getApiKey(), results);
             com.applitools.eyes.metadata.ImageMatchSettings defaultMatchSettings = sessionResults.getStartInfo().getDefaultMatchSettings();
             Assert.assertEquals(defaultMatchSettings.getAccessibilitySettings().getGuidelinesVersion(), AccessibilityGuidelinesVersion.WCAG_2_0);
             Assert.assertEquals(defaultMatchSettings.getAccessibilitySettings().getLevel(), AccessibilityLevel.AA);
 
+            // Testing the accessibility regions sent in the session
             ImageMatchSettings matchSettings = sessionResults.getActualAppOutput()[0].getImageMatchSettings();
             List<AccessibilityRegionByRectangle> actual = Arrays.asList(matchSettings.getAccessibility());
             Assert.assertEquals(new HashSet<>(actual), new HashSet<>(Arrays.asList(
@@ -50,6 +53,7 @@ public class TestAccessibility {
                     new AccessibilityRegionByRectangle(10, 284, 800, 500, AccessibilityRegionType.LargeText)
             )));
 
+            // Testing without accessibility validation
             configuration.setAccessibilityValidation(null);
             eyes.open(driver, configuration);
             eyes.checkWindow("No accessibility");
