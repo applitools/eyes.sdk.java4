@@ -31,7 +31,7 @@ public class TestAccessibility {
             driver.get("https://applitools.github.io/demo/TestPages/FramesTestPage/");
             eyes.open(driver, configuration);
             eyes.check("Sanity", Target.window().accessibility(By.className("ignore"), AccessibilityRegionType.LargeText));
-            TestResults results = eyes.close();
+            TestResults results = eyes.close(false);
 
             // Testing the accessibility status returned in the results
             SessionAccessibilityStatus accessibilityStatus = results.getAccessibilityStatus();
@@ -57,7 +57,7 @@ public class TestAccessibility {
             configuration.setAccessibilityValidation(null);
             eyes.open(driver, configuration);
             eyes.checkWindow("No accessibility");
-            results = eyes.close();
+            results = eyes.close(false);
             Assert.assertNull(results.getAccessibilityStatus());
         } finally {
             driver.quit();

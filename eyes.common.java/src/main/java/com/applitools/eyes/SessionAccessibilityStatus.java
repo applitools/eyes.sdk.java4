@@ -15,14 +15,6 @@ public class SessionAccessibilityStatus {
     @JsonProperty("version")
     private AccessibilityGuidelinesVersion version;
 
-    public SessionAccessibilityStatus() {}
-
-    public SessionAccessibilityStatus(AccessibilityStatus status, AccessibilitySettings settings) {
-        this.status = status;
-        this.level = settings.getLevel();
-        this.version = settings.getGuidelinesVersion();
-    }
-
     public AccessibilityStatus getStatus() {
         return status;
     }

@@ -39,11 +39,13 @@ public class AndroidAccessibilityTest {
         configuration.setAppName("Android Test App");
         configuration.setTestName("Test accessibility");
         configuration.setAccessibilityValidation(new AccessibilitySettings(AccessibilityLevel.AA, AccessibilityGuidelinesVersion.WCAG_2_0));
+        eyes.setServerUrl("https://testeyesapi.applitools.com");
+        eyes.setApiKey("D98LyaCRbaPoEDpIyF99AKiUHAzx1JUoqITFiyF104mHniE110");
 
         try {
             eyes.open(driver, configuration);
             eyes.check("Launcher screen", Target.window().accessibility(By.xpath("//*[@text='ScrollView']"), AccessibilityRegionType.GraphicalObject));
-            TestResults results = eyes.close();
+            TestResults results = eyes.close(false);
 
             SessionAccessibilityStatus accessibilityStatus = results.getAccessibilityStatus();
             Assert.assertEquals(accessibilityStatus.getLevel(), AccessibilityLevel.AA);
@@ -63,7 +65,7 @@ public class AndroidAccessibilityTest {
             configuration.setAccessibilityValidation(null);
             eyes.open(driver, configuration);
             eyes.checkWindow("No accessibility");
-            results = eyes.close();
+            results = eyes.close(false);
             Assert.assertNull(results.getAccessibilityStatus());
         } finally {
             driver.quit();
