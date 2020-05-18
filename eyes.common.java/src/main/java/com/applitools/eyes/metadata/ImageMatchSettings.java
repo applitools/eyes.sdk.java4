@@ -45,8 +45,8 @@ public class ImageMatchSettings {
     private Integer remainder;
     @JsonProperty("accessibility")
     private AccessibilityRegionByRectangle[] accessibility = new AccessibilityRegionByRectangle[0];
-    @JsonProperty("accessibilityLevel")
-    private AccessibilityLevel accessibilityLevel = AccessibilityLevel.None;
+    @JsonProperty("accessibilitySettings")
+    private AccessibilitySettings accessibilitySettings;
 
     @JsonProperty("matchLevel")
     public MatchLevel getMatchLevel() {
@@ -158,14 +158,14 @@ public class ImageMatchSettings {
         this.remainder = remainder;
     }
 
-    @JsonProperty("accessibilityLevel")
-    public AccessibilityLevel getAccessibilityLevel() {
-        return accessibilityLevel;
+    @JsonProperty("accessibilitySettings")
+    public AccessibilitySettings getAccessibilitySettings() {
+        return accessibilitySettings;
     }
 
-    @JsonProperty("accessibilityLevel")
-    public void setAccessibilityLevel(AccessibilityLevel accessibilityLevel) {
-        this.accessibilityLevel = accessibilityLevel;
+    @JsonProperty("accessibilitySettings")
+    public void setAccessibilitySettings(AccessibilitySettings accessibilitySettings) {
+        this.accessibilitySettings = accessibilitySettings;
     }
 
     @JsonProperty("accessibility")

@@ -2,6 +2,7 @@ package com.applitools.eyes.selenium;
 
 import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.StdoutLogHandler;
+import com.applitools.eyes.TestUtils;
 import com.applitools.eyes.selenium.fluent.Target;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
