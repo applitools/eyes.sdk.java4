@@ -1,4 +1,4 @@
-## [vNext]
+## [4.12.0]
 ### Updated
 - Accessibility guidelines version support [Trello 1767](https://trello.com/c/gq69woeK)
 
