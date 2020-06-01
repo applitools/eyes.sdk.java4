@@ -250,10 +250,19 @@ public class MatchWindowTask {
      * @param screenshot the Screenshot wrapper object.
      * @return Merged match settings.
      */
-    public ImageMatchSettings createImageMatchSettings(ICheckSettingsInternal checkSettingsInternal, EyesScreenshot screenshot) {
+    public ImageMatchSettings createImageMatchSettings(ICheckSettingsInternal checkSettingsInternal, EyesScreenshot screenshot, EyesBase eyes) {
+        ImageMatchSettings imageMatchSettings = createImageMatchSettings(checkSettingsInternal, eyes);
+        if (imageMatchSettings != null) {
+            collectSimpleRegions(checkSettingsInternal, imageMatchSettings, screenshot);
+            collectFloatingRegions(checkSettingsInternal, imageMatchSettings, screenshot);
+            collectAccessibilityRegions(checkSettingsInternal, imageMatchSettings, eyes, screenshot);
+        }
+        return imageMatchSettings;
+    }
+
+    public static ImageMatchSettings createImageMatchSettings(ICheckSettingsInternal checkSettingsInternal, EyesBase eyes) {
         ImageMatchSettings imageMatchSettings = null;
         if (checkSettingsInternal != null) {
-
             MatchLevel matchLevel = checkSettingsInternal.getMatchLevel();
             if (matchLevel == null) {
                 matchLevel = eyes.getDefaultMatchSettings().getMatchLevel();
@@ -267,14 +276,10 @@ public class MatchWindowTask {
             }
 
             imageMatchSettings.setIgnoreCaret(ignoreCaret);
-
             imageMatchSettings.setUseDom(checkSettingsInternal.isUseDom() != null ? checkSettingsInternal.isUseDom() : false);
-
             imageMatchSettings.setAccessibilitySettings(eyes.getDefaultMatchSettings().getAccessibilitySettings());
-
-            collectSimpleRegions(checkSettingsInternal, imageMatchSettings, screenshot);
-            collectFloatingRegions(checkSettingsInternal, imageMatchSettings, screenshot);
-            collectAccessibilityRegions(checkSettingsInternal, imageMatchSettings, eyes, screenshot);
+            imageMatchSettings.setIgnoreDisplacements(checkSettingsInternal.isIgnoreDisplacements() != null ? checkSettingsInternal.isIgnoreDisplacements() : false);
+            imageMatchSettings.setEnablePatterns(checkSettingsInternal.isEnablePatterns() != null ? checkSettingsInternal.isEnablePatterns() : false);
         }
         return imageMatchSettings;
     }
@@ -340,7 +345,7 @@ public class MatchWindowTask {
                                              boolean ignoreMismatch, ICheckSettingsInternal checkSettingsInternal) {
         AppOutputWithScreenshot appOutput = appOutputProvider.getAppOutput(region, lastScreenshot, checkSettingsInternal);
         EyesScreenshot screenshot = appOutput.getScreenshot();
-        ImageMatchSettings matchSettings = createImageMatchSettings(checkSettingsInternal, screenshot);
+        ImageMatchSettings matchSettings = createImageMatchSettings(checkSettingsInternal, screenshot, eyes);
         matchResult = performMatch(userInputs, appOutput, tag, ignoreMismatch, matchSettings);
         return screenshot;
     }

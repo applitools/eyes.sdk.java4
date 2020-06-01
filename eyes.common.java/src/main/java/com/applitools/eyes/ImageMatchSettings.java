@@ -16,6 +16,8 @@ public class ImageMatchSettings {
     private Region contentRegions[];
     private FloatingMatchSettings floatingMatchSettings[];
     private boolean useDom;
+    private boolean enablePatterns;
+    private boolean ignoreDisplacements;
     private AccessibilityRegionByRectangle[] accessibility = new AccessibilityRegionByRectangle[0];
     private AccessibilitySettings accessibilitySettings;
 
@@ -202,5 +204,21 @@ public class ImageMatchSettings {
     public String toString() {
         return String.format("Match level: %s, Exact match settings: %s",
                 matchLevel, exact);
+    }
+
+    public void setIgnoreDisplacements(boolean ignoreDisplacements) {
+        this.ignoreDisplacements = ignoreDisplacements;
+    }
+
+    public boolean isIgnoreDisplacements() {
+        return ignoreDisplacements;
+    }
+
+    public boolean isEnablePatterns() {
+        return enablePatterns;
+    }
+
+    public void setEnablePatterns(boolean enablePatterns) {
+        this.enablePatterns = enablePatterns;
     }
 }

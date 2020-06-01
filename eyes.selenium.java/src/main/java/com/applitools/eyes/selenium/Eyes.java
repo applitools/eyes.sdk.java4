@@ -788,7 +788,7 @@ public class Eyes extends EyesBase {
 
             debugScreenshotsProvider.save(subScreenshot.getImage(), String.format("subscreenshot_%s", name));
 
-            ImageMatchSettings ims = mwt.createImageMatchSettings(checkSettingsInternal, subScreenshot);
+            ImageMatchSettings ims = mwt.createImageMatchSettings(checkSettingsInternal, subScreenshot, this);
 
             BufferedImage screenshotImage = subScreenshot.getImage();
             byte[] screenshotBytes = ImageUtils.encodeAsPng(screenshotImage);

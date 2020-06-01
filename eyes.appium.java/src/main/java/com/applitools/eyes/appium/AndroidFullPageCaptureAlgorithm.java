@@ -30,7 +30,7 @@ public class AndroidFullPageCaptureAlgorithm extends AppiumFullPageCaptureAlgori
         // scrollViewRegion is the (upscaled) region of the scrollview on the screen
         Region scrollViewRegion = scaleSafe(((AppiumScrollPositionProvider) scrollProvider).getScrollableViewRegion());
         // we modify the region by one pixel to make sure we don't accidentally get a pixel of the header above it
-        Location newLoc = new Location(0, scrollViewRegion.getTop() - scaleSafe(((AppiumScrollPositionProvider) scrollProvider).getStatusBarHeight()));
+        Location newLoc = new Location(scrollViewRegion.getLeft(), scrollViewRegion.getTop() - scaleSafe(((AppiumScrollPositionProvider) scrollProvider).getStatusBarHeight()));
         RectangleSize newSize = new RectangleSize(initialPartSize.getWidth(), scrollViewRegion.getHeight());
         scrollViewRegion.setLocation(newLoc);
         scrollViewRegion.setSize(newSize);
@@ -39,7 +39,7 @@ public class AndroidFullPageCaptureAlgorithm extends AppiumFullPageCaptureAlgori
 
         int positionMargin = 50; // We need to set position margin to avoid shadow at the top of view
 
-        int xPos = 5;
+        int xPos = scrollViewRegion.getLeft() + 1;
         Region regionToCrop;
         int oneScrollStep = scrollViewRegion.getHeight() - positionMargin;
         int maxScrollSteps = contentSize.getScrollContentHeight() / oneScrollStep;

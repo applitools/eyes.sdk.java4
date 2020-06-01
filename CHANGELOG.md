@@ -1,3 +1,7 @@
+
+### Added 
+- Ignore displacements and enable patterns. [Trello 1628](https://trello.com/c/ejcVTEJV)
+
 ## [4.12.0]
 ### Updated
 - Accessibility guidelines version support [Trello 1767](https://trello.com/c/gq69woeK)

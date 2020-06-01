@@ -165,4 +165,12 @@ public interface ICheckSettings {
     ICheckSettings sendDom(boolean sendDom);
 
     ICheckSettings sendDom();
+
+    ICheckSettings ignoreDisplacements(boolean ignoreDisplacements);
+
+    ICheckSettings ignoreDisplacements();
+
+    ICheckSettings enablePatterns(boolean enablePatterns);
+
+    ICheckSettings enablePatterns();
 }

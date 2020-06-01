@@ -24,6 +24,8 @@ public class CheckSettings implements ICheckSettings, ICheckSettingsInternal {
     protected Boolean sendDom = null;
     protected Boolean useDom = null;
     protected List<IGetAccessibilityRegion> accessibilityRegions = new ArrayList<>();
+    protected Boolean ignoreDisplacements;
+    protected Boolean enablePatterns;
 
     protected CheckSettings() { }
 
@@ -337,6 +339,16 @@ public class CheckSettings implements ICheckSettings, ICheckSettingsInternal {
     }
 
     @Override
+    public Boolean isIgnoreDisplacements() {
+        return ignoreDisplacements;
+    }
+
+    @Override
+    public Boolean isEnablePatterns() {
+        return enablePatterns;
+    }
+
+    @Override
     public ICheckSettings useDom(boolean useDom) {
         CheckSettings clone = this.clone();
         clone.useDom = useDom;
@@ -354,6 +366,32 @@ public class CheckSettings implements ICheckSettings, ICheckSettingsInternal {
     @Override
     public ICheckSettings sendDom() {
         return sendDom(true);
+    }
+
+    @Override
+    public ICheckSettings ignoreDisplacements(boolean ignoreDisplacements) {
+        CheckSettings clone = this.clone();
+        clone.ignoreDisplacements = ignoreDisplacements;
+        return clone;
+    }
+
+    @Override
+    public ICheckSettings ignoreDisplacements() {
+        return this.ignoreDisplacements(true);
+    }
+
+    @Override
+    public ICheckSettings enablePatterns(boolean enablePatterns) {
+        CheckSettings clone = this.clone();
+        clone.enablePatterns = enablePatterns;
+        return clone;
+    }
+
+    @Override
+    public ICheckSettings enablePatterns() {
+        CheckSettings clone = this.clone();
+        clone.enablePatterns = true;
+        return clone;
     }
 
     @Override
@@ -449,5 +487,8 @@ public class CheckSettings implements ICheckSettings, ICheckSettingsInternal {
         clone.strictRegions.addAll(this.strictRegions);
         clone.floatingRegions.addAll(this.floatingRegions);
         clone.accessibilityRegions = this.accessibilityRegions;
+        clone.useDom = this.useDom;
+        clone.ignoreDisplacements = (this.ignoreDisplacements);
+        clone.enablePatterns = (this.enablePatterns);
     }
 }
