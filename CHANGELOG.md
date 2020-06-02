@@ -1,3 +1,9 @@
+
+### Added 
+- Ignore displacements and enable patterns. [Trello 1628](https://trello.com/c/ejcVTEJV)
+### Updated
+- Use the scrollable view's X position for avoiding "clickable elements" instead of fixed location. [Trello 1871](https://trello.com/c/Dt6yaCpw)
+
 ## [4.12.0]
 ### Updated
 - Accessibility guidelines version support [Trello 1767](https://trello.com/c/gq69woeK)

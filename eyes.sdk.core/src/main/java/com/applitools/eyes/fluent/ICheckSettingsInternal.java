@@ -19,4 +19,6 @@ public interface ICheckSettingsInternal {
     IGetAccessibilityRegion[] getAccessibilityRegions();
     Boolean isUseDom();
     Boolean isSendDom();
+    Boolean isIgnoreDisplacements();
+    Boolean isEnablePatterns();
 }
