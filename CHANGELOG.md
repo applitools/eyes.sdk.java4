@@ -3,6 +3,8 @@
 - Ignore displacements and enable patterns. [Trello 1628](https://trello.com/c/ejcVTEJV)
 ### Updated
 - Use the scrollable view's X position for avoiding "clickable elements" instead of fixed location. [Trello 1871](https://trello.com/c/Dt6yaCpw)
+### Fixed
+- Init temporary content size with default values if it was not initialized before. [Trello 1596](https://trello.com/c/Axjv3Lzn)
 
 ## [4.12.0]
 ### Updated
