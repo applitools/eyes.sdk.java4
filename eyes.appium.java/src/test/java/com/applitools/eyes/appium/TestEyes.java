@@ -3,8 +3,11 @@ package com.applitools.eyes.appium;
 import com.applitools.eyes.EyesBase;
 import com.applitools.eyes.EyesScreenshot;
 import com.applitools.eyes.RectangleSize;
+import com.applitools.eyes.config.Configuration;
 
 public class TestEyes extends EyesBase {
+
+    private Configuration configuration = new Configuration();
 
     public TestEyes() {
     }
@@ -46,5 +49,13 @@ public class TestEyes extends EyesBase {
     @Override
     protected String getAUTSessionId() {
         return null;
+    }
+
+    public void setConfiguration(Configuration configuration) {
+        this.configuration = configuration;
+    }
+
+    protected Configuration getConfiguration() {
+        return configuration;
     }
 }

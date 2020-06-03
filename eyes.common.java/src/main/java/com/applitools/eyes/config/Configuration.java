@@ -18,6 +18,8 @@ public class Configuration {
     private RectangleSize viewportSize;
     private SessionType sessionType;
     private AccessibilitySettings accessibilityValidation = null;
+    private boolean ignoreDisplacements = false;
+    private boolean enablePatterns = false;
 
     public void setBatch(BatchInfo batch) {
         this.batch = batch;
@@ -130,5 +132,21 @@ public class Configuration {
         }
 
         this.accessibilityValidation = accessibilityValidation;
+    }
+
+    public boolean getIgnoreDisplacements() {
+        return ignoreDisplacements;
+    }
+
+    public void setIgnoreDisplacements(boolean ignoreDisplacements) {
+        this.ignoreDisplacements = ignoreDisplacements;
+    }
+
+    public boolean getEnablePatterns() {
+        return enablePatterns;
+    }
+
+    public void setEnablePatterns(boolean enablePatterns) {
+        this.enablePatterns = enablePatterns;
     }
 }
