@@ -268,6 +268,13 @@ public class AndroidScrollPositionProvider extends AppiumScrollPositionProvider 
             return new Location(scrollData.scrollX, scrollData.scrollY);
         }
 
+        if (contentSize == null) {
+            logger.verbose("Retrieved content size is null... Initialized temporary with default values");
+            // It can happens when we use scroll (touch) actions for navigation on some screens before
+            // And after that we are executing check() command
+            contentSize = new ContentSize();
+        }
+
         // otherwise, if we already have a scroll position, just assume we scrolled exactly as much
         // as the touchaction was supposed to. unfortunately it's not really that simple, because we
         // might think we scrolled a full page but we hit a barrier and only scrolled a bit. so take
