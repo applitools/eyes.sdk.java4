@@ -1,4 +1,4 @@
-
+## [4.12.1]
 ### Added 
 - Ignore displacements and enable patterns. [Trello 1628](https://trello.com/c/ejcVTEJV)
 ### Updated
