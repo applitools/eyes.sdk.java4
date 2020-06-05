@@ -130,7 +130,7 @@ public class IOSScrollPositionProvider extends AppiumScrollPositionProvider {
     }
 
     @Override
-    public void scrollTo(int startX, int startY, int endX, int endY) {
+    public void scrollTo(int startX, int startY, int endX, int endY, boolean shouldCancel) {
         // Do not need this method
     }
 

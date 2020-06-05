@@ -1,6 +1,8 @@
-package com.applitools.eyes.appium;
+package com.applitools.eyes.appium.android;
 
 import com.applitools.eyes.StdoutLogHandler;
+import com.applitools.eyes.appium.Eyes;
+import com.applitools.eyes.appium.Target;
 import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 

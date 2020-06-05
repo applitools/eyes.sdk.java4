@@ -6,22 +6,31 @@ import com.applitools.eyes.capture.ImageProvider;
 import com.applitools.eyes.debug.DebugScreenshotsProvider;
 import com.applitools.eyes.selenium.positioning.NullRegionPositionCompensation;
 import com.applitools.utils.GeneralUtils;
+import com.google.common.math.IntMath;
 
 import java.awt.image.BufferedImage;
+import java.math.RoundingMode;
 
 public class AndroidFullPageCaptureAlgorithm extends AppiumFullPageCaptureAlgorithm {
+
+    private static final int DEFAULT_STITCHING_ADJUSTMENT = 50;
+
+    private Integer stitchingAdjustment = DEFAULT_STITCHING_ADJUSTMENT;
 
     public AndroidFullPageCaptureAlgorithm(Logger logger,
         AppiumScrollPositionProvider scrollProvider,
         ImageProvider imageProvider, DebugScreenshotsProvider debugScreenshotsProvider,
         ScaleProviderFactory scaleProviderFactory, CutProvider cutProvider,
-        EyesScreenshotFactory screenshotFactory, int waitBeforeScreenshots) {
+        EyesScreenshotFactory screenshotFactory, int waitBeforeScreenshots, Integer stitchingAdjustment) {
 
         super(logger, scrollProvider, imageProvider, debugScreenshotsProvider,
             scaleProviderFactory, cutProvider, screenshotFactory, waitBeforeScreenshots, null);
 
         // Android returns pixel coordinates which are already scaled according to the pixel ratio
         this.coordinatesAreScaled = true;
+        if (stitchingAdjustment != null) {
+            this.stitchingAdjustment = stitchingAdjustment;
+        }
     }
 
     @SuppressWarnings("Duplicates")
@@ -37,45 +46,51 @@ public class AndroidFullPageCaptureAlgorithm extends AppiumFullPageCaptureAlgori
 
         ContentSize contentSize = ((AppiumScrollPositionProvider) scrollProvider).getCachedContentSize();
 
-        int positionMargin = 50; // We need to set position margin to avoid shadow at the top of view
-
         int xPos = scrollViewRegion.getLeft() + 1;
         Region regionToCrop;
-        int oneScrollStep = scrollViewRegion.getHeight() - positionMargin;
+
+        // We need to set position margin to avoid shadow at the top of view
+        int oneScrollStep = scrollViewRegion.getHeight() - stitchingAdjustment;
         int maxScrollSteps = contentSize.getScrollContentHeight() / oneScrollStep;
+        logger.verbose("Entire scrollable height: " + contentSize.getScrollContentHeight());
+        logger.verbose("One scroll step: " + oneScrollStep);
+        logger.verbose("Max scroll steps: " + ((double) contentSize.getScrollContentHeight() / oneScrollStep));
 
         for (int step = 1; step <= maxScrollSteps; step++) {
             regionToCrop = new Region(0,
-                    scrollViewRegion.getTop() + positionMargin,
+                    scrollViewRegion.getTop() + stitchingAdjustment,
                     initialPartSize.getWidth(),
-                    scrollViewRegion.getHeight() - positionMargin);
+                    scrollViewRegion.getHeight() - stitchingAdjustment);
 
             currentPosition = new Location(0,
-                    scrollViewRegion.getTop() + ((scrollViewRegion.getHeight()) * (step)) - (positionMargin*step - positionMargin));
+                    scrollViewRegion.getTop() + ((scrollViewRegion.getHeight()) * (step)) - (stitchingAdjustment*step - stitchingAdjustment));
 
+            // We should use release() touch action for the last scroll action
+            // For some applications scrolling is not executed for the last part with cancel() action
             ((AppiumScrollPositionProvider) scrollProvider).scrollTo(xPos,
                     scrollViewRegion.getHeight() + scrollViewRegion.getTop() - 1,
                     xPos,
-                    scrollViewRegion.getTop() + (step != maxScrollSteps ? positionMargin : 0));
+                    scrollViewRegion.getTop() + (step != maxScrollSteps ? stitchingAdjustment : 0),
+                    step != maxScrollSteps);
 
             if (step == maxScrollSteps) {
                 int cropTo = contentSize.getScrollContentHeight() - (oneScrollStep * (step));
-                int cropFrom = oneScrollStep - cropTo + scrollViewRegion.getTop() + positionMargin;
+                int cropFrom = oneScrollStep - cropTo + scrollViewRegion.getTop() + stitchingAdjustment;
                 regionToCrop = new Region(0,
                         cropFrom,
                         initialPartSize.getWidth(),
                         cropTo);
                 currentPosition = new Location(0,
-                        scrollViewRegion.getTop() + ((scrollViewRegion.getHeight()) * (step)) - (positionMargin*step));
+                        scrollViewRegion.getTop() + ((scrollViewRegion.getHeight()) * (step)) - (stitchingAdjustment*step));
             }
             captureAndStitchCurrentPart(regionToCrop, scrollViewRegion);
         }
 
         int heightUnderScrollableView = initialPartSize.getHeight() - oneScrollStep - scrollViewRegion.getTop();
         if (heightUnderScrollableView > 0) { // check if there is views under the scrollable view
-            regionToCrop = new Region(0, scrollViewRegion.getHeight() + scrollViewRegion.getTop() - positionMargin, initialPartSize.getWidth(), heightUnderScrollableView);
+            regionToCrop = new Region(0, scrollViewRegion.getHeight() + scrollViewRegion.getTop() - stitchingAdjustment, initialPartSize.getWidth(), heightUnderScrollableView);
 
-            currentPosition = new Location(0, scrollViewRegion.getTop() + contentSize.getScrollContentHeight() - positionMargin);
+            currentPosition = new Location(0, scrollViewRegion.getTop() + contentSize.getScrollContentHeight() - stitchingAdjustment);
 
             captureAndStitchCurrentPart(regionToCrop, scrollViewRegion);
         }

@@ -178,12 +178,16 @@ public class AndroidScrollPositionProvider extends AppiumScrollPositionProvider 
     }
 
     @Override
-    public void scrollTo(int startX, int startY, int endX, int endY) {
+    public void scrollTo(int startX, int startY, int endX, int endY, boolean shouldCancel) {
         logger.verbose("Trying to scroll from startX: " + startX + " | startY: " + startY + " | endX: " + endX + " | endY: " + endY);
         TouchAction scrollAction = new TouchAction(driver);
         scrollAction.press(new PointOption().withCoordinates(startX, startY)).waitAction(new WaitOptions().withDuration(Duration.ofMillis(1500)));
         scrollAction.moveTo(new PointOption().withCoordinates(endX, endY - contentSize.touchPadding));
-        scrollAction.cancel();
+        if (shouldCancel) {
+            scrollAction.cancel();
+        } else {
+            scrollAction.release();
+        }
         driver.performTouchAction(scrollAction);
 
         curScrollPos = new Location(curScrollPos.getX(), curScrollPos.getY() + startX);
@@ -322,6 +326,7 @@ public class AndroidScrollPositionProvider extends AppiumScrollPositionProvider 
 
         try {
             WebElement activeScroll = EyesAppiumUtils.getFirstScrollableView(driver);
+            logger.verbose("Scrollable element is instance of " + activeScroll.getAttribute("className"));
             String className = activeScroll.getAttribute("className");
 
             if (className.equals("android.support.v7.widget.RecyclerView") ||

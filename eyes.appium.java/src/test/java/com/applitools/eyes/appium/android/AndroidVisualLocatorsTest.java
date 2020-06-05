@@ -1,12 +1,12 @@
-package com.applitools.eyes.appium;
+package com.applitools.eyes.appium.android;
 
 import com.applitools.eyes.Location;
-import com.applitools.eyes.LogHandler;
 import com.applitools.eyes.Region;
 import com.applitools.eyes.StdoutLogHandler;
+import com.applitools.eyes.appium.Eyes;
 import com.applitools.eyes.locators.VisualLocator;
 import io.appium.java_client.TouchAction;
-import io.appium.java_client.ios.IOSDriver;
+import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -16,33 +16,37 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
-public class IOSVisualLocatorTest {
+public class AndroidVisualLocatorsTest {
 
     public static void main(String[] args) throws Exception {
-        DesiredCapabilities capabilities = new DesiredCapabilities();
 
-        capabilities.setCapability("platformName", "iOS");
-        capabilities.setCapability("deviceName", "iPhone Xr");
-        capabilities.setCapability("platformVersion", "12.4");
-        capabilities.setCapability("app", "/Users/alexanderkachechka/Downloads/app-ios.app");
-        capabilities.setCapability("automationName", "XCUITest");
-        capabilities.setCapability("fullReset", true);
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        // IMPORTANT: This assumes an emulator running locally. Make sure the settings match the device you're running.
+        capabilities.setCapability("platformName", "Android");
+        capabilities.setCapability("deviceName", "Google Nexus 6");
+        capabilities.setCapability("platformVersion", "7.1.1");
+
+        capabilities.setCapability("app", "https://applitools.bintray.com/Examples/app-android.apk");
+        capabilities.setCapability("automationName", "UiAutomator2");
         capabilities.setCapability("newCommandTimeout", 300);
 
-        IOSDriver driver = new IOSDriver<>(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
+        AndroidDriver driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
+
+        driver.manage().timeouts().implicitlyWait(10_000, TimeUnit.MILLISECONDS);
 
         Eyes eyes = new Eyes();
 
-        LogHandler logHandler = new StdoutLogHandler(true);
-        eyes.setLogHandler(logHandler);
+        eyes.setLogHandler(new StdoutLogHandler(true));
         eyes.setForceFullPageScreenshot(false);
-        eyes.setScrollToRegion(false);
         eyes.setMatchTimeout(1000);
-        try {
-            eyes.open(driver, "iOS Test App", "Test Visual Locators");
+        eyes.setSaveDebugScreenshots(false);
 
-            eyes.checkWindow("Launch screen");
+        try {
+            eyes.open(driver, "Android Test App", "Test Visual Locators");
+
+            eyes.checkWindow("Launch screen test");
 
             Map<String, List<Region>> locators = eyes.locate(VisualLocator.name("list_view_locator").name("scroll_view_locator"));
             System.out.println("Received locators" + locators);
@@ -69,6 +73,10 @@ public class IOSVisualLocatorTest {
 
                 eyes.checkWindow("ListView screen");
             }
+
+            locators = eyes.locate(VisualLocator.name("header_locator"));
+            System.out.println("Received locators" + locators);
+
             eyes.close();
         } finally {
             driver.quit();
