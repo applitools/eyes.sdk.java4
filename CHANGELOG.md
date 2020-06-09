@@ -1,6 +1,7 @@
 
 ### Updated 
 - Ignore displacements and enable patterns to Configuration. [Trello 844](https://trello.com/c/CvOpWbfU)
+- Make AccessibilityStatus enum public. [Trello 1840](https://trello.com/c/0jkWOnew)
 ### Added
 - Interaction setStitchOverlap method with mobile full page algorithms. [Trello 1419](https://trello.com/c/IIIKosP8)
 
