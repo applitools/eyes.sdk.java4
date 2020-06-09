@@ -2,7 +2,7 @@
 ### Updated 
 - Ignore displacements and enable patterns to Configuration. [Trello 844](https://trello.com/c/CvOpWbfU)
 ### Added
-- stitchingAdjustment parameter to Configuration class. It will be used to avoid shadows on stitching parts. [Trello 1419](https://trello.com/c/IIIKosP8)
+- Interaction setStitchOverlap method with mobile full page algorithms. [Trello 1419](https://trello.com/c/IIIKosP8)
 
 ## [4.12.1]
 ### Added 

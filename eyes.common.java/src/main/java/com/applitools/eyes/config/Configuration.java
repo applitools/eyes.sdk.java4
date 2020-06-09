@@ -20,7 +20,6 @@ public class Configuration {
     private AccessibilitySettings accessibilityValidation = null;
     private boolean ignoreDisplacements = false;
     private boolean enablePatterns = false;
-    private Integer stitchingAdjustment;
 
     public void setBatch(BatchInfo batch) {
         this.batch = batch;
@@ -149,17 +148,5 @@ public class Configuration {
 
     public void setEnablePatterns(boolean enablePatterns) {
         this.enablePatterns = enablePatterns;
-    }
-
-    public Integer getStitchingAdjustment() {
-        return stitchingAdjustment;
-    }
-
-    /**
-     * This parameter will help to avoid shadows on stitching parts.
-     * Used only for full page screenshots.
-     */
-    public void setStitchingAdjustment(Integer stitchingAdjustment) {
-        this.stitchingAdjustment = stitchingAdjustment;
     }
 }
