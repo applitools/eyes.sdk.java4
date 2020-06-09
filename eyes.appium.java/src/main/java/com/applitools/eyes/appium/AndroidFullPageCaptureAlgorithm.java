@@ -6,10 +6,8 @@ import com.applitools.eyes.capture.ImageProvider;
 import com.applitools.eyes.debug.DebugScreenshotsProvider;
 import com.applitools.eyes.selenium.positioning.NullRegionPositionCompensation;
 import com.applitools.utils.GeneralUtils;
-import com.google.common.math.IntMath;
 
 import java.awt.image.BufferedImage;
-import java.math.RoundingMode;
 
 public class AndroidFullPageCaptureAlgorithm extends AppiumFullPageCaptureAlgorithm {
 
