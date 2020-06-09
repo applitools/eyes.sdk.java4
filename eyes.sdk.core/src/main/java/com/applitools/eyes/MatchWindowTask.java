@@ -278,8 +278,8 @@ public class MatchWindowTask {
             imageMatchSettings.setIgnoreCaret(ignoreCaret);
             imageMatchSettings.setUseDom(checkSettingsInternal.isUseDom() != null ? checkSettingsInternal.isUseDom() : false);
             imageMatchSettings.setAccessibilitySettings(eyes.getDefaultMatchSettings().getAccessibilitySettings());
-            imageMatchSettings.setIgnoreDisplacements(checkSettingsInternal.isIgnoreDisplacements() != null ? checkSettingsInternal.isIgnoreDisplacements() : false);
-            imageMatchSettings.setEnablePatterns(checkSettingsInternal.isEnablePatterns() != null ? checkSettingsInternal.isEnablePatterns() : false);
+            imageMatchSettings.setIgnoreDisplacements(checkSettingsInternal.isIgnoreDisplacements());
+            imageMatchSettings.setEnablePatterns(checkSettingsInternal.isEnablePatterns());
         }
         return imageMatchSettings;
     }

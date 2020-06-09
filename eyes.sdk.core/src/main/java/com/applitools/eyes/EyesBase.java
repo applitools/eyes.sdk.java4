@@ -1143,6 +1143,13 @@ public abstract class EyesBase implements IEyesBase {
 
         beforeMatchWindow();
 
+        if (((ICheckSettingsInternal) checkSettings).isIgnoreDisplacements() == null) {
+            checkSettings = checkSettings.ignoreDisplacements(config.getIgnoreDisplacements());
+        }
+        if (((ICheckSettingsInternal) checkSettings).isEnablePatterns() == null) {
+            checkSettings = checkSettings.enablePatterns(config.getEnablePatterns());
+        }
+
         result = matchWindow(regionProvider, tag, ignoreMismatch, checkSettings);
 
         afterMatchWindow();

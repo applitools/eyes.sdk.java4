@@ -430,6 +430,28 @@ public class SeleniumCheckSettings extends CheckSettings implements ISeleniumChe
         return clone;
     }
 
+    public SeleniumCheckSettings ignoreDisplacements(boolean ignoreDisplacements) {
+        SeleniumCheckSettings clone = this.clone();
+        clone.ignoreDisplacements = ignoreDisplacements;
+        return clone;
+    }
+
+    public SeleniumCheckSettings ignoreDisplacements() {
+        return this.ignoreDisplacements(true);
+    }
+
+    public SeleniumCheckSettings enablePatterns(boolean enablePatterns) {
+        SeleniumCheckSettings clone = this.clone();
+        clone.enablePatterns = enablePatterns;
+        return clone;
+    }
+
+    public SeleniumCheckSettings enablePatterns() {
+        SeleniumCheckSettings clone = this.clone();
+        clone.enablePatterns = true;
+        return clone;
+    }
+
     public SeleniumCheckSettings statusBarExists() {
         SeleniumCheckSettings clone = this.clone();
         clone.statusBarExists = true;
