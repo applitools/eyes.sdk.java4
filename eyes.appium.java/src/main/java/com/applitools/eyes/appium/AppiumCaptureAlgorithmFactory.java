@@ -20,12 +20,14 @@ public class AppiumCaptureAlgorithmFactory {
     private EyesScreenshotFactory screenshotFactory;
     private int waitBeforeScreenshot;
     private WebElement cutElement;
+    private Integer stitchingAdjustment;
 
     public AppiumCaptureAlgorithmFactory(EyesAppiumDriver driver, Logger logger,
                                          AppiumScrollPositionProvider scrollProvider,
                                          ImageProvider imageProvider, DebugScreenshotsProvider debugScreenshotsProvider,
                                          ScaleProviderFactory scaleProviderFactory, CutProvider cutProvider,
-                                         EyesScreenshotFactory screenshotFactory, int waitBeforeScreenshots, WebElement cutElement) {
+                                         EyesScreenshotFactory screenshotFactory, int waitBeforeScreenshots, WebElement cutElement,
+                                         Integer stitchingAdjustment) {
 
         this.driver = driver;
         this.logger = logger;
@@ -37,13 +39,14 @@ public class AppiumCaptureAlgorithmFactory {
         this.screenshotFactory = screenshotFactory;
         this.waitBeforeScreenshot = waitBeforeScreenshots;
         this.cutElement = cutElement;
+        this.stitchingAdjustment = stitchingAdjustment;
     }
 
     public AppiumFullPageCaptureAlgorithm getAlgorithm () {
         if (EyesAppiumUtils.isAndroid(driver.getRemoteWebDriver())) {
             return new AndroidFullPageCaptureAlgorithm(logger, scrollProvider, imageProvider,
                     debugScreenshotsProvider, scaleProviderFactory, cutProvider, screenshotFactory,
-                    waitBeforeScreenshot);
+                    waitBeforeScreenshot, stitchingAdjustment);
         } else if (EyesAppiumUtils.isIOS(driver.getRemoteWebDriver())) {
             return new AppiumFullPageCaptureAlgorithm(logger, scrollProvider, imageProvider,
                     debugScreenshotsProvider, scaleProviderFactory, cutProvider, screenshotFactory,

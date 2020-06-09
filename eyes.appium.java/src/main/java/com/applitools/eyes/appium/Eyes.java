@@ -200,7 +200,7 @@ public class Eyes extends com.applitools.eyes.selenium.Eyes {
 
         AppiumCaptureAlgorithmFactory algoFactory = new AppiumCaptureAlgorithmFactory(getEyesDriver(), logger,
                 scrollPositionProvider, imageProvider, debugScreenshotsProvider, scaleProviderFactory,
-                cutProviderHandler.get(), screenshotFactory, getWaitBeforeScreenshots(), cutElement);
+                cutProviderHandler.get(), screenshotFactory, getWaitBeforeScreenshots(), cutElement, getStitchOverlap());
 
         AppiumFullPageCaptureAlgorithm algo = algoFactory.getAlgorithm();
 

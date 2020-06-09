@@ -1,6 +1,8 @@
-package com.applitools.eyes.appium;
+package com.applitools.eyes.appium.android;
 
 import com.applitools.eyes.*;
+import com.applitools.eyes.appium.Eyes;
+import com.applitools.eyes.appium.Target;
 import com.applitools.eyes.metadata.ImageMatchSettings;
 import com.applitools.eyes.metadata.SessionResults;
 import com.applitools.eyes.selenium.config.Configuration;

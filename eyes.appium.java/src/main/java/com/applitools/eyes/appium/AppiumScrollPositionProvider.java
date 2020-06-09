@@ -213,7 +213,7 @@ public abstract class AppiumScrollPositionProvider implements SeleniumScrollingP
 
     public abstract Location scrollDown(boolean returnAbsoluteLocation);
 
-    public abstract void scrollTo(int startX, int startY, int endX, int endY);
+    public abstract void scrollTo(int startX, int startY, int endX, int endY, boolean shouldCancel);
 
     int getStatusBarHeight() {
         return eyesDriver.getStatusBarHeight();
