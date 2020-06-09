@@ -19,7 +19,7 @@ public class ScrollViewTest {
 
         capabilities.setCapability("platformName", "iOS");
         capabilities.setCapability("deviceName", "iPhone 8");
-        capabilities.setCapability("platformVersion", "13.5");
+        capabilities.setCapability("platformVersion", "12.4");
         capabilities.setCapability("app", "https://applitools.bintray.com/Examples/IOSTestApp/1.1/IOSTestApp-1.1.zip");
         capabilities.setCapability("automationName", "XCUITest");
         capabilities.setCapability("fullReset", true);

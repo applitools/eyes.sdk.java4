@@ -1,3 +1,7 @@
+
+### Updated 
+- Ignore displacements and enable patterns to Configuration. [Trello 844](https://trello.com/c/CvOpWbfU)
+
 ## [4.12.1]
 ### Added 
 - Ignore displacements and enable patterns. [Trello 1628](https://trello.com/c/ejcVTEJV)
