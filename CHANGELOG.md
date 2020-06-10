@@ -1,11 +1,11 @@
-
+## [4.13.0] - 2020-06-10
 ### Updated 
 - Ignore displacements and enable patterns to Configuration. [Trello 844](https://trello.com/c/CvOpWbfU)
 - Make AccessibilityStatus enum public. [Trello 1840](https://trello.com/c/0jkWOnew)
 ### Added
 - Interaction setStitchOverlap method with mobile full page algorithms. [Trello 1419](https://trello.com/c/IIIKosP8)
 
-## [4.12.1]
+## [4.12.1] - 2020-06-03
 ### Added 
 - Ignore displacements and enable patterns. [Trello 1628](https://trello.com/c/ejcVTEJV)
 ### Updated
@@ -13,7 +13,7 @@
 ### Fixed
 - Init temporary content size with default values if it was not initialized before. [Trello 1596](https://trello.com/c/Axjv3Lzn)
 
-## [4.12.0]
+## [4.12.0] - 2020-05-18
 ### Updated
 - Accessibility guidelines version support [Trello 1767](https://trello.com/c/gq69woeK)
 

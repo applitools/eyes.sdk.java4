@@ -40,7 +40,7 @@ public class Eyes extends com.applitools.eyes.selenium.Eyes {
 
     @Override
     public String getBaseAgentId() {
-        return "eyes.appium.java/4.12.1";
+        return "eyes.appium.java/4.13.0";
     }
 
     private void init() {
