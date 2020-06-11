@@ -1,4 +1,4 @@
-## [4.13.1] - 2020-06-10
+## [4.13.2] - 2020-06-10
 ### Updated 
 - Ignore displacements and enable patterns to Configuration. [Trello 844](https://trello.com/c/CvOpWbfU)
 - Make AccessibilityStatus enum public. [Trello 1840](https://trello.com/c/0jkWOnew)
