@@ -1,6 +1,7 @@
 package com.applitools.eyes;
 
 import com.applitools.IDomCaptureListener;
+import com.applitools.connectivity.ServerConnector;
 import com.applitools.eyes.capture.AppOutputProvider;
 import com.applitools.eyes.capture.AppOutputWithScreenshot;
 import com.applitools.eyes.config.Configuration;
@@ -811,6 +812,7 @@ public abstract class EyesBase implements IEyesBase {
             // exception was thrown during close.
             runningSession = null;
             logger.getLogHandler().close();
+            serverConnector.closeConnector();
         }
     }
 

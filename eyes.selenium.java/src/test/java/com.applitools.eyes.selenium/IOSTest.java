@@ -1,8 +1,8 @@
 package com.applitools.eyes.selenium;
 
+import com.applitools.connectivity.ServerConnector;
 import com.applitools.eyes.BatchInfo;
 import com.applitools.eyes.FileLogger;
-import com.applitools.eyes.ServerConnector;
 import com.applitools.eyes.StdoutLogHandler;
 import com.applitools.eyes.selenium.fluent.Target;
 import org.openqa.selenium.By;
@@ -17,8 +17,6 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 

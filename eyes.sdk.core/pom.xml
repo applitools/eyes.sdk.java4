@@ -19,11 +19,6 @@
     <dependencies>
         <dependency>
             <groupId>com.applitools</groupId>
-            <artifactId>eyes-common-java4</artifactId>
-            <version>4.12.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.applitools</groupId>
                 <artifactId>eyes-connectivity-java4-jersey2x</artifactId>
             <version>4.12.1</version>
         </dependency>
