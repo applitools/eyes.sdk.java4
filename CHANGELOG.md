@@ -5,6 +5,8 @@
 - Connectivity package for network requests. [Trello 1912](https://trello.com/c/QWLOYEBA)
 ### Added
 - Interaction setStitchOverlap method with mobile full page algorithms. [Trello 1419](https://trello.com/c/IIIKosP8)
+### Fixed
+- Use the scrollable view's X position for avoiding "clickable elements" instead of middle location. [Trello 1594](https://trello.com/c/W9Yolu7K)
 
 ## [4.12.1] - 2020-06-03
 ### Added 

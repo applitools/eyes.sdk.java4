@@ -13,6 +13,8 @@ import com.applitools.eyes.selenium.positioning.RegionPositionCompensation;
 import com.applitools.utils.ArgumentGuard;
 import com.applitools.utils.GeneralUtils;
 import com.applitools.utils.ImageUtils;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 
 import java.awt.image.BufferedImage;
@@ -89,7 +91,6 @@ public class AppiumFullPageCaptureAlgorithm {
     }
 
     protected RectangleSize captureAndStitchCurrentPart(Region partRegion, Region scrollViewRegion) {
-
         logger.verbose("Taking screenshot for current scroll location");
         GeneralUtils.sleep(waitBeforeScreenshots);
         BufferedImage partImage = imageProvider.getImage();
@@ -98,7 +99,7 @@ public class AppiumFullPageCaptureAlgorithm {
 
         // before we take new screenshots, we have to reset the region in the screenshot we care
         // about, since from now on we just want the scroll view, not the entire view
-        setRegionInScreenshot(partImage, scrollViewRegion, new NullRegionPositionCompensation());
+        setRegionInScreenshot(partImage, partRegion, new NullRegionPositionCompensation());
 
         partImage = cropPartToRegion(partImage, partRegion);
 
@@ -111,55 +112,63 @@ public class AppiumFullPageCaptureAlgorithm {
 
         logger.verbose("Capturing all the tail parts for an Appium screen");
 
-        Location lastSuccessfulLocation;
         RectangleSize lastSuccessfulPartSize = new RectangleSize(initialPartSize.getWidth(), initialPartSize.getHeight());
         PositionMemento originalStitchedState = scrollProvider.getState();
+
+        int statusBarHeight = ((AppiumScrollPositionProvider) scrollProvider).getStatusBarHeight();
+
         // scrollViewRegion is the (upscaled) region of the scrollview on the screen
         Region scrollViewRegion = scaleSafe(((AppiumScrollPositionProvider) scrollProvider).getScrollableViewRegion());
         // we modify the region by one pixel to make sure we don't accidentally get a pixel of the header above it
-        Location newLoc = new Location(0, scrollViewRegion.getTop() - scaleSafe(((AppiumScrollPositionProvider) scrollProvider).getStatusBarHeight()) + 1);
+        Location newLoc = new Location(scrollViewRegion.getLeft(), scrollViewRegion.getTop() - scaleSafe(statusBarHeight) + 1);
         RectangleSize newSize = new RectangleSize(initialPartSize.getWidth(), scrollViewRegion.getHeight() - 1);
         scrollViewRegion.setLocation(newLoc);
         scrollViewRegion.setSize(newSize);
 
         ((AppiumScrollPositionProvider) scrollProvider).setCutElement(cutElement);
 
-        do {
-            lastSuccessfulLocation = currentPosition;
-            logger.verbose("Scrolling down to get next part");
-            currentPosition = scaleSafe(((AppiumScrollPositionProvider) scrollProvider).scrollDown(true));
+        ContentSize contentSize = ((AppiumScrollPositionProvider) scrollProvider).getCachedContentSize();
 
-            logger.verbose("After scroll the virtual absolute and scaled position was at " + currentPosition);
-            if (currentPosition.getX() == lastSuccessfulLocation.getX() && currentPosition.getY() == lastSuccessfulLocation.getY()) {
-                logger.verbose("Scroll had no effect, breaking the scroll loop");
-                break;
-            }
+        int xPos = downscaleSafe(scrollViewRegion.getLeft() + 1);
+        Region regionToCrop;
+        int oneScrollStep = downscaleSafe(scrollViewRegion.getHeight());
+        int maxScrollSteps = contentSize.getScrollContentHeight() / oneScrollStep;
+        logger.verbose("maxScrollSteps: " + maxScrollSteps);
+
+        for (int step = 1; step <= maxScrollSteps; step++) {
+            regionToCrop = new Region(0,
+                    scrollViewRegion.getTop(),
+                    initialPartSize.getWidth(),
+                    scrollViewRegion.getHeight());
+
+            int startY = downscaleSafe(scrollViewRegion.getHeight() + scrollViewRegion.getTop()) - 1;
+            int endY = startY - oneScrollStep;
+            ((AppiumScrollPositionProvider) scrollProvider).scrollTo(xPos, startY, xPos, endY, false);
+
+            currentPosition = scaleSafe(((AppiumScrollPositionProvider) scrollProvider).getCurrentPositionWithoutStatusBar(true));
+
             // here we make sure to say that the region we have scrolled to in the main screenshot
             // is also offset by 1, to match the change we made to the scrollViewRegion
             // We should set left = 0 because we need to a region from the start of viewport
-            Region scrolledRegion = new Region(0, currentPosition.getY() + 1, initialPartSize.getWidth(),
+            Region scrolledRegion = new Region(scrollViewRegion.getLeft(), scrollViewRegion.getTop() + 1, scrollViewRegion.getWidth(),
                     scrollViewRegion.getHeight());
+            currentPosition = new Location(currentPosition.getX(), currentPosition.getY() + 1);
             logger.verbose("The region to capture will be " + scrolledRegion);
-            lastSuccessfulPartSize = captureAndStitchCurrentPart(scrolledRegion, scrollViewRegion);
-        }
-        while (true);
 
-        // We should check if there any elements below the scrollable view
-        // and add them to entire screenshot
-        int capturedHeight = scrollViewRegion.getHeight() + scrollViewRegion.getTop();
-        if (initialPartSize.getHeight() - capturedHeight > 0) {
-            Region partRegion = new Region(0,
-                    capturedHeight,
-                    initialPartSize.getWidth(),
-                    initialPartSize.getHeight() - capturedHeight);
-
-            currentPosition = new Location(currentPosition.getX(), lastSuccessfulLocation.getY() + lastSuccessfulPartSize.getHeight());
-
-            lastSuccessfulPartSize = captureAndStitchCurrentPart(partRegion, partRegion);
-            lastSuccessfulLocation = currentPosition;
+            lastSuccessfulPartSize = captureAndStitchCurrentPart(regionToCrop, scrollViewRegion);
         }
 
-        cleanupStitch(originalStitchedState, lastSuccessfulLocation, lastSuccessfulPartSize, entireSize);
+        int heightUnderScrollableView = initialPartSize.getHeight() - scaleSafe(oneScrollStep) - scrollViewRegion.getTop();
+        if (heightUnderScrollableView > 0) { // check if there is views under the scrollable view
+            logger.verbose("There are extra space under the scrollable element. (height: " + heightUnderScrollableView + ")");
+            regionToCrop = new Region(0, scrollViewRegion.getHeight() + scrollViewRegion.getTop(), initialPartSize.getWidth(), heightUnderScrollableView);
+
+            currentPosition = new Location(currentPosition.getX(), currentPosition.getY() + lastSuccessfulPartSize.getHeight());
+
+            lastSuccessfulPartSize = captureAndStitchCurrentPart(regionToCrop, scrollViewRegion);
+        }
+
+        cleanupStitch(originalStitchedState, currentPosition, lastSuccessfulPartSize, entireSize);
         moveToTopLeft();
     }
 
@@ -501,5 +510,12 @@ public class AppiumFullPageCaptureAlgorithm {
             return value;
         }
         return (int) Math.ceil(value * pixelRatio);
+    }
+
+    protected int downscaleSafe(int value) {
+        if (coordinatesAreScaled) {
+            return value;
+        }
+        return (int) Math.ceil(value/pixelRatio);
     }
 }
