@@ -225,7 +225,7 @@ public class GeneralUtils {
         logExceptionStackTrace(logger, ex);
     }
 
-    public static void logExceptionStackTrace(Logger logger, Exception ex) {
+    public static void logExceptionStackTrace(Logger logger, Throwable ex) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream(2048);
         PrintWriter writer = new PrintWriter(stream, true);
         ex.printStackTrace(writer);
@@ -243,7 +243,7 @@ public class GeneralUtils {
         GeneralUtils.logger = logger;
     }
 
-    public static URI getDefaultServerUrl() {
+    public static URI getServerUrl() {
         String serverUrl = getEnvString(APPLITOOLS_SERVER_URL);
         try {
             return new URI(serverUrl != null ? serverUrl : "https://eyesapi.applitools.com");
@@ -272,5 +272,9 @@ public class GeneralUtils {
 
     public static String getEnvString(String variableName) {
         return System.getenv(variableName) == null ? System.getenv("bamboo_" + variableName) : System.getenv(variableName);
+    }
+
+    public static boolean getDontCloseBatches() {
+        return "true".equalsIgnoreCase(GeneralUtils.getEnvString(APPLITOOLS_DONT_CLOSE_BATCHES));
     }
 }

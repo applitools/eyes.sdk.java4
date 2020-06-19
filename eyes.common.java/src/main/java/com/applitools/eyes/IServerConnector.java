@@ -1,5 +1,7 @@
 package com.applitools.eyes;
 
+import com.applitools.connectivity.api.Response;
+
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
@@ -80,10 +82,9 @@ public interface IServerConnector {
      * Downloads string from a given Url
      *
      * @param uri The URI from which the IServerConnector will download the string
-     * @param isSecondRetry Indicates if a retry is mandatory onFailed - 2 retries per request
      * @param listener the listener will be called when the request will be resolved.
      */
-    void downloadString(URL uri, boolean isSecondRetry, IDownloadListener listener);
+    void downloadString(URL uri, TaskListener<String> listener);
 
     Map<String, List<Region>> postLocators(VisualLocatorsData visualLocatorsData);
 
@@ -92,5 +93,9 @@ public interface IServerConnector {
      */
     RenderingInfo getRenderInfo();
 
-    int uploadData(byte[] bytes, RenderingInfo renderingInfo, String targetUrl, String contentType, String mediaType);
+    Response uploadData(byte[] bytes, RenderingInfo renderingInfo, String targetUrl, String contentType, String mediaType);
+
+    String postViewportImage(byte[] bytes);
+
+    void closeConnector();
 }

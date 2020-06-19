@@ -1,11 +1,15 @@
 package com.applitools.eyes;
 
+import com.applitools.connectivity.RestClient;
+import com.applitools.connectivity.ServerConnector;
+import com.applitools.connectivity.api.Response;
 import com.applitools.eyes.metadata.ActualAppOutput;
 import com.applitools.eyes.metadata.SessionResults;
 import com.applitools.utils.ArgumentGuard;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriBuilder;
 import java.net.URI;
@@ -59,12 +63,13 @@ public class TestUtils {
                 .queryParam("apiKey", apiKey)
                 .build();
 
-        RestClient client = new RestClient(new Logger(), apiSessionUri);
-        String srStr = client.getString(apiSessionUri.toString(), MediaType.APPLICATION_JSON);
+        RestClient client = new RestClient(new Logger(), apiSessionUri, ServerConnector.DEFAULT_CLIENT_TIMEOUT);
+        Response response = client.sendHttpWebRequest(apiSessionUri.toString(), HttpMethod.GET, MediaType.APPLICATION_JSON);
+        String body = response.getBodyString();
         ObjectMapper jsonMapper = new ObjectMapper();
         jsonMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
-        return jsonMapper.readValue(srStr, SessionResults.class);
+        return jsonMapper.readValue(body, SessionResults.class);
     }
 
     public static String getStepDom(EyesBase eyes, ActualAppOutput actualAppOutput) {
@@ -78,9 +83,8 @@ public class TestUtils {
                 .queryParam("apiKey", eyes.getApiKey())
                 .build();
 
-        RestClient client = new RestClient(new Logger(), apiSessionUri);
-        String result = client.getString(apiSessionUri.toString(), MediaType.APPLICATION_JSON);
-        return result;
+        RestClient client = new RestClient(new Logger(), apiSessionUri, ServerConnector.DEFAULT_CLIENT_TIMEOUT);
+        return client.sendHttpWebRequest(apiSessionUri.toString(), HttpMethod.GET, MediaType.APPLICATION_JSON).getBodyString();
     }
 
 }

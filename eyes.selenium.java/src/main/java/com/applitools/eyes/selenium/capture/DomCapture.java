@@ -1,6 +1,6 @@
 package com.applitools.eyes.selenium.capture;
 
-import com.applitools.eyes.IDownloadListener;
+import com.applitools.eyes.TaskListener;
 import com.applitools.eyes.IServerConnector;
 import com.applitools.eyes.Location;
 import com.applitools.eyes.Logger;
@@ -236,16 +236,16 @@ public class DomCapture {
 
             if (isHTML) {
                 mainPhaser.register();
-                getFrameBundledCss(baseUrl, new IDownloadListener() {
+                getFrameBundledCss(baseUrl, new TaskListener<String>() {
                     @Override
-                    public void onDownloadComplete(String downloadedString) {
+                    public void onComplete(String downloadedString) {
                         domTree.put("css", downloadedString);
                         mLogger.verbose("Putting css in " + " - CSS = " + downloadedString);
                         mainPhaser.arriveAndDeregister();
                     }
 
                     @Override
-                    public void onDownloadFailed() {
+                    public void onFail() {
                         mLogger.verbose("mainPhaser.arriveAndDeregister()");
                         mainPhaser.arriveAndDeregister();
 
@@ -304,7 +304,7 @@ public class DomCapture {
     }
 
 
-    private void getFrameBundledCss(final URL baseUrl, IDownloadListener listener) {
+    private void getFrameBundledCss(final URL baseUrl, TaskListener listener) {
         URI uri = URI.create(baseUrl.toString());
         if (!uri.isAbsolute()) {
             mLogger.log("WARNING! Base URL is not an absolute URL!");
@@ -325,10 +325,10 @@ public class DomCapture {
                 final CssTreeNode cssTreeNode = new CssTreeNode();
                 cssTreeNode.setBaseUrl(root.baseUrl);
                 cssTreeNode.setUrlPostfix(value);
-                downloadCss(cssTreeNode, new IDownloadListener() {
+                downloadCss(cssTreeNode, new TaskListener<String>() {
                     @Override
-                    public void onDownloadComplete(String downloadedString) {
-                        mLogger.verbose("DomCapture.onDownloadComplete");
+                    public void onComplete(String downloadedString) {
+                        mLogger.verbose("DomCapture.onComplete");
 
                         parseCSS(cssTreeNode, downloadedString);
                         if (cssTreeNode.allImportRules != null && !cssTreeNode.allImportRules.isEmpty()) {
@@ -339,8 +339,8 @@ public class DomCapture {
 
                     @Override
 
-                    public void onDownloadFailed() {
-                        mLogger.verbose("DomCapture.onDownloadFailed");
+                    public void onFail() {
+                        mLogger.verbose("DomCapture.onFail");
                     }
                 });
                 nodes.add(cssTreeNode);
@@ -348,7 +348,7 @@ public class DomCapture {
         }
         root.setDecedents(nodes);
         treePhaser.arriveAndAwaitAdvance();
-        listener.onDownloadComplete(root.calcCss());
+        listener.onComplete(root.calcCss());
     }
 
     class CssTreeNode {
@@ -396,9 +396,9 @@ public class DomCapture {
                     cssTreeNode.setBaseUrl(this.baseUrl);
                     String uri = importRule.getLocation().getURI();
                     cssTreeNode.setUrlPostfix(uri);
-                    downloadCss(cssTreeNode, new IDownloadListener() {
+                    downloadCss(cssTreeNode, new TaskListener<String>() {
                         @Override
-                        public void onDownloadComplete(String downloadedString) {
+                        public void onComplete(String downloadedString) {
                             parseCSS(cssTreeNode, downloadedString);
                             if (!cssTreeNode.allImportRules.isEmpty()) {
                                 cssTreeNode.downloadNodeCss();
@@ -407,7 +407,7 @@ public class DomCapture {
                         }
 
                         @Override
-                        public void onDownloadFailed() {
+                        public void onFail() {
                             mLogger.verbose("Download Failed");
                         }
                     });
@@ -440,15 +440,15 @@ public class DomCapture {
 
     }
 
-    private void downloadCss(final CssTreeNode node, final IDownloadListener listener) {
+    private void downloadCss(final CssTreeNode node, final TaskListener<String> listener) {
         treePhaser.register();
         mLogger.verbose("Given URL to download: " + node.urlPostfix);
-        mServerConnector.downloadString(node.urlPostfix, false, new IDownloadListener() {
+        mServerConnector.downloadString(node.urlPostfix, new TaskListener<String>() {
             @Override
-            public void onDownloadComplete(String downloadedString) {
+            public void onComplete(String downloadedString) {
                 try {
                     mLogger.verbose("Download Complete");
-                    listener.onDownloadComplete(downloadedString);
+                    listener.onComplete(downloadedString);
 
                 } catch (Exception e) {
                     GeneralUtils.logExceptionStackTrace(e);
@@ -461,7 +461,7 @@ public class DomCapture {
             }
 
             @Override
-            public void onDownloadFailed() {
+            public void onFail() {
                 treePhaser.arriveAndDeregister();
                 mLogger.verbose("Download Faild");
                 mLogger.verbose("treePhaser.arriveAndDeregister(); " + node.urlPostfix);
