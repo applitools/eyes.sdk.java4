@@ -7,16 +7,17 @@ import com.applitools.eyes.positioning.PositionMemento;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 
 import com.applitools.utils.ImageUtils;
 import io.appium.java_client.MobileBy;
+import io.appium.java_client.TouchAction;
 import io.appium.java_client.remote.MobileCapabilityType;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.Rectangle;
-import org.openqa.selenium.WebElement;
+import io.appium.java_client.touch.WaitOptions;
+import io.appium.java_client.touch.offset.PointOption;
+import org.openqa.selenium.*;
 
 import javax.annotation.Nullable;
 
@@ -131,7 +132,16 @@ public class IOSScrollPositionProvider extends AppiumScrollPositionProvider {
 
     @Override
     public void scrollTo(int startX, int startY, int endX, int endY, boolean shouldCancel) {
-        // Do not need this method
+        logger.verbose("Trying to scroll from startX: " + startX + " | startY: " + startY + " | endX: " + endX + " | endY: " + endY);
+
+        TouchAction scrollAction = new TouchAction(driver);
+        scrollAction.press(new PointOption().withCoordinates(startX, startY)).waitAction(new WaitOptions().withDuration(Duration.ofMillis(3000)));
+        scrollAction.moveTo(new PointOption().withCoordinates(startX, endY));
+        scrollAction.release();
+
+        driver.performTouchAction(scrollAction);
+
+        try { Thread.sleep(750); } catch (InterruptedException ign) {}
     }
 
     @Override
