@@ -1,4 +1,4 @@
-## [vNext] - 2020-06-12
+## [4.14.0] - 2020-06-22
 ### Updated
 - Connectivity package for network requests. [Trello 1912](https://trello.com/c/QWLOYEBA)
 ### Fixed
