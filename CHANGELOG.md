@@ -1,12 +1,15 @@
+## [vNext] - 2020-06-12
+### Updated
+- Connectivity package for network requests. [Trello 1912](https://trello.com/c/QWLOYEBA)
+### Fixed
+- Use the scrollable view's X position for avoiding "clickable elements" instead of middle location. [Trello 1594](https://trello.com/c/W9Yolu7K)
+
 ## [4.13.3] - 2020-06-12
 ### Updated 
 - Ignore displacements and enable patterns to Configuration. [Trello 844](https://trello.com/c/CvOpWbfU)
 - Make AccessibilityStatus enum public. [Trello 1840](https://trello.com/c/0jkWOnew)
-- Connectivity package for network requests. [Trello 1912](https://trello.com/c/QWLOYEBA)
 ### Added
 - Interaction setStitchOverlap method with mobile full page algorithms. [Trello 1419](https://trello.com/c/IIIKosP8)
-### Fixed
-- Use the scrollable view's X position for avoiding "clickable elements" instead of middle location. [Trello 1594](https://trello.com/c/W9Yolu7K)
 
 ## [4.12.1] - 2020-06-03
 ### Added 
