@@ -1,3 +1,7 @@
+
+### Added
+- Test reporting event. [Trello 1940](https://trello.com/c/b2XYeZ8v)
+
 ## [4.14.0] - 2020-06-22
 ### Updated
 - Connectivity package for network requests. [Trello 1912](https://trello.com/c/QWLOYEBA)

@@ -1,38 +1,23 @@
 package com.applitools.eyes.appium.android;
 
 import com.applitools.eyes.*;
-import com.applitools.eyes.appium.Eyes;
 import com.applitools.eyes.appium.Target;
 import com.applitools.eyes.metadata.ImageMatchSettings;
 import com.applitools.eyes.metadata.SessionResults;
 import com.applitools.eyes.selenium.config.Configuration;
-import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.By;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
-public class AndroidAccessibilityTest {
+public class AndroidAccessibilityTest extends AndroidTestSetup {
 
-    @Test
+    @Test(groups = "failed") // Invalid status code [401 Unauthorized]
     public void testAndroidAccessibility() throws Exception {
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability("platformName", "Android");
-        capabilities.setCapability("deviceName", "Google Nexus 6");
-
-        capabilities.setCapability("app", "https://applitools.bintray.com/Examples/app-android.apk");
-        capabilities.setCapability("automationName", "UiAutomator2");
-        capabilities.setCapability("newCommandTimeout", 300);
-
-        AndroidDriver driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
-
-        Eyes eyes = new Eyes();
         eyes.setForceFullPageScreenshot(false);
         eyes.setMatchTimeout(1000);
         eyes.setSaveDebugScreenshots(false);
@@ -42,7 +27,6 @@ public class AndroidAccessibilityTest {
         configuration.setTestName("Test accessibility");
         configuration.setAccessibilityValidation(new AccessibilitySettings(AccessibilityLevel.AA, AccessibilityGuidelinesVersion.WCAG_2_0));
         eyes.setServerUrl("https://testeyesapi.applitools.com");
-        eyes.setApiKey("D98LyaCRbaPoEDpIyF99AKiUHAzx1JUoqITFiyF104mHniE110");
 
         try {
             eyes.open(driver, configuration);
@@ -61,7 +45,7 @@ public class AndroidAccessibilityTest {
             ImageMatchSettings matchSettings = sessionResults.getActualAppOutput()[0].getImageMatchSettings();
             List<AccessibilityRegionByRectangle> actual = Arrays.asList(matchSettings.getAccessibility());
             Assert.assertEquals(new HashSet<>(actual), new HashSet<>(Collections.singletonList(
-                    new AccessibilityRegionByRectangle(15, 358, 382, 48, AccessibilityRegionType.GraphicalObject)
+                    new AccessibilityRegionByRectangle(16, 358, 382, 48, AccessibilityRegionType.GraphicalObject)
             )));
 
             configuration.setAccessibilityValidation(null);
@@ -73,5 +57,10 @@ public class AndroidAccessibilityTest {
             driver.quit();
             eyes.abortIfNotClosed();
         }
+    }
+
+    @Override
+    protected void setAppCapability() {
+        capabilities.setCapability("app", "https://applitools.bintray.com/Examples/app-android.apk");
     }
 }

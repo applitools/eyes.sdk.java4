@@ -1,30 +1,14 @@
 package com.applitools.eyes.appium.android;
 
 import com.applitools.eyes.StdoutLogHandler;
-import com.applitools.eyes.appium.Eyes;
 import com.applitools.eyes.appium.Target;
 import io.appium.java_client.MobileBy;
-import io.appium.java_client.android.AndroidDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.annotations.Test;
 
-import java.net.URL;
+public class AndroidXRecyclerViewTest extends AndroidTestSetup {
 
-public class AndroidXRecyclerViewTest {
-
-    public static void main(String[] args) throws Exception {
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability("platformName", "Android");
-        capabilities.setCapability("deviceName", "Pixel 2");
-        capabilities.setCapability("platformVersion", "9.0");
-
-        capabilities.setCapability("app", "https://applitools.bintray.com/Examples/androidx/1.0.0/app_androidx.apk");
-        capabilities.setCapability("automationName", "UiAutomator2");
-        capabilities.setCapability("newCommandTimeout", 300);
-
-        AndroidDriver driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
-
-        Eyes eyes = new Eyes();
-
+    @Test(groups = "failed") // Error executing adbExec
+    public void testAndroidXRecyclerView() {
         eyes.setLogHandler(new StdoutLogHandler(true));
         eyes.setMatchTimeout(1000);
 
@@ -46,5 +30,10 @@ public class AndroidXRecyclerViewTest {
             driver.quit();
             eyes.abortIfNotClosed();
         }
+    }
+
+    @Override
+    protected void setAppCapability() {
+        capabilities.setCapability("app", "https://applitools.bintray.com/Examples/androidx/1.0.0/app_androidx.apk");
     }
 }
