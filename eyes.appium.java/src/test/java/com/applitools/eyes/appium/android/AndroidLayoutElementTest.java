@@ -6,17 +6,15 @@ import com.applitools.eyes.StdoutLogHandler;
 import com.applitools.eyes.appium.Eyes;
 import com.applitools.eyes.appium.Target;
 import io.appium.java_client.MobileElement;
-import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.annotations.Test;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
-public class AndroidLayoutElementTest {
+public class AndroidLayoutElementTest extends AndroidTestSetup {
 
-    public static void main(String[] args) throws MalformedURLException {
+    @Test
+    public void testAndroidLayoutElement() {
         BatchInfo batch = new BatchInfo("Regions test");
         Eyes eyes = new Eyes();
         eyes.setBatch(batch);
@@ -24,15 +22,6 @@ public class AndroidLayoutElementTest {
         //Add API Key
         eyes.setSaveDebugScreenshots(true);
 
-        DesiredCapabilities dc = new DesiredCapabilities();
-
-        dc.setCapability(MobileCapabilityType.PLATFORM_VERSION, "7.1.1");
-        dc.setCapability(MobileCapabilityType.PLATFORM_NAME, "Android");
-        dc.setCapability(MobileCapabilityType.AUTOMATION_NAME, "UIautomator2");
-        dc.setCapability(MobileCapabilityType.DEVICE_NAME, "Pixel3");
-        dc.setCapability(MobileCapabilityType.APP, "https://applitools.bintray.com/Examples/eyes-android-hello-world.apk");
-
-        AndroidDriver<MobileElement> driver = new AndroidDriver<MobileElement>(new URL("http://127.0.0.1:4723/wd/hub"), dc);
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
         try {
@@ -58,5 +47,10 @@ public class AndroidLayoutElementTest {
             eyes.abortIfNotClosed();
             driver.quit();
         }
+    }
+
+    @Override
+    protected void setAppCapability() {
+        capabilities.setCapability(MobileCapabilityType.APP, "https://applitools.bintray.com/Examples/eyes-android-hello-world.apk");
     }
 }

@@ -7,34 +7,19 @@ import com.applitools.eyes.StdoutLogHandler;
 import com.applitools.eyes.appium.Eyes;
 import com.applitools.eyes.locators.VisualLocator;
 import io.appium.java_client.TouchAction;
-import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.annotations.Test;
 
-import java.net.URL;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class IOSVisualLocatorTest {
+public class IOSVisualLocatorTest extends IOSTestSetup {
 
-    public static void main(String[] args) throws Exception {
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-
-        capabilities.setCapability("platformName", "iOS");
-        capabilities.setCapability("deviceName", "iPhone Xr");
-        capabilities.setCapability("platformVersion", "12.4");
-        capabilities.setCapability("app", "/Users/alexanderkachechka/Downloads/app-ios.app");
-        capabilities.setCapability("automationName", "XCUITest");
-        capabilities.setCapability("fullReset", true);
-        capabilities.setCapability("newCommandTimeout", 300);
-
-        IOSDriver driver = new IOSDriver<>(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
-
-        Eyes eyes = new Eyes();
-
+    @Test(groups = "failed") // App paths is absolute
+    public void testIOSVisualLocator() throws Exception {
         LogHandler logHandler = new StdoutLogHandler(true);
         eyes.setLogHandler(logHandler);
         eyes.setForceFullPageScreenshot(false);
@@ -75,5 +60,10 @@ public class IOSVisualLocatorTest {
             driver.quit();
             eyes.abortIfNotClosed();
         }
+    }
+
+    @Override
+    protected void setAppCapability() {
+        capabilities.setCapability("app", "/Users/alexanderkachechka/Downloads/app-ios.app");
     }
 }
