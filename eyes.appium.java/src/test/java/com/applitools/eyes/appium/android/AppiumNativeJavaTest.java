@@ -6,40 +6,23 @@ import org.testng.annotations.Test;
 
 public class AppiumNativeJavaTest extends AndroidTestSetup {
 
-    @Test(groups = "failed") // Could not proxy. Proxy error: Request failed with status code 404
+    @Test
     public void testAppiumNativeJava() {
-        capabilities.setCapability("browserName", "");
-        capabilities.setCapability("clearSystemFiles", true);
-        capabilities.setCapability("noReset", true);
+        // Start the test.
+        eyes.open(driver, "Android Test App", "My first Appium native Java test!");
 
-        LogHandler logHandler = new StdoutLogHandler(true);
-        eyes.setLogHandler(logHandler);
+        // Visual validation.
+        eyes.checkWindow("Launch screen test");
 
-        try {
-
-            // Start the test.
-            eyes.open(driver, "Contacts!", "My first Appium native Java test!");
-
-            // Visual validation.
-            eyes.checkWindow("Contact list!");
-
-            // End the test.
-            eyes.close();
-
-        } finally {
-
-            // Close the app.
-            driver.quit();
-
-            // If the test was aborted before eyes.close was called, ends the test as aborted.
-            eyes.abortIfNotClosed();
-
-        }
-
+        // End the test.
+        eyes.close();
     }
 
     @Override
-    protected void setAppCapability() {
-        capabilities.setCapability("app", "http://saucelabs.com/example_files/ContactManager.apk");
+    public void setCapabilities() {
+        super.setCapabilities();
+        capabilities.setCapability("browserName", "");
+        capabilities.setCapability("clearSystemFiles", true);
+        capabilities.setCapability("noReset", true);
     }
 }

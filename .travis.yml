@@ -1,8 +1,56 @@
 language: java
-
 jdk: oraclejdk8
 
-script:
+before_script:
   - export APPLITOOLS_BATCH_ID=`uuidgen -t`
   - echo $APPLITOOLS_BATCH_ID
-  - mvn test
+  # Grab SDK name and version from git tag
+  - export SDK_NAME=$(cut -d'@' -f1 <<<"$TRAVIS_TAG")
+  - SDK_VERSION=$(cut -d'@' -f2 <<<"$TRAVIS_TAG")
+  # Runs only during the release process. Set 'TestReportSandbox' key to false. It means that test reports will go to release sheet. Stops if CHANGELOG.md has the wrong format.
+  - if [[ "$SDK_NAME" && "$SDK_VERSION" ]]; then
+    export TEST_REPORT_SANDBOX = false;
+    TMP_CHANGELOG=$(sh extract_change_log.sh "$SDK_VERSION" "CHANGELOG.md");
+    CHANGELOG=$([ -z "$TMP_CHANGELOG" ] && echo "THERE IS NO CHANGELOG FOR VERSION $SDK_VERSION"; echo "$TMP_CHANGELOG");
+    if [[ (-z "$TMP_CHANGELOG") ]]; then
+    echo "THE CHANGELOG IS NOT CORRECT";
+    exit 1;
+    fi
+    fi
+  # Upload app to BrowserStack
+  - ANDROID_APP_UPLOAD_RESPONSE=$(curl -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" -X POST "https://api-cloud.browserstack.com/app-automate/upload" -F "data={\"url\": \"https://applitools.bintray.com/Examples/android/1.2/app_android.apk\"}")
+  - echo $APP_UPLOAD_RESPONSE
+  - ANDROID_APP_ID=$(echo $ANDROID_APP_UPLOAD_RESPONSE | jq -r ".app_url")
+  - echo $ANDROID_APP_ID                                                                                                                                                                                                                                                                                                                             fi
+
+stages:
+  - tests
+  - release-event
+
+jobs:
+  include:
+    - stage: test
+      script:
+        - cd eyes.appium.java
+        - echo "Test started"
+        - mvn test
+        - cd ..
+
+    - stage: deploy
+        if: $TRAVIS_TAG =~ ^RELEASE_CANDIDATE AND fork == false
+        script:
+          - echo "Deploy"
+    #          -git remote set-url origin https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG};
+    #          -mvn versions:set -DnewVersion=$SDK_VERSION;
+    #          -mvn versions:commit;
+    #          -git add */pom.xml pom.xml;
+    #          -git commit -m 'update pom version';
+    #          -git push origin HEAD:$RELEASE_BRANCH;
+
+    - stage: release-event
+        if: $TRAVIS_TAG =~ ^RELEASE_CANDIDATE AND fork == false
+        script:
+          - echo $TMP_CHANGELOG
+          - COMMITTER_EMAIL="$(git log -1 $TRAVIS_COMMIT --pretty="%cE")"
+          - TEST_COVERAGE_GAP=$(cat eyes.appium.java/testCoverageGap.txt)
+          - sh send_mail.sh "$SDK_NAME" "$SDK_VERSION" "$CHANGELOG" "$TEST_COVERAGE_GAP" "$COMMITTER_EMAIL";

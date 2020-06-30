@@ -1,0 +1,13 @@
+serialization
+android native regions
+android native windows
+android native full page (recycler view)
+android native scroll view
+android native visual locators
+android native full page screenshot
+android native sequence
+android native device name
+ios native full page screenshot
+ios native table view
+ios native visual locators
+ios native scroll view

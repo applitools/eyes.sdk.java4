@@ -1,5 +1,6 @@
 package com.applitools.eyes;
 
+import com.applitools.utils.GeneralUtils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
@@ -7,25 +8,34 @@ import java.util.List;
 
 public class TestResultReportSummary {
 
+    private static final String APPLITOOLS_REPORT_ID_KEY = "APPLITOOLS_REPORT_ID";
+    private static final String APPLITOOLS_REPORT_TO_SANDBOX_KEY = "TEST_REPORT_SANDBOX";
+    private static final String TRAVIS_TAG_KEY = "TRAVIS_TAG";
+    private static final String RELEASE_CANDIDATE = "RELEASE_CANDIDATE";
+
+    private static final String SDK_NAME = "java";
+    private static final String DEFAULT_APPLITOOLS_REPORT_ID = "0000-0000";
+    private static final String DEFAULT_GROUP_NAME = "appium";
+
     @JsonProperty("group")
-    private String group;
+    private String group = null;
 
     @JsonProperty("id")
     private String id = null;
 
+
     @JsonProperty("sdk")
     public String getSdkName() {
-        return "java";
+        return SDK_NAME;
     }
 
     @JsonProperty("id")
     public String getId() {
         if (this.id == null) {
-            this.id = System.getenv("APPLITOOLS_REPORT_ID");
+            this.id = GeneralUtils.getEnvString(APPLITOOLS_REPORT_ID_KEY);
         }
-
         if (this.id == null) {
-            return "0000-0000";
+            return DEFAULT_APPLITOOLS_REPORT_ID;
         }
         return this.id;
     }
@@ -37,14 +47,17 @@ public class TestResultReportSummary {
 
     @JsonProperty("sandbox")
     public boolean getSandbox() {
-        String isSandbox = System.getenv("APPLITOOLS_REPORT_TO_SANDBOX");
-        String travisTag = System.getenv("TRAVIS_TAG");
-        return "true".equalsIgnoreCase(isSandbox) || travisTag == null || travisTag.contains("RELEASE_CANDIDATE");
+        String isSandbox = GeneralUtils.getEnvString(APPLITOOLS_REPORT_TO_SANDBOX_KEY);
+        String travisTag = GeneralUtils.getEnvString(TRAVIS_TAG_KEY);
+        return "true".equalsIgnoreCase(isSandbox) || travisTag == null || travisTag.contains(RELEASE_CANDIDATE);
 
     }
 
     @JsonProperty("group")
     public String getGroup() {
+        if (this.group == null) {
+            return DEFAULT_GROUP_NAME;
+        }
         return this.group;
     }
 
