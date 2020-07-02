@@ -27,6 +27,6 @@ public abstract class AndroidTestSetup extends TestSetup {
     @Override
     protected void setAppCapability() {
         // To run locally use https://applitools.bintray.com/Examples/android/1.2/app_android.apk
-        capabilities.setCapability("app", GeneralUtils.getEnvString("ANDROID_APP_ID"));
+        capabilities.setCapability("app", "app_android");
     }
 }

@@ -18,7 +18,7 @@ before_script:
     fi
     fi
   # Upload app to BrowserStack
-  - ANDROID_APP_UPLOAD_RESPONSE=$(curl -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" -X POST "https://api-cloud.browserstack.com/app-automate/upload" -F "data={\"url\": \"https://applitools.bintray.com/Examples/android/1.2/app_android.apk\"}")
+  - ANDROID_APP_UPLOAD_RESPONSE=$(curl -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" -X POST "https://api-cloud.browserstack.com/app-automate/upload" -F "data={\"url\": \"https://applitools.bintray.com/Examples/android/1.2/app_android.apk\", \"custom_id\": \"app_android\"}")
   - echo $APP_UPLOAD_RESPONSE
   - ANDROID_APP_ID=$(echo $ANDROID_APP_UPLOAD_RESPONSE | jq -r ".app_url")
   - echo $ANDROID_APP_ID                                                                                                                                                                                                                                                                                                                             fi
