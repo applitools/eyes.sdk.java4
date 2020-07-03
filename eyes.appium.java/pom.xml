@@ -53,7 +53,7 @@
         <dependency>
             <groupId>com.applitools</groupId>
             <artifactId>eyes-common-java4</artifactId>
-            <version>4.12.1</version>
+            <version>4.14.0</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
