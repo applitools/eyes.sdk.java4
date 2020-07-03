@@ -4,6 +4,7 @@ jdk: oraclejdk8
 before_script:
   - export APPLITOOLS_BATCH_ID=`uuidgen -t`
   - echo $APPLITOOLS_BATCH_ID
+  - echo $RELEASE_CANDIDATE
   # Grab SDK name and version from git tag
   - export SDK_NAME=$(cut -d'@' -f1 <<<"$TRAVIS_TAG")
   - SDK_VERSION=$(cut -d'@' -f2 <<<"$TRAVIS_TAG")
@@ -18,13 +19,15 @@ before_script:
     fi
     fi
   # Upload app to BrowserStack
-  - ANDROID_APP_UPLOAD_RESPONSE=$(curl -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" -X POST "https://api-cloud.browserstack.com/app-automate/upload" -F "data={\"url\": \"https://applitools.bintray.com/Examples/android/1.2/app_android.apk\", \"custom_id\": \"app_android\"}")
+  - ANDROID_APP_UPLOAD_REQUEST_BODY=$(cat android_app_upload_request.txt)
+  - ANDROID_APP_UPLOAD_RESPONSE=$(curl -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" -X POST "https://api-cloud.browserstack.com/app-automate/upload" -F "data=$ANDROID_APP_UPLOAD_REQUEST_BODY")
   - echo $APP_UPLOAD_RESPONSE
   - ANDROID_APP_ID=$(echo $ANDROID_APP_UPLOAD_RESPONSE | jq -r ".app_url")
   - echo $ANDROID_APP_ID                                                                                                                                                                                                                                                                                                                             fi
 
 stages:
   - tests
+  - deploy
   - release-event
 
 jobs:
@@ -37,20 +40,20 @@ jobs:
         - cd ..
 
     - stage: deploy
-        if: $TRAVIS_TAG =~ ^RELEASE_CANDIDATE AND fork == false
-        script:
-          - echo "Deploy"
-    #          -git remote set-url origin https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG};
-    #          -mvn versions:set -DnewVersion=$SDK_VERSION;
-    #          -mvn versions:commit;
-    #          -git add */pom.xml pom.xml;
-    #          -git commit -m 'update pom version';
-    #          -git push origin HEAD:$RELEASE_BRANCH;
+      if: $TRAVIS_TAG =~ ^RELEASE_CANDIDATE AND fork == false
+      script:
+        - echo "Deploy"
+        #-git remote set-url origin https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG};
+        #-mvn versions:set -DnewVersion=$SDK_VERSION;
+        #-mvn versions:commit;
+        #-git add */pom.xml pom.xml;
+        #-git commit -m 'update pom version';
+        #-git push origin HEAD:$RELEASE_BRANCH;
 
     - stage: release-event
-        if: $TRAVIS_TAG =~ ^RELEASE_CANDIDATE AND fork == false
-        script:
-          - echo $TMP_CHANGELOG
-          - COMMITTER_EMAIL="$(git log -1 $TRAVIS_COMMIT --pretty="%cE")"
-          - TEST_COVERAGE_GAP=$(cat eyes.appium.java/testCoverageGap.txt)
-          - sh send_mail.sh "$SDK_NAME" "$SDK_VERSION" "$CHANGELOG" "$TEST_COVERAGE_GAP" "$COMMITTER_EMAIL";
+      if: $TRAVIS_TAG =~ ^RELEASE_CANDIDATE AND fork == false
+      script:
+        - echo $TMP_CHANGELOG
+        - COMMITTER_EMAIL="$(git log -1 $TRAVIS_COMMIT --pretty="%cE")"
+        - TEST_COVERAGE_GAP=$(cat eyes.appium.java/testCoverageGap.txt)
+        - sh send_mail.sh "$SDK_NAME" "$SDK_VERSION" "$CHANGELOG" "$TEST_COVERAGE_GAP" "$COMMITTER_EMAIL";

@@ -1,0 +1,1 @@
+{\"url\": \"https://applitools.bintray.com/Examples/android/1.2/app_android.apk\", \"custom_id\": \"app_android\"}
