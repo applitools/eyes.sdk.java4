@@ -19,12 +19,10 @@ before_script:
     exit 1;
     fi
     fi
-  # Upload app to BrowserStack
-  - ANDROID_APP_UPLOAD_REQUEST_BODY=$(cat android_app_upload_request.txt)
-  - ANDROID_APP_UPLOAD_RESPONSE=$(curl -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" -X POST "https://api-cloud.browserstack.com/app-automate/upload" -F "data=$ANDROID_APP_UPLOAD_REQUEST_BODY")
-  - echo $APP_UPLOAD_RESPONSE
-  - ANDROID_APP_ID=$(echo $ANDROID_APP_UPLOAD_RESPONSE | jq -r ".app_url")
-  - echo $ANDROID_APP_ID                                                                                                                                                                                                                                                                                                                             fi
+  # Upload apps to BrowserStack
+  - sh upload_app.sh "https://applitools.bintray.com/Examples/android/1.2/app_android.apk" "app_android"
+  - sh upload_app.sh "https://applitools.bintray.com/Examples/androidx/1.0.0/app_androidx.apk" "app_androidx"
+  - sh upload_app.sh "https://applitools.bintray.com/Examples/ipa/IOSTestApp.ipa" "app_ios"
 
 stages:
   - tests
