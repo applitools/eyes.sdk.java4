@@ -26,8 +26,8 @@ public abstract class IOSTestSetup extends TestSetup {
 
     @Override
     protected void setAppCapability() {
-        // To run locally use https://applitools.bintray.com/Examples/ipa/IOSTestApp.ipa
-        capabilities.setCapability("app", "app_ios");
+        // TODO: upload https://applitools.bintray.com/Examples/IOSTestApp/1.1/IOSTestApp-1.1.zip on runtime in travis.yml
+        capabilities.setCapability("app", "bs://a55cc1555d1bf6c0b464e2b1fa37cd8c96dcb953");
     }
 
     protected void setResetMode() {
