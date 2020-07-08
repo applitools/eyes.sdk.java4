@@ -12,7 +12,7 @@ public class TableViewTest extends IOSTestSetup {
         eyes.setMatchTimeout(1000);
 
         // Start the test.
-        eyes.open(driver, "IOS test application", "XCUIElementTypeTable");
+        eyes.open(driver, getApplicationName(), "XCUIElementTypeTable");
 
         WebElement showTable = driver.findElement(MobileBy.AccessibilityId("Table view"));
         showTable.click();

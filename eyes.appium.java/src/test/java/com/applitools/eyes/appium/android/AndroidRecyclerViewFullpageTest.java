@@ -1,6 +1,5 @@
 package com.applitools.eyes.appium.android;
 
-import com.applitools.eyes.StdoutLogHandler;
 import com.applitools.eyes.appium.Target;
 import org.testng.annotations.Test;
 
@@ -16,7 +15,7 @@ public class AndroidRecyclerViewFullpageTest extends AndroidTestSetup {
 
         driver.findElementById("btn_recycler_view").click();
 
-        eyes.open(driver, "AndroidTestApp", "Test RecyclerView");
+        eyes.open(driver, getApplicationName(), "Test RecyclerView");
 
         eyes.check(Target.window().withName("Viewport"));
 

@@ -12,7 +12,7 @@ public class ScrollViewTest extends IOSTestSetup {
         eyes.setMatchTimeout(1000);
 
         // Start the test.
-        eyes.open(driver, "IOS test application", "XCUIElementTypeScrollView");
+        eyes.open(driver, getApplicationName(), "XCUIElementTypeScrollView");
 
         WebElement showScrollView = driver.findElement(MobileBy.AccessibilityId("Scroll view"));
         showScrollView.click();

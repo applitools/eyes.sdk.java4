@@ -24,7 +24,7 @@ public class AndroidVisualLocatorsTest extends AndroidTestSetup {
         eyes.setMatchTimeout(1000);
         eyes.setSaveDebugScreenshots(false);
 
-        eyes.open(driver, "Android Test App", "Test Visual Locators");
+        eyes.open(driver, getApplicationName(), "Test Visual Locators");
 
         eyes.checkWindow("Launch screen test");
 

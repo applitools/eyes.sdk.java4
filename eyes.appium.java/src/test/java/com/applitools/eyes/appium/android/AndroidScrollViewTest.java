@@ -1,6 +1,5 @@
 package com.applitools.eyes.appium.android;
 
-import com.applitools.eyes.StdoutLogHandler;
 import com.applitools.eyes.appium.Target;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.touch.WaitOptions;
@@ -18,7 +17,7 @@ public class AndroidScrollViewTest extends AndroidTestSetup {
 
         eyes.setMatchTimeout(1000);
 
-        eyes.open(driver, "AndroidTestApp", "Check ScrollView");
+        eyes.open(driver, getApplicationName(), "Check ScrollView");
 
         // Scroll down
         TouchAction scrollAction = new TouchAction(driver);

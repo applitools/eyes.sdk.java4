@@ -13,7 +13,7 @@ public class AndroidCheckElementTest extends AndroidTestSetup {
         driver.manage().timeouts().implicitlyWait(10_000, TimeUnit.MILLISECONDS);
         eyes.setMatchTimeout(1000);
 
-        eyes.open(driver, "AndroidTestApp", "Check element test");
+        eyes.open(driver, getApplicationName(), "Check element test");
 
         eyes.check(Target.region(MobileBy.id("btn_recycler_view")));
 

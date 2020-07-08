@@ -1,7 +1,6 @@
 package com.applitools.eyes.appium.android;
 
 import com.applitools.eyes.appium.TestSetup;
-import com.applitools.utils.GeneralUtils;
 import io.appium.java_client.android.AndroidDriver;
 
 import java.net.MalformedURLException;
@@ -28,5 +27,10 @@ public abstract class AndroidTestSetup extends TestSetup {
     protected void setAppCapability() {
         // To run locally use https://applitools.bintray.com/Examples/android/1.2/app_android.apk
         capabilities.setCapability("app", "app_android");
+    }
+
+    @Override
+    protected String getApplicationName() {
+        return "Java Appium - Android";
     }
 }
