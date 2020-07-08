@@ -1,7 +1,5 @@
 package com.applitools.eyes.appium.ios;
 
-import com.applitools.eyes.LogHandler;
-import com.applitools.eyes.StdoutLogHandler;
 import com.applitools.eyes.appium.Target;
 import io.appium.java_client.MobileBy;
 import org.openqa.selenium.WebElement;
@@ -14,7 +12,7 @@ public class EmptyTableTest extends IOSTestSetup {
         eyes.setMatchTimeout(1000);
 
         // Start the test.
-        eyes.open(driver, "IOS test application", "Empty XCUIElementTypeTable");
+        eyes.open(driver, getApplicationName(), "Empty XCUIElementTypeTable");
 
         WebElement showTable = driver.findElement(MobileBy.AccessibilityId("Empty table view"));
         showTable.click();

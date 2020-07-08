@@ -19,7 +19,7 @@ public class AndroidLayoutElementTest extends AndroidTestSetup {
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
         // Start visual UI testing
-        eyes.open(driver, "Android test application", "Test regions with element");
+        eyes.open(driver, getApplicationName(), "Test regions with element");
 
         MobileElement elem = driver.findElementById("btn_activity_as_dialog");
         eyes.check(Target.window().layout(elem).withName("layout()"));

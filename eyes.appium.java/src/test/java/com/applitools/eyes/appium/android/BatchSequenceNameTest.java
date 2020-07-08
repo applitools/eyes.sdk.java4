@@ -1,7 +1,6 @@
 package com.applitools.eyes.appium.android;
 
 import com.applitools.eyes.BatchInfo;
-import com.applitools.eyes.StdoutLogHandler;
 import com.applitools.eyes.appium.Target;
 import org.testng.annotations.Test;
 
@@ -19,7 +18,7 @@ public class BatchSequenceNameTest extends AndroidTestSetup {
         eyes.setMatchTimeout(1000);
         eyes.setBatch(batchInfo);
 
-        eyes.open(driver, "AndroidTestApp", "Batch Sequence Name Test");
+        eyes.open(driver, getApplicationName(), "Batch Sequence Name Test");
 
         eyes.check(Target.window());
 

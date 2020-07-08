@@ -17,7 +17,7 @@ public class ScrollViewWithClickableElementTest extends AndroidTestSetup {
 
         eyes.setMatchTimeout(1000);
 
-        eyes.open(driver, "AndroidTestApp", "Check ScrollView with clickable element");
+        eyes.open(driver, getApplicationName(), "Check ScrollView with clickable element");
 
         // Scroll down
         TouchAction scrollAction = new TouchAction(driver);

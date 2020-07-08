@@ -1,10 +1,7 @@
 package com.applitools.eyes.appium.ios;
 
 import com.applitools.eyes.Location;
-import com.applitools.eyes.LogHandler;
 import com.applitools.eyes.Region;
-import com.applitools.eyes.StdoutLogHandler;
-import com.applitools.eyes.appium.Eyes;
 import com.applitools.eyes.locators.VisualLocator;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.touch.WaitOptions;
@@ -24,7 +21,7 @@ public class IOSVisualLocatorTest extends IOSTestSetup {
         eyes.setScrollToRegion(false);
         eyes.setMatchTimeout(1000);
 
-        eyes.open(driver, "iOS Test App", "Test Visual Locators");
+        eyes.open(driver, getApplicationName(), "Test Visual Locators");
 
         eyes.checkWindow("Launch screen");
 

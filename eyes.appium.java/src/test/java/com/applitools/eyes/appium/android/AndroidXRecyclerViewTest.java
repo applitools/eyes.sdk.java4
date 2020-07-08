@@ -12,7 +12,7 @@ public class AndroidXRecyclerViewTest extends AndroidTestSetup {
 
         driver.findElementById("btn_recycler_view_activity").click();
 
-        eyes.open(driver, "AndroidXTestApp", "Test RecyclerView");
+        eyes.open(driver, getApplicationName(), "Test RecyclerView");
 
         eyes.check(Target.window().withName("Viewport"));
 
@@ -29,5 +29,10 @@ public class AndroidXRecyclerViewTest extends AndroidTestSetup {
     protected void setAppCapability() {
         // To run locally use https://applitools.bintray.com/Examples/androidx/1.0.0/app_androidx.apk
         capabilities.setCapability("app", "app_androidx");
+    }
+
+    @Override
+    protected String getApplicationName() {
+        return "Java Appium - AndroidX";
     }
 }

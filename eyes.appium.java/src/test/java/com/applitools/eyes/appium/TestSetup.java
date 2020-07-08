@@ -63,4 +63,6 @@ public abstract class TestSetup extends ReportingTestSuite implements ITest {
     protected abstract void initDriver() throws MalformedURLException;
 
     protected abstract void setAppCapability();
+
+    protected abstract String getApplicationName();
 }

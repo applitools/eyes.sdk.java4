@@ -33,4 +33,9 @@ public abstract class IOSTestSetup extends TestSetup {
     protected void setResetMode() {
         capabilities.setCapability("fullReset", true);
     }
+
+    @Override
+    protected String getApplicationName() {
+        return "Java Appium - IOS";
+    }
 }

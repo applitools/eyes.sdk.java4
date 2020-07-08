@@ -16,7 +16,7 @@ public class IOSCheckElementTest extends IOSTestSetup {
 
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
-        eyes.open(driver, "iOS test application", "Check element test");
+        eyes.open(driver, getApplicationName(), "Check element test");
 
         WebElement showScrollView = driver.findElement(MobileBy.AccessibilityId("Scroll view"));
         showScrollView.click();

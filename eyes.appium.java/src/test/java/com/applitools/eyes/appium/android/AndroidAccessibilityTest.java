@@ -23,7 +23,7 @@ public class AndroidAccessibilityTest extends AndroidTestSetup {
         eyes.setSaveDebugScreenshots(false);
 
         Configuration configuration = new Configuration();
-        configuration.setAppName("Android Test App");
+        configuration.setAppName(getApplicationName());
         configuration.setTestName("Test accessibility");
         configuration.setAccessibilityValidation(new AccessibilitySettings(AccessibilityLevel.AA, AccessibilityGuidelinesVersion.WCAG_2_0));
         eyes.setServerUrl("https://testeyesapi.applitools.com");
