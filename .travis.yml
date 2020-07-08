@@ -7,8 +7,10 @@ before_script:
   - echo $APPLITOOLS_BATCH_ID
   - echo $RELEASE_CANDIDATE
   # Grab SDK name and version from git tag
-  - export SDK_NAME=$(cut -d'@' -f1 <<<"$TRAVIS_TAG")
-  - SDK_VERSION=$(cut -d'@' -f2 <<<"$TRAVIS_TAG")
+  - export SDK_NAME="java4"
+  - SDK_VERSION=$(cut -d'v' -f2 <<<"$TRAVIS_TAG")
+  - export APPLITOOLS_REPORT_ID=$(git log --pretty=format:'%h' -n 1)
+  - export TEST_REPORT_SANDBOX=false
   # Runs only during the release process. Set 'TestReportSandbox' key to false. It means that test reports will go to release sheet. Stops if CHANGELOG.md has the wrong format.
   - if [[ "$SDK_NAME" && "$SDK_VERSION" ]]; then
     export TEST_REPORT_SANDBOX = false;
@@ -39,7 +41,6 @@ jobs:
         - cd ..
 
     - stage: deploy
-      if: $TRAVIS_TAG =~ ^RELEASE_CANDIDATE AND fork == false
       script:
         - echo "Deploy"
         #-git remote set-url origin https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG};
@@ -50,7 +51,6 @@ jobs:
         #-git push origin HEAD:$RELEASE_BRANCH;
 
     - stage: release-event
-      if: $TRAVIS_TAG =~ ^RELEASE_CANDIDATE AND fork == false
       script:
         - echo $TMP_CHANGELOG
         - COMMITTER_EMAIL="$(git log -1 $TRAVIS_COMMIT --pretty="%cE")"

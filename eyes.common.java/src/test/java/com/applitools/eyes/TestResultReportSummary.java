@@ -10,10 +10,8 @@ public class TestResultReportSummary {
 
     private static final String APPLITOOLS_REPORT_ID_KEY = "APPLITOOLS_REPORT_ID";
     private static final String APPLITOOLS_REPORT_TO_SANDBOX_KEY = "TEST_REPORT_SANDBOX";
-    private static final String TRAVIS_TAG_KEY = "TRAVIS_TAG";
-    private static final String RELEASE_CANDIDATE = "RELEASE_CANDIDATE";
 
-    private static final String SDK_NAME = "java";
+    private static final String SDK_NAME = "java4";
     private static final String DEFAULT_APPLITOOLS_REPORT_ID = "0000-0000";
     private static final String DEFAULT_GROUP_NAME = "appium";
 
@@ -48,9 +46,7 @@ public class TestResultReportSummary {
     @JsonProperty("sandbox")
     public boolean getSandbox() {
         String isSandbox = GeneralUtils.getEnvString(APPLITOOLS_REPORT_TO_SANDBOX_KEY);
-        String travisTag = GeneralUtils.getEnvString(TRAVIS_TAG_KEY);
-        return "true".equalsIgnoreCase(isSandbox) || travisTag == null || travisTag.contains(RELEASE_CANDIDATE);
-
+        return !"false".equalsIgnoreCase(isSandbox);
     }
 
     @JsonProperty("group")
