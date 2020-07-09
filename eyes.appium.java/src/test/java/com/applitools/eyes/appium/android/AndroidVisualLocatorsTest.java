@@ -2,6 +2,7 @@ package com.applitools.eyes.appium.android;
 
 import com.applitools.eyes.Location;
 import com.applitools.eyes.Region;
+import com.applitools.eyes.appium.EyesAppiumUtils;
 import com.applitools.eyes.locators.VisualLocator;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.touch.WaitOptions;
@@ -17,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 public class AndroidVisualLocatorsTest extends AndroidTestSetup {
 
     @Test
-    public void testAndroidVisualLocators() {
+    public void testAndroidVisualLocators() throws InterruptedException {
         driver.manage().timeouts().implicitlyWait(10_000, TimeUnit.MILLISECONDS);
 
         eyes.setForceFullPageScreenshot(false);
@@ -50,6 +51,8 @@ public class AndroidVisualLocatorsTest extends AndroidTestSetup {
             actionPress.press(PointOption.point(clickLocation.getX(), clickLocation.getY())).waitAction(WaitOptions.waitOptions(Duration.ofMillis(500)));
             actionPress.release();
             driver.performTouchAction(actionPress);
+
+            Thread.sleep(3000);
 
             eyes.checkWindow("ListView screen");
         }
