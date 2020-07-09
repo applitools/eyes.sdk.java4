@@ -1,4 +1,5 @@
 
+## [4.14.1] - 2020-07-09
 ### Added
 - Test reporting event. [Trello 1940](https://trello.com/c/b2XYeZ8v)
 

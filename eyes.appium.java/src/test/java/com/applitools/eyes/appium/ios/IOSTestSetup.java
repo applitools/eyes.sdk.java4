@@ -1,6 +1,7 @@
 package com.applitools.eyes.appium.ios;
 
 import com.applitools.eyes.appium.TestSetup;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.appium.java_client.ios.IOSDriver;
 
 import java.net.MalformedURLException;
@@ -16,6 +17,7 @@ public abstract class IOSTestSetup extends TestSetup {
         capabilities.setCapability("os_version", "13.3");
         capabilities.setCapability("automationName", "XCUITest");
         capabilities.setCapability("newCommandTimeout", 300);
+        capabilities.setCapability("processArguments", "{ \"args\": [\"test_lightmode\"] }");
         setResetMode();
     }
 
