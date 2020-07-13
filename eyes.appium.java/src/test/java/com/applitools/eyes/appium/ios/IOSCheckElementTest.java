@@ -1,38 +1,22 @@
 package com.applitools.eyes.appium.ios;
 
 import com.applitools.eyes.StdoutLogHandler;
-import com.applitools.eyes.appium.Eyes;
 import com.applitools.eyes.appium.Target;
-import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.annotations.Test;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
-public class IOSCheckElementTest {
+public class IOSCheckElementTest extends IOSTestSetup {
 
-    public static void main(String[] args) throws MalformedURLException {
-        Eyes eyes = new Eyes();
+    @Test(groups = "failed") // App paths is absolute
+    public void testIOSCheckElement() {
         eyes.setLogHandler(new StdoutLogHandler(true));
-        eyes.setApiKey(System.getenv("APPLITOOLS_API_KEY"));
         eyes.setSaveDebugScreenshots(false);
 
-        DesiredCapabilities dc = new DesiredCapabilities();
-
-        dc.setCapability(MobileCapabilityType.PLATFORM_VERSION, "12.4");
-//        dc.setCapability(MobileCapabilityType.PLATFORM_VERSION, "13.0");
-        dc.setCapability(MobileCapabilityType.PLATFORM_NAME, "iOS");
-        dc.setCapability(MobileCapabilityType.AUTOMATION_NAME, "XCUITest");
-        dc.setCapability(MobileCapabilityType.DEVICE_NAME, "iPhone Xr");
-//        dc.setCapability(MobileCapabilityType.DEVICE_NAME, "iPhone 11");
-        dc.setCapability(MobileCapabilityType.APP, "/Users/alexanderkachechka/Downloads/FullpagescrolliOS.app");
-
-        IOSDriver<WebElement> driver = new IOSDriver<>(new URL("http://127.0.0.1:4723/wd/hub"), dc);
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+
         try {
             eyes.open(driver, "iOS test application", "Check element test");
 
@@ -44,5 +28,10 @@ public class IOSCheckElementTest {
             eyes.abortIfNotClosed();
             driver.quit();
         }
+    }
+
+    @Override
+    protected void setAppCapability() {
+        capabilities.setCapability(MobileCapabilityType.APP, "/Users/alexanderkachechka/Downloads/FullpagescrolliOS.app");
     }
 }

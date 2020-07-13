@@ -1,35 +1,20 @@
 package com.applitools.eyes.appium.android;
 
 import com.applitools.eyes.StdoutLogHandler;
-import com.applitools.eyes.appium.Eyes;
 import com.applitools.eyes.appium.Target;
 import io.appium.java_client.TouchAction;
-import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.annotations.Test;
 
-import java.net.URL;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
-public class ScrollViewWithClickableElementTest {
+public class ScrollViewWithClickableElementTest extends AndroidTestSetup {
 
-    public static void main(String[] args) throws Exception {
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        capabilities.setCapability("platformName", "Android");
-        capabilities.setCapability("deviceName", "Google Nexus 6");
-        capabilities.setCapability("platformVersion", "7.1.1");
-
-        capabilities.setCapability("app", "https://applitools.bintray.com/Examples/android/1.2/app_android.apk");
-        capabilities.setCapability("automationName", "UiAutomator2");
-        capabilities.setCapability("newCommandTimeout", 300);
-
-        AndroidDriver driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
-
+    @Test
+    public void testScrollViewWithClickableElement() {
         driver.manage().timeouts().implicitlyWait(10_000, TimeUnit.MILLISECONDS);
-
-        Eyes eyes = new Eyes();
 
         eyes.setLogHandler(new StdoutLogHandler(true));
         eyes.setMatchTimeout(1000);
@@ -53,5 +38,10 @@ public class ScrollViewWithClickableElementTest {
             driver.quit();
             eyes.abortIfNotClosed();
         }
+    }
+
+    @Override
+    protected void setAppCapability() {
+        capabilities.setCapability("app", "https://applitools.bintray.com/Examples/android/1.2/app_android.apk");
     }
 }

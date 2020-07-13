@@ -3,40 +3,23 @@ package com.applitools.eyes.appium.android;
 import com.applitools.eyes.Location;
 import com.applitools.eyes.Region;
 import com.applitools.eyes.StdoutLogHandler;
-import com.applitools.eyes.appium.Eyes;
 import com.applitools.eyes.locators.VisualLocator;
 import io.appium.java_client.TouchAction;
-import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.annotations.Test;
 
-import java.net.URL;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-public class AndroidVisualLocatorsTest {
+public class AndroidVisualLocatorsTest extends AndroidTestSetup {
 
-    public static void main(String[] args) throws Exception {
-
-        DesiredCapabilities capabilities = new DesiredCapabilities();
-        // IMPORTANT: This assumes an emulator running locally. Make sure the settings match the device you're running.
-        capabilities.setCapability("platformName", "Android");
-        capabilities.setCapability("deviceName", "Google Nexus 6");
-        capabilities.setCapability("platformVersion", "7.1.1");
-
-        capabilities.setCapability("app", "https://applitools.bintray.com/Examples/app-android.apk");
-        capabilities.setCapability("automationName", "UiAutomator2");
-        capabilities.setCapability("newCommandTimeout", 300);
-
-        AndroidDriver driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
-
+    @Test
+    public void testAndroidVisualLocators() {
         driver.manage().timeouts().implicitlyWait(10_000, TimeUnit.MILLISECONDS);
-
-        Eyes eyes = new Eyes();
 
         eyes.setLogHandler(new StdoutLogHandler(true));
         eyes.setForceFullPageScreenshot(false);
@@ -82,5 +65,10 @@ public class AndroidVisualLocatorsTest {
             driver.quit();
             eyes.abortIfNotClosed();
         }
+    }
+
+    @Override
+    protected void setAppCapability() {
+        capabilities.setCapability("app", "https://applitools.bintray.com/Examples/app-android.apk");
     }
 }
