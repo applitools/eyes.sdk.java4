@@ -45,7 +45,7 @@ jobs:
       script:
         - cd eyes.appium.java
         - echo "Test started"
-        - mvn test -P parallel
+        - mvn test
         - cd ..
 
     - stage: deploy
