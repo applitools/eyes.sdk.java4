@@ -1,6 +1,7 @@
 package com.applitools.eyes.appium.ios;
 
 import com.applitools.eyes.appium.TestSetup;
+import com.google.common.collect.ImmutableMap;
 import io.appium.java_client.ios.IOSDriver;
 
 import java.net.MalformedURLException;
@@ -16,13 +17,15 @@ public abstract class IOSTestSetup extends TestSetup {
         capabilities.setCapability("os_version", "13.3");
         capabilities.setCapability("automationName", "XCUITest");
         capabilities.setCapability("newCommandTimeout", 300);
-        capabilities.setCapability("processArguments", "{ \"args\": [\"test_lightmode\"] }");
         setResetMode();
     }
 
     @Override
     protected void initDriver() throws MalformedURLException {
         driver = new IOSDriver<>(new URL(appiumServerUrl), capabilities);
+
+        driver.executeScript("mobile: siriCommand", ImmutableMap.of("text", "Siri, switch to light mode"));
+        driver.executeScript("mobile: pressButton", ImmutableMap.of("name", "home"));
     }
 
     @Override

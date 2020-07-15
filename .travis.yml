@@ -45,7 +45,7 @@ jobs:
       script:
         - cd eyes.appium.java
         - echo "Test started"
-        - mvn test
+        - mvn test -P parallel
         - cd ..
 
     - stage: deploy
@@ -58,4 +58,8 @@ jobs:
       script:
         - echo $TMP_CHANGELOG
         - TEST_COVERAGE_GAP=$(cat eyes.appium.java/testCoverageGap.txt)
-        - sh send_mail.sh "$SDK_NAME" "$SDK_VERSION" "$CHANGELOG" "$TEST_COVERAGE_GAP";
+        - $RESPONSE_CODE=$(sh send_mail.sh "$SDK_NAME" "$SDK_VERSION" "$CHANGELOG" "$TEST_COVERAGE_GAP")
+        - if [ "$RESPONSE_CODE" -ne "200" ]; then
+          echo "SEND MAIL FAILED";
+          exit 1;
+          fi
