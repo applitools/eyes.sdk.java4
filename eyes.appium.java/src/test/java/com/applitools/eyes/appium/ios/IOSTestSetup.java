@@ -17,7 +17,7 @@ public abstract class IOSTestSetup extends TestSetup {
         capabilities.setCapability("os_version", "13.3");
         capabilities.setCapability("automationName", "XCUITest");
         capabilities.setCapability("newCommandTimeout", 300);
-        setResetMode();
+        capabilities.setCapability("fullReset", false);
     }
 
     @Override
@@ -32,10 +32,6 @@ public abstract class IOSTestSetup extends TestSetup {
     protected void setAppCapability() {
         // TODO: upload https://applitools.bintray.com/Examples/IOSTestApp/1.1/IOSTestApp-1.1.zip on runtime in travis.yml
         capabilities.setCapability("app", "bs://a55cc1555d1bf6c0b464e2b1fa37cd8c96dcb953");
-    }
-
-    protected void setResetMode() {
-        capabilities.setCapability("fullReset", true);
     }
 
     @Override

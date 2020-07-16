@@ -28,9 +28,4 @@ public class AppiumIOSFullPageScreenshotTest extends IOSTestSetup {
         super.setCapabilities();
         capabilities.setCapability("useNewWDA", false);
     }
-
-    @Override
-    protected void setResetMode() {
-        capabilities.setCapability("noReset", true);
-    }
 }

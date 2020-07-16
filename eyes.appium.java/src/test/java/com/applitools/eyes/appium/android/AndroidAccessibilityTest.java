@@ -16,7 +16,7 @@ import java.util.List;
 
 public class AndroidAccessibilityTest extends AndroidTestSetup {
 
-    @Test(groups = "failed") // Invalid status code [401 Unauthorized]
+    @Test
     public void testAndroidAccessibility() throws Exception {
         eyes.setForceFullPageScreenshot(false);
         eyes.setMatchTimeout(1000);
@@ -26,7 +26,6 @@ public class AndroidAccessibilityTest extends AndroidTestSetup {
         configuration.setAppName(getApplicationName());
         configuration.setTestName("Test accessibility");
         configuration.setAccessibilityValidation(new AccessibilitySettings(AccessibilityLevel.AA, AccessibilityGuidelinesVersion.WCAG_2_0));
-        eyes.setServerUrl("https://testeyesapi.applitools.com");
 
         eyes.open(driver, configuration);
         eyes.check("Launcher screen", Target.window().accessibility(By.xpath("//*[@text='ScrollView']"), AccessibilityRegionType.GraphicalObject));
@@ -44,7 +43,7 @@ public class AndroidAccessibilityTest extends AndroidTestSetup {
         ImageMatchSettings matchSettings = sessionResults.getActualAppOutput()[0].getImageMatchSettings();
         List<AccessibilityRegionByRectangle> actual = Arrays.asList(matchSettings.getAccessibility());
         Assert.assertEquals(new HashSet<>(actual), new HashSet<>(Collections.singletonList(
-                new AccessibilityRegionByRectangle(16, 358, 382, 48, AccessibilityRegionType.GraphicalObject)
+                new AccessibilityRegionByRectangle(15, 358, 382, 48, AccessibilityRegionType.GraphicalObject)
         )));
 
         configuration.setAccessibilityValidation(null);
@@ -52,5 +51,11 @@ public class AndroidAccessibilityTest extends AndroidTestSetup {
         eyes.checkWindow("No accessibility");
         results = eyes.close(false);
         Assert.assertNull(results.getAccessibilityStatus());
+    }
+
+    @Override
+    protected void setAppCapability() {
+        // To run locally use https://applitools.bintray.com/Examples/android/1.2/app_android.apk
+        capabilities.setCapability("app", "app_android_accessibility");
     }
 }

@@ -32,6 +32,7 @@ before_script:
   # Upload apps to BrowserStack
   - sh upload_app.sh "https://applitools.bintray.com/Examples/android/1.2/app_android.apk" "app_android"
   - sh upload_app.sh "https://applitools.bintray.com/Examples/androidx/1.0.0/app_androidx.apk" "app_androidx"
+  - sh upload_app.sh "https://applitools.bintray.com/Examples/app-android.apk" "app_android_accessibility"
   - sh upload_app.sh "https://applitools.bintray.com/Examples/ipa/IOSTestApp.ipa" "app_ios"
 
 stages:
