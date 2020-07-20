@@ -8,26 +8,27 @@ before_script:
   - echo $RELEASE_CANDIDATE
   # Grab SDK name and version from git tag
   - export SDK_NAME="java4"
-  - SDK_VERSION=$(cut -d'v' -f2 <<<"$TRAVIS_TAG")
+  - SDK_VERSION=$(echo $TRAVIS_TAG | sed 's/[^.0-9]*//g')
+  - echo $SDK_VERSION
   - export APPLITOOLS_REPORT_ID=$(git log --pretty=format:'%h' -n 1)
   # Runs only during the release process. Set 'TestReportSandbox' key to false. It means that test reports will go to release sheet. Stops if CHANGELOG.md has the wrong format.
   - if [[ "$SDK_NAME" && "$SDK_VERSION" ]]; then
     export TEST_REPORT_SANDBOX = false;
     TMP_CHANGELOG=$(sh extract_change_log.sh "$SDK_VERSION" "CHANGELOG.md");
     CHANGELOG=$([ -z "$TMP_CHANGELOG" ] && echo "THERE IS NO CHANGELOG FOR VERSION $SDK_VERSION"; echo "$TMP_CHANGELOG");
-    if [[ (-z "$TMP_CHANGELOG") ]]; then
+    if [[ (-z "$TMP_CHANGELOG") && ($TRAVIS_TAG =~ ^RELEASE_CANDIDATE) ]]; then
     echo "THE CHANGELOG IS NOT CORRECT";
     exit 1;
     fi
     fi
   # Bump up pom.xml version
   - if [[ $TRAVIS_TAG =~ ^RELEASE_CANDIDATE ]]; then
-    git remote set-url origin https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG};
+    git remote set-url origin https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG.git;
     mvn versions:set -DnewVersion=$SDK_VERSION;
     mvn versions:commit;
     git add */pom.xml pom.xml;
     git commit -m 'update pom version';
-    git push origin HEAD:$RELEASE_BRANCH;
+    git push origin HEAD:"$RELEASE_BRANCH";
     fi
   # Upload apps to BrowserStack
   - sh upload_app.sh "https://applitools.bintray.com/Examples/android/1.2/app_android.apk" "app_android"
@@ -52,7 +53,6 @@ jobs:
     - stage: deploy
       script:
         - echo "Deploy"
-        - sh set_tags.sh
 
     - stage: release-event
       if: tag =~ ^RELEASE_CANDIDATE AND fork == false
