@@ -52,7 +52,6 @@ jobs:
     - stage: deploy
       script:
         - echo "Deploy"
-        - sh set_tags.sh
 
     - stage: release-event
       if: tag =~ ^RELEASE_CANDIDATE AND fork == false
