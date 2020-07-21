@@ -8,32 +8,30 @@ before_script:
   - echo $RELEASE_CANDIDATE
   # Grab SDK name and version from git tag
   - export SDK_NAME="java4"
-  - SDK_VERSION=$(cut -d'v' -f2 <<<"$TRAVIS_TAG")
+  - SDK_VERSION=$(echo $TRAVIS_TAG | sed 's/[^.0-9]*//g')
+  - echo $SDK_VERSION
   - export APPLITOOLS_REPORT_ID=$(git log --pretty=format:'%h' -n 1)
   # Runs only during the release process. Set 'TestReportSandbox' key to false. It means that test reports will go to release sheet. Stops if CHANGELOG.md has the wrong format.
   - if [[ "$SDK_NAME" && "$SDK_VERSION" ]]; then
     export TEST_REPORT_SANDBOX = false;
     TMP_CHANGELOG=$(sh extract_change_log.sh "$SDK_VERSION" "CHANGELOG.md");
     CHANGELOG=$([ -z "$TMP_CHANGELOG" ] && echo "THERE IS NO CHANGELOG FOR VERSION $SDK_VERSION"; echo "$TMP_CHANGELOG");
-    if [[ (-z "$TMP_CHANGELOG") ]]; then
-    echo "THE CHANGELOG IS NOT CORRECT";
-    exit 1;
     fi
+  - if [[ (-z "$TMP_CHANGELOG") && ($TRAVIS_TAG =~ ^RELEASE_CANDIDATE) ]]; then
+    sleep 5;
+    exit 1;
     fi
   # Bump up pom.xml version
   - if [[ $TRAVIS_TAG =~ ^RELEASE_CANDIDATE ]]; then
-    git remote set-url origin https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG};
+    git remote set-url origin https://$GITHUB_TOKEN@github.com/$TRAVIS_REPO_SLUG.git;
     mvn versions:set -DnewVersion=$SDK_VERSION;
     mvn versions:commit;
+    git config --global user.email "travis@travis-ci.org"
+    git config --global user.name "Travis"
     git add */pom.xml pom.xml;
     git commit -m 'update pom version';
-    git push origin HEAD:$RELEASE_BRANCH;
+    git push origin HEAD:"$RELEASE_BRANCH";
     fi
-  # Upload apps to BrowserStack
-  - sh upload_app.sh "https://applitools.bintray.com/Examples/android/1.2/app_android.apk" "app_android"
-  - sh upload_app.sh "https://applitools.bintray.com/Examples/androidx/1.0.0/app_androidx.apk" "app_androidx"
-  - sh upload_app.sh "https://applitools.bintray.com/Examples/app-android.apk" "app_android_accessibility"
-  - sh upload_app.sh "https://applitools.bintray.com/Examples/ipa/IOSTestApp.ipa" "app_ios"
 
 stages:
   - tests
@@ -44,10 +42,7 @@ jobs:
   include:
     - stage: test
       script:
-        - cd eyes.appium.java
         - echo "Test started"
-        - mvn test
-        - cd ..
 
     - stage: deploy
       script:
@@ -56,10 +51,4 @@ jobs:
     - stage: release-event
       if: tag =~ ^RELEASE_CANDIDATE AND fork == false
       script:
-        - echo $TMP_CHANGELOG
-        - TEST_COVERAGE_GAP=$(cat eyes.appium.java/testCoverageGap.txt)
-        - $RESPONSE_CODE=$(sh send_mail.sh "$SDK_NAME" "$SDK_VERSION" "$CHANGELOG" "$TEST_COVERAGE_GAP")
-        - if [ "$RESPONSE_CODE" -ne "200" ]; then
-          echo "SEND MAIL FAILED";
-          exit 1;
-          fi
+        - echo "Release event"
