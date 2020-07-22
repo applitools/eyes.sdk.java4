@@ -1,37 +1,29 @@
 package com.applitools.eyes.appium.ios;
 
-import com.applitools.eyes.StdoutLogHandler;
 import com.applitools.eyes.appium.Target;
-import io.appium.java_client.remote.MobileCapabilityType;
+import io.appium.java_client.MobileBy;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 
 import java.util.concurrent.TimeUnit;
 
 public class IOSCheckElementTest extends IOSTestSetup {
 
-    @Test(groups = "failed") // App paths is absolute
+    @Test
     public void testIOSCheckElement() {
-        eyes.setLogHandler(new StdoutLogHandler(true));
         eyes.setSaveDebugScreenshots(false);
 
         driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 
-        try {
-            eyes.open(driver, "iOS test application", "Check element test");
+        eyes.open(driver, getApplicationName(), "Check element test");
 
-            String xpath = "//XCUIElementTypeApplication[@name=\"FullpagescrolliOS\"]/XCUIElementTypeWindow[1]/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeOther/XCUIElementTypeScrollView";
-            eyes.check(Target.region(By.xpath(xpath)).fully().statusBarExists());
+        WebElement showScrollView = driver.findElement(MobileBy.AccessibilityId("Scroll view"));
+        showScrollView.click();
 
-            eyes.close();
-        } finally {
-            eyes.abortIfNotClosed();
-            driver.quit();
-        }
-    }
+        String xpath = "//XCUIElementTypeScrollView[1]";
+        eyes.check(Target.region(By.xpath(xpath)).fully().statusBarExists());
 
-    @Override
-    protected void setAppCapability() {
-        capabilities.setCapability(MobileCapabilityType.APP, "/Users/alexanderkachechka/Downloads/FullpagescrolliOS.app");
+        eyes.close();
     }
 }

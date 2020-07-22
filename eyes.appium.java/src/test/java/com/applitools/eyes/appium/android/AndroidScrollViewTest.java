@@ -1,6 +1,5 @@
 package com.applitools.eyes.appium.android;
 
-import com.applitools.eyes.StdoutLogHandler;
 import com.applitools.eyes.appium.Target;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.touch.WaitOptions;
@@ -16,32 +15,21 @@ public class AndroidScrollViewTest extends AndroidTestSetup {
     public void testAndroidScrollView() {
         driver.manage().timeouts().implicitlyWait(10_000, TimeUnit.MILLISECONDS);
 
-        eyes.setLogHandler(new StdoutLogHandler(true));
         eyes.setMatchTimeout(1000);
 
-        try {
-            eyes.open(driver, "AndroidTestApp", "Check ScrollView");
+        eyes.open(driver, getApplicationName(), "Check ScrollView");
 
-            // Scroll down
-            TouchAction scrollAction = new TouchAction(driver);
-            scrollAction.press(new PointOption().withCoordinates(5, 1700)).waitAction(new WaitOptions().withDuration(Duration.ofMillis(1500)));
-            scrollAction.moveTo(new PointOption().withCoordinates(5, 100));
-            scrollAction.cancel();
-            driver.performTouchAction(scrollAction);
+        // Scroll down
+        TouchAction scrollAction = new TouchAction(driver);
+        scrollAction.press(new PointOption().withCoordinates(5, 1700)).waitAction(new WaitOptions().withDuration(Duration.ofMillis(1500)));
+        scrollAction.moveTo(new PointOption().withCoordinates(5, 100));
+        scrollAction.cancel();
+        driver.performTouchAction(scrollAction);
 
-            driver.findElementById("btn_scroll_view_footer_header").click();
+        driver.findElementById("btn_scroll_view_footer_header").click();
 
-            eyes.check(Target.window().fully().withName("Fullpage"));
+        eyes.check(Target.window().fully().withName("Fullpage"));
 
-            eyes.close();
-        } finally {
-            driver.quit();
-            eyes.abortIfNotClosed();
-        }
-    }
-
-    @Override
-    protected void setAppCapability() {
-        capabilities.setCapability("app", "https://applitools.bintray.com/Examples/android/1.2/app_android.apk");
+        eyes.close();
     }
 }

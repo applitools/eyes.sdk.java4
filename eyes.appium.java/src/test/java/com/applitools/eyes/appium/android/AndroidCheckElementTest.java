@@ -1,6 +1,5 @@
 package com.applitools.eyes.appium.android;
 
-import com.applitools.eyes.StdoutLogHandler;
 import com.applitools.eyes.appium.Target;
 import io.appium.java_client.MobileBy;
 import org.testng.annotations.Test;
@@ -12,30 +11,18 @@ public class AndroidCheckElementTest extends AndroidTestSetup {
     @Test
     public void testAndroidCheckElement() {
         driver.manage().timeouts().implicitlyWait(10_000, TimeUnit.MILLISECONDS);
-
-        eyes.setLogHandler(new StdoutLogHandler(true));
         eyes.setMatchTimeout(1000);
 
-        try {
-            eyes.open(driver, "AndroidTestApp", "Check element test");
+        eyes.open(driver, getApplicationName(), "Check element test");
 
-            eyes.check(Target.region(MobileBy.id("btn_recycler_view")));
+        eyes.check(Target.region(MobileBy.id("btn_recycler_view")));
 
-            driver.findElementById("btn_recycler_view").click();
+        driver.findElementById("btn_recycler_view").click();
 
-            eyes.check(Target.region(MobileBy.id("recycler_view")));
+        eyes.check(Target.region(MobileBy.id("recycler_view")));
 
-            eyes.check(Target.region(MobileBy.id("recycler_view")).fully());
+        eyes.check(Target.region(MobileBy.id("recycler_view")).fully());
 
-            eyes.close();
-        } finally {
-            driver.quit();
-            eyes.abortIfNotClosed();
-        }
-    }
-
-    @Override
-    protected void setAppCapability() {
-        capabilities.setCapability("app", "https://applitools.bintray.com/Examples/android_test_app.apk");
+        eyes.close();
     }
 }

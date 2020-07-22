@@ -10,20 +10,27 @@ public abstract class AndroidTestSetup extends TestSetup {
 
     @Override
     public void setCapabilities() {
+        super.setCapabilities();
         capabilities.setCapability("platformName", "Android");
-        capabilities.setCapability("deviceName", "Google Nexus 6");
-        capabilities.setCapability("platformVersion", "7.1.1");
-
+        capabilities.setCapability("deviceName", "Google Pixel 2");
+        capabilities.setCapability("os_version", "9.0");
         capabilities.setCapability("automationName", "UiAutomator2");
         capabilities.setCapability("newCommandTimeout", 300);
-
-        setAppCapability();
     }
 
     @Override
     protected void initDriver() throws MalformedURLException {
-        driver = new AndroidDriver<>(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
+        driver = new AndroidDriver<>(new URL(appiumServerUrl), capabilities);
     }
 
-    protected abstract void setAppCapability();
+    @Override
+    protected void setAppCapability() {
+        // To run locally use https://applitools.bintray.com/Examples/android/1.2/app_android.apk
+        capabilities.setCapability("app", "app_android");
+    }
+
+    @Override
+    protected String getApplicationName() {
+        return "Java Appium - Android";
+    }
 }
