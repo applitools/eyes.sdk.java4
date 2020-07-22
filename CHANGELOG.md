@@ -1,5 +1,6 @@
 
 ### Added
+- Additional logging in `getViewportRect`. [Trello 644](https://trello.com/c/FnOtYN6J)
 - Test reporting event. [Trello 1940](https://trello.com/c/b2XYeZ8v)
 
 ## [4.14.0] - 2020-06-22
