@@ -55,7 +55,11 @@ public class EyesAppiumDriver extends EyesWebDriver {
     }
 
     public HashMap<String, Integer> getViewportRect () {
-        Map<String, Long> rectMap = (Map<String, Long>) getCachedSessionDetails().get("viewportRect");
+        Object viewportRectObject = getCachedSessionDetails().get("viewportRect");
+        logger.verbose("Viewport Rect Type: " + viewportRectObject.getClass());
+        logger.verbose("Viewport Rect Value: " + viewportRectObject.toString());
+
+        Map<String, Long> rectMap = (Map<String, Long>) viewportRectObject;
         HashMap<String, Integer> intRectMap = new HashMap<String, Integer>();
         intRectMap.put("width", rectMap.get("width").intValue());
         intRectMap.put("height", rectMap.get("height").intValue());
