@@ -11,7 +11,7 @@ import org.openqa.selenium.WebDriver;
 public class ImageProviderFactory {
     public static ImageProvider getImageProvider(Eyes eyes, Logger logger, WebDriver driver, boolean viewportImage) {
         if (viewportImage) {
-            return new MobileViewportScreenshotImageProvider(logger, (JavascriptExecutor) driver);
+            return new MobileViewportScreenshotImageProvider(logger, driver);
         }
         return new TakesScreenshotImageProvider(logger, (TakesScreenshot) driver);
     }

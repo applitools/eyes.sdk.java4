@@ -25,6 +25,7 @@ import org.openqa.selenium.remote.RemoteWebElement;
 public class EyesAppiumUtils extends EyesSeleniumUtils{
 
     private static final String NATIVE_APP = "NATIVE_APP";
+    private static final String TEST_CLOUD = "saucelabs";
 
     private static String SCROLLVIEW_XPATH = "//*[@scrollable='true']";
     private static String FIRST_VIS_XPATH = "/*[@firstVisible='true']";
@@ -57,6 +58,20 @@ public class EyesAppiumUtils extends EyesSeleniumUtils{
     public static boolean isIOS(WebDriver driver) {
         driver = getUnderlyingDriver(driver);
         return driver instanceof IOSDriver;
+    }
+
+    /**
+     * @param driver The driver to test.
+     * @return {@code true} if the driver address is an test cloud address (saucelabs or browserstack - defined in const above).
+     * {@code false} otherwise.
+     */
+    public static boolean isRunOnTestCloud(WebDriver driver) {
+        if (!isMobileDevice(driver)) {
+            return false;
+        }
+        else{
+            return ((AppiumDriver) driver).getRemoteAddress().getHost().toLowerCase().contains(TEST_CLOUD);
+        }
     }
 
     /**

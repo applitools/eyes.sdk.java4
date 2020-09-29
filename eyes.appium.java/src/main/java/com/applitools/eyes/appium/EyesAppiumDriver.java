@@ -55,15 +55,26 @@ public class EyesAppiumDriver extends EyesWebDriver {
     }
 
     public HashMap<String, Integer> getViewportRect () {
+
         Map<String, Long> rectMap = (Map<String, Long>) getCachedSessionDetails().get("viewportRect");
         HashMap<String, Integer> intRectMap = new HashMap<String, Integer>();
-        intRectMap.put("width", rectMap.get("width").intValue());
-        intRectMap.put("height", rectMap.get("height").intValue());
+        if (EyesAppiumUtils.isRunOnTestCloud(driver)) {
+            Dimension viewportSize = driver.manage().window().getSize();
+            intRectMap.put("width", viewportSize.width);
+            intRectMap.put("height", viewportSize.height);
+        }
+        else {
+            intRectMap.put("width", rectMap.get("width").intValue());
+            intRectMap.put("height", rectMap.get("height").intValue());
+        }
         return intRectMap;
     }
 
     public int getStatusBarHeight() {
         Object statusBarHeight = getCachedSessionDetails().get("statBarHeight");
+        if (EyesAppiumUtils.isRunOnTestCloud(driver)) {
+            statusBarHeight = 0.0;
+        }
         if (statusBarHeight instanceof Double) {
             return ((Double) statusBarHeight).intValue();
         } else {
@@ -73,6 +84,9 @@ public class EyesAppiumDriver extends EyesWebDriver {
 
     public double getDevicePixelRatio () {
         Object pixelRatio = getCachedSessionDetails().get("pixelRatio");
+        if (EyesAppiumUtils.isRunOnTestCloud(driver)) {
+            return 1.0;
+        }
         if (pixelRatio instanceof Double) {
             return (Double) pixelRatio;
         } else {
